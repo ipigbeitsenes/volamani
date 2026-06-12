@@ -1,0 +1,716 @@
+# VOLAMANI — COMPLETE ENTERPRISE PLATFORM MASTER PROMPT
+
+You are a principal Laravel 12 architect, senior backend engineer, DevOps engineer, enterprise SaaS engineer, marketplace architect, fintech engineer, and scalable platform designer.
+
+You are building a COMPLETE production-ready enterprise web platform called:
+
+# VOLAMANI
+
+VOLAMANI is a Nigerian and African-focused digital business ecosystem designed to help individuals, startups, freelancers, agencies, creators, vendors, and SMEs sell products, offer services, manage digital businesses, receive payments, and grow online.
+
+The platform combines the functionality of:
+
+* Shopify
+* Selar
+* Fiverr
+* Upwork
+* Paystack Commerce
+* Gumroad
+* Freelancer
+* digital agency systems
+
+inside one unified web platform.
+
+VOLAMANI is not just a marketplace.
+
+It is a complete business operating system for African digital entrepreneurs.
+
+The platform must be scalable, secure, modular, production-ready, maintainable, and enterprise-grade.
+
+---
+
+# CORE BUSINESS PURPOSE
+
+VOLAMANI must help users:
+
+* sell digital products
+* sell templates
+* offer freelance services
+* run agency businesses
+* create vendor storefronts
+* receive payments
+* manage customers
+* generate invoices
+* receive consultation bookings
+* request products/services
+* negotiate quotations
+* use escrow protection
+* build trusted digital businesses
+
+The system should prioritize:
+
+* trust
+* ease of use
+* mobile-friendly web experience
+* African payment realities
+* vendor verification
+* business automation
+* financial integrity
+
+---
+
+# TARGET MARKET
+
+Primary target market:
+
+* Nigeria
+* Africa
+
+Target users:
+
+* freelancers
+* startups
+* agencies
+* consultants
+* creators
+* SMEs
+* digital entrepreneurs
+* students
+* developers
+* designers
+* online vendors
+
+The platform must support Nigerian business realities such as:
+
+* manual bank transfers
+* WhatsApp-driven commerce
+* negotiation-based pricing
+* installment payments
+* low-trust online environments
+* vendor verification requirements
+* escrow protection
+* flexible service pricing
+
+---
+
+# PLATFORM MODULES
+
+VOLAMANI must include the following complete enterprise modules.
+
+---
+
+# 1. DIGITAL PRODUCT MARKETPLACE
+
+Users must be able to:
+
+* upload digital products
+* upload templates
+* upload downloadable files
+* sell eBooks
+* sell software
+* sell website templates
+* sell UI kits
+* sell digital assets
+
+Features:
+
+* categories
+* tags
+* product galleries
+* reviews
+* ratings
+* SEO slugs
+* search
+* advanced filtering
+* featured products
+* secure downloads
+* expiring download links
+* download limits
+
+---
+
+# 2. SERVICE MARKETPLACE
+
+Users must be able to:
+
+* offer freelance services
+* offer agency services
+* offer consultations
+* offer digital services
+
+Examples:
+
+* web development
+* graphic design
+* AI automation
+* digital marketing
+* branding
+* social media management
+* consulting
+* business setup services
+
+Features:
+
+* service listings
+* service pricing
+* milestone pricing
+* revision limits
+* service packages
+* delivery timelines
+* proposal system
+* booking system
+* service reviews
+
+---
+
+# 3. PRODUCT REQUEST MARKETPLACE
+
+Users must be able to request products or services they need.
+
+This works like a reverse marketplace.
+
+Buyers can:
+
+* create requests
+* specify budgets
+* upload attachments
+* define requirements
+* receive vendor proposals
+* negotiate pricing
+* accept offers
+
+Vendors can:
+
+* browse requests
+* submit quotations
+* negotiate pricing
+* communicate with clients
+
+This system should function similarly to:
+
+* Upwork job postings
+* Freelancer bidding
+* Fiverr request system
+
+---
+
+# 4. STARTUP CONSULTATION PLATFORM
+
+VOLAMANI must support startup and business consultation services.
+
+Users must be able to:
+
+* book consultants
+* choose time slots
+* pay for sessions
+* upload business information
+* attend meetings
+* receive reports
+
+Consultants must be able to:
+
+* define consultation packages
+* define pricing
+* manage schedules
+* issue reports
+* upload recommendations
+
+Consultation categories include:
+
+* startup consultation
+* business growth strategy
+* branding consultation
+* AI/business automation
+* eCommerce consultation
+* website consultation
+* digital marketing consultation
+* pricing strategy consultation
+
+---
+
+# 5. BUSINESS PRICING ASSISTANCE SYSTEM
+
+VOLAMANI must include a pricing assistance engine to help freelancers and startups determine proper service pricing.
+
+Users should be able to generate pricing estimates for:
+
+* websites
+* branding
+* AI automation
+* software projects
+* digital marketing
+* social media services
+* agency retainers
+* consulting services
+
+The system should support:
+
+* fixed pricing
+* hourly pricing
+* milestone pricing
+* urgency multipliers
+* service add-ons
+* quotation generation
+
+---
+
+# 6. VENDOR STOREFRONT SYSTEM
+
+Each vendor must have a customizable storefront.
+
+Features:
+
+* vendor profile
+* logo/banner
+* social media links
+* featured products
+* service listings
+* reviews
+* ratings
+* WhatsApp integration
+* SEO storefront URLs
+
+Example:
+
+volamani.com/store/vendor-name
+
+---
+
+# 7. WALLET & LEDGER SYSTEM
+
+VOLAMANI must include a complete wallet infrastructure.
+
+Features:
+
+* wallet funding
+* transaction history
+* refunds
+* withdrawals
+* transfers
+* escrow balance
+* commission deductions
+
+CRITICAL:
+
+Use immutable ledger accounting.
+
+Never rely only on wallet balance.
+
+Use:
+
+* wallet_ledgers
+* transaction_entries
+
+for financial integrity.
+
+All financial operations must use database transactions.
+
+---
+
+# 8. PAYMENT SYSTEM
+
+Default payment gateway:
+
+# PAYSTACK
+
+Architecture must support future gateways:
+
+* Flutterwave
+* Monnify
+* Opay
+* PalmPay
+
+Features:
+
+* Paystack inline payments
+* webhook verification
+* payment reconciliation
+* payment logging
+* duplicate prevention
+* refunds
+
+Also support:
+
+* offline bank transfer
+* payment proof upload
+* admin payment approval
+
+Future-ready architecture required using:
+
+PaymentGatewayInterface
+
+---
+
+# 9. ESCROW SYSTEM
+
+The platform must include escrow protection.
+
+Workflow:
+
+buyer pays
+→ funds held in escrow
+→ vendor delivers work
+→ buyer approves
+→ funds released
+
+Features:
+
+* escrow wallets
+* escrow releases
+* milestone escrow
+* disputes
+* partial refunds
+
+---
+
+# 10. DISPUTE RESOLUTION SYSTEM
+
+The platform must include a dispute management system.
+
+Features:
+
+* dispute creation
+* evidence uploads
+* admin mediation
+* refunds
+* partial settlements
+* dispute conversations
+
+---
+
+# 11. KYC & VENDOR VERIFICATION SYSTEM
+
+To reduce fraud, vendors must support verification.
+
+Features:
+
+* BVN verification readiness
+* NIN verification readiness
+* CAC verification
+* ID uploads
+* bank verification
+* selfie verification
+* verification badges
+
+---
+
+# 12. REVIEW & TRUST SYSTEM
+
+The platform must prioritize trust.
+
+Features:
+
+* verified reviews
+* ratings
+* vendor scores
+* completion rates
+* response rates
+* trust badges
+* verified vendor badges
+
+---
+
+# 13. AFFILIATE & REFERRAL SYSTEM
+
+Users must be able to:
+
+* refer users
+* earn commissions
+* share affiliate links
+* track referral earnings
+
+---
+
+# 14. SUBSCRIPTION SYSTEM
+
+Vendors must be able to subscribe to plans.
+
+Plans may include:
+
+* free plan
+* premium plan
+* agency plan
+* featured vendor plan
+
+Features:
+
+* listing limits
+* commission adjustments
+* analytics access
+* storefront upgrades
+
+---
+
+# 15. INVOICE, QUOTATION & DOCUMENT SYSTEM
+
+The platform must generate:
+
+* invoices
+* quotations
+* contracts
+* NDAs
+* proposals
+* receipts
+
+Features:
+
+* PDF generation
+* branding
+* signatures
+* downloadable exports
+
+---
+
+# 16. BUSINESS MATCHING SYSTEM
+
+VOLAMANI should recommend vendors and consultants based on:
+
+* expertise
+* ratings
+* budget
+* category
+* delivery speed
+* pricing
+
+---
+
+# 17. CLIENT MANAGEMENT SYSTEM
+
+Vendors and agencies must be able to:
+
+* manage clients
+* track projects
+* store notes
+* manage invoices
+* manage milestones
+* manage communication history
+
+---
+
+# 18. NOTIFICATION SYSTEM
+
+Features:
+
+* email notifications
+* in-app notifications
+
+Architecture should support future:
+
+* WhatsApp notifications
+* SMS notifications
+
+---
+
+# 19. ADMIN MANAGEMENT SYSTEM
+
+The admin dashboard must include:
+
+* analytics
+* vendor approvals
+* KYC approvals
+* withdrawal approvals
+* dispute management
+* payment monitoring
+* audit logs
+* user management
+* role management
+* commission management
+* subscription management
+
+---
+
+# 20. AUDIT & SECURITY SYSTEM
+
+Track:
+
+* wallet activity
+* payment activity
+* admin actions
+* login attempts
+* suspicious activity
+* withdrawal approvals
+
+Implement:
+
+* CSRF protection
+* XSS protection
+* secure uploads
+* signed URLs
+* webhook verification
+* rate limiting
+* login throttling
+
+---
+
+# TECHNOLOGY STACK
+
+Use:
+
+* Laravel 12
+* PHP 8.3
+* Blade
+* Bootstrap 5
+* Vanilla JavaScript
+* MySQL 8
+* Redis
+* Docker Compose
+* Nginx
+* Supervisor
+
+DO NOT USE:
+
+* React
+* Vue
+* Next.js
+* Nuxt
+* Inertia
+* Livewire
+* Tailwind
+
+---
+
+# APPLICATION TYPE
+
+This is a:
+
+# WEB-FIRST MONOLITH APPLICATION
+
+NOT API-FIRST.
+
+NO MOBILE APP ARCHITECTURE.
+
+NO MICROSERVICES.
+
+The platform must function as a complete web application.
+
+---
+
+# ARCHITECTURE REQUIREMENTS
+
+Use strict enterprise layered architecture:
+
+Controller
+→ Action
+→ Service
+→ Repository
+→ Model
+
+Rules:
+
+* Controllers must remain thin
+* Actions handle single workflows
+* Services contain business logic
+* Repositories contain all database queries
+* Models contain relationships only
+* Policies handle authorization
+* Requests handle validation
+
+---
+
+# DOCKER REQUIREMENTS
+
+Generate complete Docker environment including:
+
+* Dockerfile
+* docker-compose.yml
+* nginx config
+* PHP config
+* MySQL service
+* Redis service
+* queue worker service
+* scheduler service
+* mailpit service
+* supervisor config
+
+The application must run successfully using:
+
+docker compose up -d
+
+---
+
+# FRONTEND REQUIREMENTS
+
+Use:
+
+* Blade
+* Bootstrap 5
+* Vanilla JavaScript
+* custom CSS
+
+Build complete responsive pages for:
+
+* homepage
+* marketplace
+* product pages
+* service pages
+* storefronts
+* checkout
+* dashboards
+* wallet pages
+* admin dashboard
+* vendor dashboard
+* consultation pages
+* dispute pages
+
+The UI must be:
+
+* modern
+* clean
+* mobile-friendly
+* conversion-focused
+
+---
+
+# DATABASE REQUIREMENTS
+
+Generate complete migrations in proper order.
+
+Ensure:
+
+* proper indexes
+* foreign keys
+* cascade rules
+* soft deletes
+* UUID support where needed
+* financial integrity
+
+Generate all required tables and pivot tables.
+
+---
+
+# TESTING REQUIREMENTS
+
+Generate:
+
+* Feature Tests
+* Unit Tests
+
+Test:
+
+* authentication
+* checkout
+* Paystack payments
+* wallet operations
+* escrow flow
+* withdrawals
+* disputes
+* vendor workflows
+
+---
+
+# FINAL OBJECTIVE
+
+The final result must be:
+
+* a fully working Laravel 12 application
+* Docker-ready
+* scalable
+* enterprise-grade
+* production-ready
+* Nigerian-market optimized
+* financially secure
+* trust-focused
+* modular
+* maintainable
+
+The platform must function as a complete African digital business ecosystem.

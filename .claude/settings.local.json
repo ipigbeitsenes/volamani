@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(wsl -d Ubuntu -e bash -c \"cd /home/ipigb/laravelProjects/volamani && php artisan vendor:publish --provider='Spatie\\\\Permission\\\\PermissionServiceProvider' --force 2>&1\")",
+      "PowerShell(wsl -d Ubuntu -e bash -c \"cd /home/ipigb/laravelProjects/volamani && php artisan config:clear 2>&1 && php artisan route:list 2>&1 | head -80\")",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && timeout 60 php verify_subs.php 2>&1; echo \"EXIT $?\"')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && php verify_subs.php')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && rm -f verify_subs.php lint_subs.sh /tmp/subs_out.txt && echo cleaned')",
+      "PowerShell(wsl bash /home/ipigb/laravelProjects/volamani/lint_docs.sh)",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && php verify_docs.php')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && rm -f verify_docs.php lint_docs.sh && echo cleaned')",
+      "PowerShell(wsl bash -lc 'mkdir -p /home/ipigb/laravelProjects/volamani/resources/views/marketplace/matching /home/ipigb/laravelProjects/volamani/resources/views/vendor/matching && echo created')",
+      "PowerShell(wsl bash /home/ipigb/laravelProjects/volamani/lint_match.sh)",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && php verify_match.php')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani; grep -i spatie composer.json; echo \"--- vendor dir count ---\"; ls vendor 2>/dev/null | wc -l')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani && rm -f verify_match.php lint_match.sh && echo cleaned')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani; echo \"=== root files ===\"; ls -1 | grep -iE \"docker|compose|artisan|\\\\.env|composer\\\\.json|package\\\\.json|vite|Makefile\"; echo; echo \"=== .env exists? ===\"; test -f .env && echo \"YES .env\" || echo \"NO .env\"; test -f .env.example && echo \"YES .env.example\" || echo \"NO .env.example\"; echo; echo \"=== php/composer/node versions ===\"; php -v 2>/dev/null | head -1; composer --version 2>/dev/null; node -v 2>/dev/null; echo \"docker:\"; docker --version 2>/dev/null || echo \"docker NOT found in WSL\"')",
+      "PowerShell(wsl bash -lc 'php -v | head -1; composer --version; node -v; docker --version')",
+      "PowerShell(wsl bash -lc 'echo hello; pwd; ls /home/ipigb/laravelProjects/volamani | head -30')",
+      "PowerShell(wsl bash -lc 'cat /home/ipigb/laravelProjects/volamani/Dockerfile')",
+      "PowerShell(wsl bash -lc 'cat /home/ipigb/laravelProjects/volamani/package.json')",
+      "PowerShell(wsl bash -lc 'cd /home/ipigb/laravelProjects/volamani; if [ -f .env ]; then echo \"ENV_EXISTS\"; grep -E \"APP_KEY|DB_|REDIS_HOST|QUEUE_CONNECTION|CACHE_STORE|MAIL_\" .env; else echo \"NO_ENV\"; fi; echo \"----example----\"; test -f .env.example && echo EXAMPLE_EXISTS || echo NO_EXAMPLE')",
+      "PowerShell(wsl bash -lc 'rm -f /home/ipigb/laravelProjects/volamani/check_env.sh; echo done')",
+      "PowerShell(wsl --shutdown)",
+      "PowerShell(wsl bash -lc 'echo WSL_BACK; ls /home/ipigb/laravelProjects/volamani/app/Enums/ClientStatus.php')"
+    ]
+  }
+}

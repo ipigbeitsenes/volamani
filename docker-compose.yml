@@ -1,0 +1,126 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: volamani
+        uid: 1000
+    image: volamani
+    container_name: volamani_app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/app.ini
+      - ./docker/php/zzz-listen.conf:/usr/local/etc/php-fpm.d/zzz-listen.conf
+    networks:
+      - volamani
+    depends_on:
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: volamani_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - volamani
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: volamani_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-volamani}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_USER: ${DB_USERNAME:-volamani}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-volamani}
+    ports:
+      - "3307:3306"
+    volumes:
+      - volamani_mysql:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - volamani
+
+  redis:
+    image: redis:alpine
+    container_name: volamani_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - volamani_redis:/data
+    networks:
+      - volamani
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: volamani
+        uid: 1000
+    image: volamani
+    container_name: volamani_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/app.ini
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    networks:
+      - volamani
+    depends_on:
+      - mysql
+      - redis
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: volamani
+        uid: 1000
+    image: volamani
+    container_name: volamani_scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/app.ini
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
+    networks:
+      - volamani
+    depends_on:
+      - mysql
+      - redis
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: volamani_mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - volamani
+
+networks:
+  volamani:
+    driver: bridge
+
+volumes:
+  volamani_mysql:
+    driver: local
+  volamani_redis:
+    driver: local
