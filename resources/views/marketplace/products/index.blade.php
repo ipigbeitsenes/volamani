@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Digital Products — Volamani Marketplace')
+@section('title', 'Products — Volamani Marketplace')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -17,50 +17,77 @@
                 <div class="collapse d-lg-block" id="filterCollapse">
                 <div class="card-body">
                     <form action="{{ route('marketplace.products.index') }}" method="GET" id="filterForm">
-                        {{-- Search --}}
+                        {{-- Search (covers digital + physical by name/description) --}}
                         <div class="mb-3">
                             <input type="text" name="q" class="form-control"
-                                placeholder="Search products..."
+                                placeholder="Search all products..."
                                 value="{{ $filters['q'] ?? '' }}">
                         </div>
 
-                        {{-- Category --}}
+                        {{-- Kind: digital vs physical --}}
+                        @php $kind = $filters['kind'] ?? ''; @endphp
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small text-uppercase text-muted">Category</label>
-                            <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat->id }}"
-                                        {{ ($filters['category'] ?? '') == $cat->id ? 'selected' : '' }}>
-                                        {{ $cat->name }}
-                                    </option>
-                                    @foreach($cat->children as $sub)
-                                        <option value="{{ $sub->id }}"
-                                            {{ ($filters['category'] ?? '') == $sub->id ? 'selected' : '' }}>
-                                            &nbsp;&nbsp;&nbsp;{{ $sub->name }}
-                                        </option>
-                                    @endforeach
-                                @endforeach
-                            </select>
+                            <label class="form-label fw-semibold small text-uppercase text-muted">Product kind</label>
+                            <div class="btn-group w-100" role="group" id="kindGroup">
+                                <input type="radio" class="btn-check" name="kind" id="kind_all" value="" {{ $kind === '' ? 'checked' : '' }} onchange="this.form.submit()">
+                                <label class="btn btn-outline-primary btn-sm" for="kind_all">All</label>
+                                <input type="radio" class="btn-check" name="kind" id="kind_digital" value="digital" {{ $kind === 'digital' ? 'checked' : '' }} onchange="this.form.submit()">
+                                <label class="btn btn-outline-primary btn-sm" for="kind_digital">Digital</label>
+                                <input type="radio" class="btn-check" name="kind" id="kind_physical" value="physical" {{ $kind === 'physical' ? 'checked' : '' }} onchange="this.form.submit()">
+                                <label class="btn btn-outline-primary btn-sm" for="kind_physical">Physical</label>
+                            </div>
                         </div>
 
-                        {{-- Product Type --}}
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold small text-uppercase text-muted">Type</label>
-                            @foreach(\App\Enums\ProductType::cases() as $type)
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="type"
-                                        id="type_{{ $type->value }}" value="{{ $type->value }}"
-                                        {{ ($filters['type'] ?? '') === $type->value ? 'checked' : '' }}
-                                        onchange="this.form.submit()">
-                                    <label class="form-check-label small" for="type_{{ $type->value }}">
-                                        {{ $type->label() }}
-                                    </label>
-                                </div>
-                            @endforeach
-                            @if(!empty($filters['type']))
-                                <a href="{{ request()->fullUrlWithoutQuery(['type']) }}" class="small text-muted">Clear</a>
-                            @endif
+                        {{-- Digital category + type (hidden when kind=physical) --}}
+                        <div data-kind-block="digital" class="{{ $kind === 'physical' ? 'd-none' : '' }}">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted">Digital category</label>
+                                <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="">All digital categories</option>
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat->id }}" {{ ($filters['category'] ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                        @foreach($cat->children as $sub)
+                                            <option value="{{ $sub->id }}" {{ ($filters['category'] ?? '') == $sub->id ? 'selected' : '' }}>&nbsp;&nbsp;&nbsp;{{ $sub->name }}</option>
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted">Digital type</label>
+                                @foreach(\App\Enums\ProductType::cases() as $type)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="type"
+                                            id="type_{{ $type->value }}" value="{{ $type->value }}"
+                                            {{ ($filters['type'] ?? '') === $type->value ? 'checked' : '' }}
+                                            onchange="this.form.submit()">
+                                        <label class="form-check-label small" for="type_{{ $type->value }}">{{ $type->label() }}</label>
+                                    </div>
+                                @endforeach
+                                @if(!empty($filters['type']))
+                                    <a href="{{ request()->fullUrlWithoutQuery(['type']) }}" class="small text-muted">Clear type</a>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Physical category + stock (hidden when kind=digital) --}}
+                        <div data-kind-block="physical" class="{{ $kind === 'digital' ? 'd-none' : '' }}">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted">Physical category</label>
+                                <select name="physical_category" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="">All physical categories</option>
+                                    @foreach($physicalCategories as $cat)
+                                        <option value="{{ $cat->id }}" {{ ($filters['physical_category'] ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                        @foreach($cat->children as $sub)
+                                            <option value="{{ $sub->id }}" {{ ($filters['physical_category'] ?? '') == $sub->id ? 'selected' : '' }}>&nbsp;&nbsp;&nbsp;{{ $sub->name }}</option>
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input class="form-check-input" type="checkbox" name="in_stock" value="1"
+                                    id="inStock" {{ !empty($filters['in_stock']) ? 'checked' : '' }} onchange="this.form.submit()">
+                                <label class="form-check-label small" for="inStock">In stock only</label>
+                            </div>
                         </div>
 
                         {{-- Price Range --}}

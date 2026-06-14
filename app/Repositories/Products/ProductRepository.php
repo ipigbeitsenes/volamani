@@ -26,18 +26,33 @@ class ProductRepository extends BaseRepository
 
     public function searchProducts(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $query = $this->model->with(['vendor', 'category'])->active();
+        $query = $this->model->with(['vendor', 'category', 'physicalCategory', 'physicalDetail'])->active();
 
         if (!empty($filters['q'])) {
             $query->search($filters['q']);
         }
 
-        if (!empty($filters['category'])) {
-            $query->where('category_id', $filters['category']);
+        // Fulfillment kind: digital vs physical.
+        $kind = $filters['kind'] ?? null;
+        if ($kind) {
+            $query->where('kind', $kind);
         }
 
-        if (!empty($filters['type'])) {
+        // Digital-only filters (ignored when the user has narrowed to physical,
+        // so a stale cross-kind param from switching tabs can't zero out results).
+        if (!empty($filters['category']) && $kind !== 'physical') {
+            $query->where('category_id', $filters['category']);
+        }
+        if (!empty($filters['type']) && $kind !== 'physical') {
             $query->ofType($filters['type']);
+        }
+
+        // Physical-only filters (ignored when narrowed to digital).
+        if (!empty($filters['physical_category']) && $kind !== 'digital') {
+            $query->where('physical_category_id', $filters['physical_category']);
+        }
+        if (!empty($filters['in_stock']) && $kind !== 'digital') {
+            $query->whereHas('physicalDetail', fn ($q) => $q->where('stock_quantity', '>', 0));
         }
 
         if (!empty($filters['min_price'])) {

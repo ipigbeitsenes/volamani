@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
+use App\Models\PhysicalCategory;
 use App\Repositories\Products\CategoryRepository;
 use App\Repositories\Products\ProductRepository;
 use Illuminate\Http\Request;
@@ -16,12 +17,15 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['q', 'category', 'type', 'min_price', 'max_price', 'vendor', 'sort']);
+        $filters = $request->only(['q', 'kind', 'category', 'physical_category', 'type', 'min_price', 'max_price', 'vendor', 'sort', 'in_stock']);
         $products   = $this->productRepo->searchProducts($filters);
         $categories = $this->categoryRepo->rootCategories();
+        $physicalCategories = PhysicalCategory::active()->roots()
+            ->with(['children' => fn ($q) => $q->active()->orderBy('name')])
+            ->orderBy('sort_order')->orderBy('name')->get();
         $featured   = $this->productRepo->featuredProducts(4);
 
-        return view('marketplace.products.index', compact('products', 'categories', 'featured', 'filters'));
+        return view('marketplace.products.index', compact('products', 'categories', 'physicalCategories', 'featured', 'filters'));
     }
 
     public function show(string $slug)
