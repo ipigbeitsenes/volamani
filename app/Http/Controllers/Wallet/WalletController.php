@@ -26,9 +26,10 @@ class WalletController extends Controller
     public function fund(FundWalletRequest $request): RedirectResponse
     {
         $amountKobo = to_kobo((float) $request->input('amount'));
-        $result     = $this->walletService->initiateFunding(auth()->user(), $amountKobo);
+        $method     = $request->input('method', 'paystack');
+        $result     = $this->walletService->initiateFunding(auth()->user(), $amountKobo, $method);
 
-        return redirect()->away($result['authorization_url']);
+        return redirect()->away($result['redirect']);
     }
 
     public function withdraw(WithdrawalRequest $request): RedirectResponse

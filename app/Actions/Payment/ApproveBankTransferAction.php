@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ApproveBankTransferAction
 {
-    public function __construct(private VerifyPaymentAction $verify) {}
+    public function __construct(private FulfillPaymentAction $fulfill) {}
 
     public function approve(BankTransferProof $proof, User $admin): Payment
     {
@@ -23,14 +23,20 @@ class ApproveBankTransferAction
             ]);
 
             $payment = $proof->payment;
-            $payment->update([
-                'status'            => PaymentStatus::Success,
-                'gateway_reference' => 'BT-' . $proof->id,
-                'paid_at'           => now(),
-            ]);
 
-            // Trigger fulfillment (reuse VerifyPaymentAction's fulfill logic)
-            $this->fulfillPayable($payment);
+            // Idempotent: only mark paid + fulfil once.
+            if ($payment->status !== PaymentStatus::Success) {
+                $payment->update([
+                    'status'            => PaymentStatus::Success,
+                    'gateway_reference' => 'BT-' . $proof->id,
+                    'paid_at'           => now(),
+                ]);
+
+                // Canonical fulfilment — opens escrow, credits wallet fundings,
+                // activates subscriptions, decrements stock, records affiliate
+                // conversions, etc. (shared with gateway verification).
+                $this->fulfill->execute($payment->fresh());
+            }
 
             return $payment->fresh();
         });
@@ -48,35 +54,5 @@ class ApproveBankTransferAction
 
             $proof->payment->update(['status' => PaymentStatus::Failed, 'failed_at' => now()]);
         });
-    }
-
-    private function fulfillPayable(Payment $payment): void
-    {
-        // Delegate to VerifyPaymentAction's private fulfillment by re-using the same logic
-        // We mark as already verified so the gateway call is skipped
-        $payment->update(['status' => PaymentStatus::Success]);
-        $payable = $payment->payable;
-
-        if (!$payable) return;
-
-        if ($payable instanceof \App\Models\Order) {
-            $payable->update([
-                'payment_status'    => PaymentStatus::Success,
-                'status'            => \App\Enums\OrderStatus::Paid,
-                'payment_reference' => $payment->gateway_reference,
-                'payment_method'    => 'bank_transfer',
-                'paid_at'           => now(),
-            ]);
-        } elseif ($payable instanceof \App\Models\ServiceOrder) {
-            $payable->update([
-                'payment_status'    => PaymentStatus::Success,
-                'status'            => \App\Enums\ServiceOrderStatus::Active,
-                'payment_reference' => $payment->gateway_reference,
-                'payment_method'    => 'bank_transfer',
-                'paid_at'           => now(),
-            ]);
-        } elseif ($payable instanceof \App\Models\ConsultationSession) {
-            $payable->update(['payment_status' => PaymentStatus::Success, 'paid_at' => now()]);
-        }
     }
 }

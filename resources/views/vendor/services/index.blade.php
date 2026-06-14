@@ -40,7 +40,7 @@
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <img src="{{ $service->thumbnail_url }}"
-                                         class="rounded" style="width:48px;height:48px;object-fit:cover;">
+                                         class="rounded bg-light border" style="width:48px;height:48px;object-fit:contain;">
                                     <span class="fw-semibold">{{ Str::limit($service->title, 50) }}</span>
                                 </div>
                             </td>

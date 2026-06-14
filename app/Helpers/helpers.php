@@ -60,3 +60,19 @@ if (! function_exists('settings')) {
         });
     }
 }
+
+if (! function_exists('media_url')) {
+    /**
+     * Public URL for a stored media path, resolved through the configured disk
+     * so it works under both the local 'public' disk and Amazon S3. Returns the
+     * given fallback when the path is empty.
+     */
+    function media_url(?string $path, ?string $fallback = null): ?string
+    {
+        if (empty($path)) {
+            return $fallback;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+    }
+}

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Products;
 
+use App\Actions\Products\Concerns\SyncsPhysicalProduct;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\ProductFile;
@@ -12,9 +13,13 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateProductAction
 {
+    use SyncsPhysicalProduct;
+
     public function execute(Product $product, array $data): Product
     {
         return DB::transaction(function () use ($product, $data) {
+            $isPhysical = $product->isPhysical();
+
             $thumbnail = $product->thumbnail;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {
                 if ($thumbnail) {
@@ -27,17 +32,18 @@ class UpdateProductAction
                 && (isset($data['price']) || isset($data['name']) || isset($data['files']));
 
             $product->update([
-                'category_id'        => $data['category_id'] ?? $product->category_id,
+                'category_id'        => $isPhysical ? null : ($data['category_id'] ?? $product->category_id),
+                'physical_category_id' => $isPhysical ? ($data['physical_category_id'] ?? $product->physical_category_id) : null,
                 'name'               => $data['name'] ?? $product->name,
                 'short_description'  => $data['short_description'] ?? $product->short_description,
                 'description'        => $data['description'] ?? $product->description,
-                'type'               => $data['type'] ?? $product->type,
+                'type'               => $isPhysical ? $product->type : ($data['type'] ?? $product->type),
                 'price'              => isset($data['price']) ? to_kobo($data['price']) : $product->price,
                 'compare_price'      => isset($data['compare_price']) ? to_kobo($data['compare_price']) : $product->compare_price,
                 'thumbnail'          => $thumbnail,
                 'preview_url'        => $data['preview_url'] ?? $product->preview_url,
-                'download_limit'     => $data['download_limit'] ?? $product->download_limit,
-                'download_expiry_hours' => $data['download_expiry_hours'] ?? $product->download_expiry_hours,
+                'download_limit'     => $isPhysical ? null : ($data['download_limit'] ?? $product->download_limit),
+                'download_expiry_hours' => $isPhysical ? ($product->download_expiry_hours ?? 48) : ($data['download_expiry_hours'] ?? $product->download_expiry_hours),
                 'status'             => $needsReview ? ProductStatus::Pending : $product->status,
                 'seo_title'          => $data['seo_title'] ?? $product->seo_title,
                 'seo_description'    => $data['seo_description'] ?? $product->seo_description,
@@ -58,6 +64,12 @@ class UpdateProductAction
                         ]);
                     }
                 }
+            }
+
+            if ($isPhysical) {
+                $this->syncPhysical($product, $data);
+
+                return $product->fresh(['physicalCategory', 'secondaryPhysicalCategories', 'tags', 'gallery', 'physicalDetail', 'variants']);
             }
 
             if (!empty($data['files'])) {

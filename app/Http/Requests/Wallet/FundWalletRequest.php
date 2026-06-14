@@ -15,6 +15,7 @@ class FundWalletRequest extends FormRequest
     {
         return [
             'amount' => ['required', 'numeric', 'min:500', 'max:10000000'],
+            'method' => ['nullable', 'in:paystack,bank_transfer'],
         ];
     }
 

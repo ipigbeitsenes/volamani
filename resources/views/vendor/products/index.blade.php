@@ -40,8 +40,8 @@
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <img src="{{ $product->thumbnail_url }}"
-                                         class="rounded"
-                                         style="width:48px;height:48px;object-fit:cover;"
+                                         class="rounded bg-light border"
+                                         style="width:48px;height:48px;object-fit:contain;"
                                          alt="{{ $product->name }}">
                                     <div>
                                         <div class="fw-semibold">{{ Str::limit($product->name, 45) }}</div>
@@ -55,6 +55,11 @@
                                 <span class="badge bg-{{ $product->status->badge() }}">
                                     {{ $product->status->label() }}
                                 </span>
+                                @if($product->isPromoted())
+                                    <span class="badge bg-warning text-dark" title="Featured until {{ $product->featured_until->format('d M Y') }}">
+                                        <i class="bi bi-star-fill"></i> Featured
+                                    </span>
+                                @endif
                             </td>
                             <td>{{ number_format($product->sales_count) }}</td>
                             <td>
@@ -84,6 +89,17 @@
                                                 <i class="bi bi-pencil me-2"></i>Edit
                                             </a>
                                         </li>
+                                        @if($product->isActive())
+                                            <li>
+                                                <form action="{{ route('vendor.products.promote', $product->id) }}" method="POST"
+                                                      onsubmit="return confirm('Promote this product for {{ config('payment.promotion.days') }} days for {{ money(config('payment.promotion.fee')) }}? The fee is charged from your wallet.')">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item">
+                                                        <i class="bi bi-star me-2 text-warning"></i>{{ $product->isPromoted() ? 'Extend Promotion' : 'Promote' }} ({{ money(config('payment.promotion.fee')) }})
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        @endif
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <form action="{{ route('vendor.products.destroy', $product->id) }}"

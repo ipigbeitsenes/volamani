@@ -117,9 +117,7 @@ class FreelanceService extends Model
 
     public function getThumbnailUrlAttribute(): string
     {
-        return $this->thumbnail
-            ? asset('storage/' . $this->thumbnail)
-            : asset('images/placeholder.svg');
+        return media_url($this->thumbnail, asset('images/placeholder.svg'));
     }
 
     public function incrementViews(): void

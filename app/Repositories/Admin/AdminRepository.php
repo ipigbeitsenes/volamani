@@ -9,6 +9,7 @@ use App\Enums\Status;
 use App\Enums\WithdrawalStatus;
 use App\Models\BankTransferProof;
 use App\Models\Dispute;
+use App\Models\Escrow;
 use App\Models\KYCVerification;
 use App\Models\Order;
 use App\Models\Payment;
@@ -39,9 +40,42 @@ class AdminRepository
                 'products'       => Product::where('status', ProductStatus::Pending)->count(),
                 'disputes'       => Dispute::whereIn('status', ['open', 'under_review', 'awaiting_response', 'escalated'])->count(),
                 'bank_transfers' => BankTransferProof::where('status', 'pending')->count(),
+                'returns'        => \App\Models\ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
+                'category_requests' => \App\Models\CategoryRequest::where('status', 'pending')->count(),
             ],
             'recent_users'    => User::latest()->limit(6)->get(),
             'recent_payments' => Payment::with('user')->latest()->limit(6)->get(),
+        ];
+    }
+
+    /** Support-team dashboard: work queues + recent items. */
+    public function supportQueues(): array
+    {
+        $openStatuses = ['open', 'under_review', 'awaiting_response', 'escalated'];
+
+        return [
+            'disputes_open'   => Dispute::whereIn('status', $openStatuses)->count(),
+            'disputes_today'  => Dispute::whereDate('created_at', today())->count(),
+            'returns_pending' => \App\Models\ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
+            'kyc_pending'     => KYCVerification::where('status', KYCStatus::Pending)->count(),
+            'recent_disputes' => Dispute::with(['buyer', 'vendor'])->latest()->limit(6)->get(),
+            'recent_returns'  => \App\Models\ReturnRequest::with(['buyer', 'vendor'])->latest()->limit(6)->get(),
+            'recent_kyc'      => KYCVerification::with('user')->where('status', KYCStatus::Pending)->latest()->limit(6)->get(),
+        ];
+    }
+
+    /** Finance-team dashboard: money headline figures + queues + recent items. */
+    public function financeStats(): array
+    {
+        return [
+            'gross_revenue'      => (int) Payment::where('status', PaymentStatus::Success)->sum('amount'),
+            'escrow_held'        => (int) Escrow::whereIn('status', ['holding', 'partially_released'])
+                                        ->sum(DB::raw('vendor_earnings - released_amount')),
+            'withdrawals_pending'      => WalletWithdrawal::where('status', WithdrawalStatus::Pending)->count(),
+            'withdrawals_pending_sum'  => (int) WalletWithdrawal::where('status', WithdrawalStatus::Pending)->sum('amount'),
+            'bank_transfers'     => BankTransferProof::where('status', 'pending')->count(),
+            'recent_withdrawals' => WalletWithdrawal::with('user')->latest()->limit(6)->get(),
+            'recent_payments'    => Payment::with('user')->latest()->limit(6)->get(),
         ];
     }
 

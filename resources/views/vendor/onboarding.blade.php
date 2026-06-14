@@ -62,7 +62,34 @@
                             @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
+                        {{-- Store focus — what the store primarily sells --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-medium small">What will you sell? <span class="text-danger">*</span></label>
+                            <div class="row g-2">
+                                @foreach(\App\Enums\StoreFocus::cases() as $focus)
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="store_focus" id="focus_{{ $focus->value }}"
+                                           value="{{ $focus->value }}" {{ old('store_focus', 'digital') === $focus->value ? 'checked' : '' }} required>
+                                    <label class="btn btn-outline-primary w-100 text-start py-2" for="focus_{{ $focus->value }}">
+                                        <i class="bi {{ $focus->icon() }} d-block mb-1"></i>
+                                        <span class="small">{{ $focus->label() }}</span>
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                            @error('store_focus')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
                         <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Store Type <span class="text-danger">*</span></label>
+                                <select name="store_type" class="form-select @error('store_type') is-invalid @enderror" required>
+                                    @foreach(\App\Enums\StoreType::cases() as $type)
+                                        <option value="{{ $type->value }}" {{ old('store_type', 'individual') === $type->value ? 'selected' : '' }}>{{ $type->label() }}</option>
+                                    @endforeach
+                                </select>
+                                @error('store_type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-medium small">Category</label>
                                 <select name="category" class="form-select @error('category') is-invalid @enderror">

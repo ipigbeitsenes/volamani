@@ -25,6 +25,12 @@ class StorefrontSettingsController extends Controller
         $vendor = $request->user()->vendor;
         $data   = $request->safe()->except(['logo', 'banner']);
 
+        // Shipping amounts are entered in naira; persist in kobo.
+        $data['shipping_fee'] = isset($data['shipping_fee']) ? to_kobo($data['shipping_fee']) : 0;
+        $data['free_shipping_threshold'] = (isset($data['free_shipping_threshold']) && $data['free_shipping_threshold'] !== null && $data['free_shipping_threshold'] !== '')
+            ? to_kobo($data['free_shipping_threshold'])
+            : null;
+
         $this->vendorService->updateStorefront(
             $vendor,
             $data,
@@ -33,6 +39,30 @@ class StorefrontSettingsController extends Controller
         );
 
         $this->flashSuccess('Storefront updated successfully.');
+
+        return back();
+    }
+
+    /** Quick logo/banner update (e.g. from the vendor dashboard). */
+    public function updateBranding(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'logo'   => ['nullable', 'image', 'max:2048'],
+            'banner' => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        if (! $request->hasFile('logo') && ! $request->hasFile('banner')) {
+            return back()->with('error', 'Choose a logo or banner image to upload.');
+        }
+
+        $this->vendorService->updateStorefront(
+            $request->user()->vendor,
+            [],
+            $request->file('logo'),
+            $request->file('banner'),
+        );
+
+        $this->flashSuccess('Store branding updated.');
 
         return back();
     }

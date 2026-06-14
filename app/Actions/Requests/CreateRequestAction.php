@@ -21,8 +21,12 @@ class CreateRequestAction
             }
         }
 
+        // A request aimed at a specific vendor is private (only they see/quote it).
+        $vendorId = !empty($data['vendor_id']) ? (int) $data['vendor_id'] : null;
+
         return ProductRequest::create([
             'buyer_id'    => $buyer->id,
+            'vendor_id'   => $vendorId,
             'category_id' => $data['category_id'] ?? null,
             'title'       => $data['title'],
             'description' => $data['description'],
@@ -31,7 +35,7 @@ class CreateRequestAction
             'attachments' => $attachments ?: null,
             'deadline_at' => !empty($data['deadline_at']) ? $data['deadline_at']          : null,
             'status'      => RequestStatus::Open,
-            'is_public'   => $data['is_public'] ?? true,
+            'is_public'   => $vendorId ? false : ($data['is_public'] ?? true),
             'location'    => $data['location'] ?? null,
         ]);
     }

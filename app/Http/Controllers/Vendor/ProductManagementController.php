@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\CreateProductRequest;
 use App\Http\Requests\Products\UpdateProductRequest;
+use App\Models\PhysicalCategory;
 use App\Models\ProductFile;
 use App\Models\ProductGallery;
 use App\Repositories\Products\CategoryRepository;
@@ -30,8 +31,9 @@ class ProductManagementController extends Controller
 
     public function create()
     {
-        $categories = $this->categoryRepo->allForSelect();
-        return view('vendor.products.create', compact('categories'));
+        $categories         = $this->categoryRepo->allForSelect();
+        $physicalCategories = PhysicalCategory::active()->with(['children' => fn ($q) => $q->active()->orderBy('name')])->roots()->orderBy('name')->get();
+        return view('vendor.products.create', compact('categories', 'physicalCategories'));
     }
 
     public function store(CreateProductRequest $request)
@@ -50,8 +52,10 @@ class ProductManagementController extends Controller
 
         abort_unless($product->vendor_id === $vendor->id, 403);
 
-        $categories = $this->categoryRepo->allForSelect();
-        return view('vendor.products.edit', compact('product', 'categories'));
+        $product->load(['physicalDetail', 'variants', 'secondaryPhysicalCategories']);
+        $categories         = $this->categoryRepo->allForSelect();
+        $physicalCategories = PhysicalCategory::active()->with(['children' => fn ($q) => $q->active()->orderBy('name')])->roots()->orderBy('name')->get();
+        return view('vendor.products.edit', compact('product', 'categories', 'physicalCategories'));
     }
 
     public function update(UpdateProductRequest $request, int $id)
@@ -73,6 +77,23 @@ class ProductManagementController extends Controller
         $this->productService->archiveProduct($product);
         $this->flashSuccess('Product archived.');
         return redirect()->route('vendor.products.index');
+    }
+
+    public function promote(Request $request, int $id)
+    {
+        $vendor  = $request->user()->vendor;
+        $product = $this->productRepo->findOrFail($id);
+
+        abort_unless($product->vendor_id === $vendor->id, 403);
+
+        try {
+            $until = $this->productService->promoteProduct($product, $request->user());
+            $this->flashSuccess('Product promoted — it will be featured until ' . $until->format('d M Y') . '.');
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+            $this->flashError($e->getMessage());
+        }
+
+        return back();
     }
 
     public function deleteGalleryImage(Request $request, int $imageId)

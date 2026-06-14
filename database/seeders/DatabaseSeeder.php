@@ -12,8 +12,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             AdminUserSeeder::class,
+            StaffSeeder::class,
             SettingsSeeder::class,
             ProductCategorySeeder::class,
+            PhysicalCategorySeeder::class,
+            ServiceCategorySeeder::class,
             PricingTemplateSeeder::class,
             SubscriptionPlanSeeder::class,
         ]);
@@ -24,6 +27,7 @@ class DatabaseSeeder extends Seeder
                 DemoUserSeeder::class,
                 DemoVendorSeeder::class,
                 DemoProductSeeder::class,
+                DemoPhysicalProductSeeder::class,
                 DemoServiceSeeder::class,
                 DemoConsultantSeeder::class,
                 DemoProductRequestSeeder::class,

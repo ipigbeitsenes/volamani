@@ -81,9 +81,9 @@ class WalletService
         });
     }
 
-    public function initiateFunding(User $user, int $amountKobo): array
+    public function initiateFunding(User $user, int $amountKobo, string $method = 'paystack'): array
     {
-        return $this->fundAction->execute($user, $amountKobo);
+        return $this->fundAction->execute($user, $amountKobo, $method);
     }
 
     public function completeFunding(WalletFunding $funding): void

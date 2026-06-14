@@ -48,8 +48,6 @@ class ProductCategory extends Model
 
     public function getImageUrlAttribute(): string
     {
-        return $this->image
-            ? asset('storage/' . $this->image)
-            : '';
+        return media_url($this->image, '');
     }
 }

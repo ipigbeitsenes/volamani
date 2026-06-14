@@ -15,9 +15,9 @@ class FundWalletAction
      * PaymentService → VerifyPaymentAction → WalletService. Eager injection here
      * makes the container recurse forever (OOM) whenever WalletService is built.
      */
-    public function execute(User $user, int $amountKobo): array
+    public function execute(User $user, int $amountKobo, string $method = 'paystack'): array
     {
-        return DB::transaction(function () use ($user, $amountKobo) {
+        return DB::transaction(function () use ($user, $amountKobo, $method) {
             $wallet  = $user->wallet;
             abort_if(!$wallet, 500, 'User wallet not found.');
 
@@ -28,7 +28,18 @@ class FundWalletAction
                 'status'    => 'pending',
             ]);
 
-            $result = app(PaymentService::class)->initiatePaystackPayment(
+            $payments = app(PaymentService::class);
+
+            // Bank transfer: pending payment the buyer proves and an admin
+            // approves → wallet credited on approval (no live gateway needed).
+            if ($method === 'bank_transfer') {
+                $result = $payments->initiateBankTransferPayment($user, $amountKobo, $funding);
+                $funding->update(['payment_id' => $result['payment']->id]);
+
+                return ['funding' => $funding, 'redirect' => route('checkout.bank-transfer', $result['payment'])];
+            }
+
+            $result = $payments->initiatePaystackPayment(
                 $user,
                 $amountKobo,
                 $funding,
@@ -37,7 +48,7 @@ class FundWalletAction
 
             $funding->update(['payment_id' => $result['payment']->id]);
 
-            return ['funding' => $funding, 'authorization_url' => $result['authorization_url']];
+            return ['funding' => $funding, 'redirect' => $result['authorization_url']];
         });
     }
 }

@@ -85,6 +85,13 @@ class FulfillPaymentAction
 
         $order = $order->fresh();
         $this->escrowService->holdForPayable($order, $payment);
+
+        if ($order->requires_shipping) {
+            // Physical: draw down inventory; nothing to download.
+            app(\App\Actions\Products\DecrementStockAction::class)->execute($order);
+            return;
+        }
+
         $this->notifyDownloadsReady($order);
     }
 

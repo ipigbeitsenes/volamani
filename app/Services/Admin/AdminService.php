@@ -37,6 +37,16 @@ class AdminService
         return $this->repo->revenueByDay($days);
     }
 
+    public function supportQueues(): array
+    {
+        return $this->repo->supportQueues();
+    }
+
+    public function financeStats(): array
+    {
+        return $this->repo->financeStats();
+    }
+
     public function users(array $filters = [], int $perPage = 20)
     {
         return $this->repo->users($filters, $perPage);

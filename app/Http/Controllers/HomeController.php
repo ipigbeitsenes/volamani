@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\View\View;
 
@@ -18,6 +19,11 @@ class HomeController extends Controller
             $stats = ['vendors' => 0, 'buyers' => 0];
         }
 
-        return view('home', compact('stats'));
+        $plans = SubscriptionPlan::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('price')
+            ->get();
+
+        return view('home', compact('stats', 'plans'));
     }
 }

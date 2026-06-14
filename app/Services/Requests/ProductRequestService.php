@@ -6,11 +6,13 @@ use App\Actions\Requests\AcceptQuotationAction;
 use App\Actions\Requests\CloseRequestAction;
 use App\Actions\Requests\CreateRequestAction;
 use App\Actions\Requests\SubmitQuotationAction;
+use App\Enums\NotificationCategory;
 use App\Models\ProductRequest;
 use App\Models\ProductRequestQuotation;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\BaseService;
+use App\Services\Notifications\NotificationService;
 
 class ProductRequestService extends BaseService
 {
@@ -19,11 +21,26 @@ class ProductRequestService extends BaseService
         private SubmitQuotationAction $submitAction,
         private AcceptQuotationAction $acceptAction,
         private CloseRequestAction    $closeAction,
+        private NotificationService   $notifications,
     ) {}
 
     public function createRequest(User $buyer, array $data): ProductRequest
     {
-        return $this->createAction->execute($buyer, $data);
+        $request = $this->createAction->execute($buyer, $data);
+
+        // Direct request → notify the targeted vendor.
+        if ($request->vendor_id && $request->vendor?->user) {
+            $this->notifications->send(
+                $request->vendor->user,
+                NotificationCategory::Orders,
+                'New direct request',
+                "{$buyer->name} sent your store a request: \"{$request->title}\". Send a quotation.",
+                route('marketplace.requests.show', $request->id),
+                'View request',
+            );
+        }
+
+        return $request;
     }
 
     public function submitQuotation(ProductRequest $request, Vendor $vendor, array $data): ProductRequestQuotation

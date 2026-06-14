@@ -8,12 +8,29 @@
         <a href="{{ route('marketplace.requests.index') }}" class="text-muted text-decoration-none small">
             <i class="bi bi-arrow-left me-1"></i> Browse Requests
         </a>
-        <h4 class="fw-bold mb-0 mt-1">Post a Request</h4>
-        <p class="text-muted small">Describe what you need and let vendors come to you with their best offers.</p>
+        <h4 class="fw-bold mb-0 mt-1">{{ $targetVendor ? 'Request from ' . $targetVendor->business_name : 'Post a Request' }}</h4>
+        <p class="text-muted small">
+            {{ $targetVendor
+                ? 'This request goes directly to this seller — only they can see and respond to it.'
+                : 'Describe what you need and let vendors come to you with their best offers.' }}
+        </p>
     </div>
+
+    @if($targetVendor)
+        <div class="alert alert-primary d-flex align-items-center gap-3">
+            <img src="{{ $targetVendor->logo_url }}" class="rounded bg-white border" width="44" height="44" style="object-fit:contain;padding:2px" alt="">
+            <div>
+                <div class="fw-semibold">Sending directly to {{ $targetVendor->business_name }}</div>
+                <div class="small">Prefer to hear from multiple sellers? <a href="{{ route('requests.create') }}">Post it to the open board instead</a>.</div>
+            </div>
+        </div>
+    @endif
 
     <form action="{{ route('requests.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @if($targetVendor)
+            <input type="hidden" name="vendor_id" value="{{ $targetVendor->id }}">
+        @endif
 
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white fw-semibold">What do you need?</div>
@@ -107,6 +124,7 @@
             </div>
         </div>
 
+        @unless($targetVendor)
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white fw-semibold">Visibility</div>
             <div class="card-body">
@@ -119,6 +137,7 @@
                 </div>
             </div>
         </div>
+        @endunless
 
         <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary px-4">

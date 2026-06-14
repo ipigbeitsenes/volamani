@@ -60,8 +60,13 @@ class AffiliateService
         return $this->signupAction->execute($newUser);
     }
 
-    /** Hook: a payment succeeded — reward the buyer's referrer if applicable. */
-    public function recordConversion(Payment $payment): ?AffiliateCommission
+    /**
+     * Hook: a payment succeeded — reward the buyer's referrer AND the vendor's
+     * referrer a share of the platform commission.
+     *
+     * @return AffiliateCommission[]
+     */
+    public function recordConversion(Payment $payment): array
     {
         return $this->conversionAction->execute($payment);
     }

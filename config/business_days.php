@@ -24,6 +24,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Physical return window (calendar days)
+    |--------------------------------------------------------------------------
+    | A buyer may request a return for a PHYSICAL order this many days after it
+    | is marked delivered — provided the funds are still held in escrow (i.e.
+    | the buyer hasn't already confirmed receipt and the funds haven't
+    | auto-released). Opening a return freezes the escrow auto-release.
+    */
+    'return_window_days' => 7,
+
+    /*
+    |--------------------------------------------------------------------------
     | Nigerian public holidays
     |--------------------------------------------------------------------------
     | 'annual' entries (format m-d) recur every year. 'dates' entries

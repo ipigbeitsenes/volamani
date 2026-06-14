@@ -29,6 +29,24 @@ class VendorOrderController extends Controller
         return view('vendor.orders.show', compact('order'));
     }
 
+    public function markShipped(Request $request, Order $order): RedirectResponse
+    {
+        $this->authorizeVendor($order);
+
+        $data = $request->validate([
+            'tracking_number' => ['nullable', 'string', 'max:120'],
+            'courier'         => ['nullable', 'string', 'max:120'],
+        ]);
+
+        if ($this->orders->markShipped($order, $data['tracking_number'] ?? null, $data['courier'] ?? null)) {
+            $this->flashSuccess('Order marked as shipped. The buyer has been notified.');
+        } else {
+            $this->flashError('This order cannot be marked as shipped.');
+        }
+
+        return back();
+    }
+
     public function markDelivered(Order $order): RedirectResponse
     {
         $this->authorizeVendor($order);

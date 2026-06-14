@@ -13,3 +13,6 @@ Schedule::command('escrow:auto-release')->hourly();
 
 // Renew due subscriptions from the vendor wallet and expire lapsed ones.
 Schedule::command('subscriptions:process')->dailyAt('02:00');
+
+// Un-feature products whose paid promotion has elapsed.
+Schedule::command('products:expire-promotions')->hourly();

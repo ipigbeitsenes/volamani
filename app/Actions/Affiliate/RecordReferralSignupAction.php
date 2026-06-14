@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class RecordReferralSignupAction
 {
-    public function __construct(private ApproveCommissionAction $approveAction) {}
+    public function __construct(
+        private ApproveCommissionAction $approveAction,
+        private EnrollAffiliateAction   $enrollAction,
+    ) {}
 
     /**
      * When a newly registered user was referred (users.referred_by) and the
@@ -33,8 +36,10 @@ class RecordReferralSignupAction
             return null;
         }
 
-        $account = $referrer->affiliateAccount;
-        if (! $account || $account->status !== AffiliateStatus::Active) {
+        // Any user who refers someone earns — auto-enrol them into the affiliate
+        // program so the referral (and future commissions) are always tracked.
+        $account = $this->enrollAction->execute($referrer);
+        if ($account->status !== AffiliateStatus::Active) {
             return null;
         }
 

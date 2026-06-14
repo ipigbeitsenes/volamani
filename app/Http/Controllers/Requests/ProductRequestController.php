@@ -33,7 +33,10 @@ class ProductRequestController extends Controller
         $productRequest = $this->requestRepo->findWithQuotations($id);
         abort_if(!$productRequest, 404);
 
-        if (!$productRequest->is_public && $productRequest->buyer_id !== auth()->id()) {
+        // Private (direct) requests: only the buyer and the targeted vendor may view.
+        if (!$productRequest->is_public
+            && $productRequest->buyer_id !== auth()->id()
+            && $productRequest->vendor_id !== auth()->user()?->vendor?->id) {
             abort(403);
         }
 
@@ -52,10 +55,14 @@ class ProductRequestController extends Controller
         ));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $categories = $this->categoryRepo->allForSelect();
-        return view('marketplace.requests.create', compact('categories'));
+        $categories   = $this->categoryRepo->allForSelect();
+        $targetVendor = $request->filled('vendor')
+            ? \App\Models\Vendor::with('user')->find($request->integer('vendor'))
+            : null;
+
+        return view('marketplace.requests.create', compact('categories', 'targetVendor'));
     }
 
     public function store(CreateProductRequestRequest $request)
@@ -65,7 +72,10 @@ class ProductRequestController extends Controller
             $request->validated()
         );
 
-        $this->flashSuccess('Request posted! Vendors will start submitting quotations shortly.');
+        $this->flashSuccess($productRequest->isDirect()
+            ? 'Request sent directly to the seller. You\'ll be notified when they respond.'
+            : 'Request posted! Vendors will start submitting quotations shortly.');
+
         return redirect()->route('marketplace.requests.show', $productRequest->id);
     }
 

@@ -37,6 +37,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'settings.manage',
             // Commissions
             'commissions.manage',
+            // Returns / RMA
+            'returns.manage',
+            // Escrow
+            'escrows.manage',
+            // Payments (read / offline approval)
+            'payments.view',
         ];
 
         foreach ($permissions as $permission) {
@@ -45,8 +51,18 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // ── Roles ────────────────────────────────────────────────────────────
 
+        // Capabilities reserved for super-admin only. A regular admin gets
+        // every other permission; the super-admin role (seeded in
+        // AdminUserSeeder) holds Permission::all().
+        $superAdminOnly = [
+            'users.manage',                          // managing users / other admins
+            'withdrawals.approve', 'withdrawals.reject', // payout approvals
+            'commissions.manage',                    // commission rates
+            'settings.manage',                       // platform settings
+        ];
+
         $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $admin->syncPermissions(Permission::all());
+        $admin->syncPermissions(Permission::all()->whereNotIn('name', $superAdminOnly));
 
         $moderator = Role::firstOrCreate(['name' => 'moderator', 'guard_name' => 'web']);
         $moderator->syncPermissions([
@@ -77,6 +93,27 @@ class RolesAndPermissionsSeeder extends Seeder
             'wallet.view', 'wallet.fund', 'wallet.withdraw',
             'kyc.view', 'kyc.submit',
             'disputes.create', 'disputes.view',
+        ]);
+
+        // Support team — handles buyer/vendor issues: support tickets (disputes),
+        // returns/RMA, and KYC verification.
+        $support = Role::firstOrCreate(['name' => 'support', 'guard_name' => 'web']);
+        $support->syncPermissions([
+            'disputes.view', 'disputes.resolve',
+            'returns.manage',
+            'kyc.view', 'kyc.approve', 'kyc.reject',
+            'users.view',
+        ]);
+
+        // Finance team — handles money movement: payments, withdrawals/payouts,
+        // escrow release/refund, and commission rates.
+        $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);
+        $finance->syncPermissions([
+            'payments.view',
+            'withdrawals.approve', 'withdrawals.reject',
+            'escrows.manage',
+            'commissions.manage',
+            'wallet.view',
         ]);
 
         $consultant = Role::firstOrCreate(['name' => 'consultant', 'guard_name' => 'web']);

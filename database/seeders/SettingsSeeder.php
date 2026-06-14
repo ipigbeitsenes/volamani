@@ -15,7 +15,22 @@ class SettingsSeeder extends Seeder
             ['key' => 'site_tagline',     'value' => "Africa's Digital Business Ecosystem", 'type' => 'string', 'group' => 'general', 'label' => 'Tagline'],
             ['key' => 'support_email',    'value' => 'support@volamani.com',        'type' => 'string',  'group' => 'general', 'label' => 'Support Email'],
             ['key' => 'support_phone',    'value' => '+234 000 000 0000',           'type' => 'string',  'group' => 'general', 'label' => 'Support Phone'],
+            ['key' => 'currency_symbol',  'value' => '₦',                           'type' => 'string',  'group' => 'general', 'label' => 'Currency Symbol'],
+            ['key' => 'social_facebook',  'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Facebook URL'],
+            ['key' => 'social_instagram', 'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Instagram URL'],
+            ['key' => 'social_twitter',   'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'X / Twitter URL'],
             ['key' => 'maintenance_mode', 'value' => '0',                           'type' => 'boolean', 'group' => 'general', 'label' => 'Maintenance Mode'],
+            ['key' => 'registration_enabled', 'value' => '1',                       'type' => 'boolean', 'group' => 'general', 'label' => 'New Registrations Enabled'],
+
+            // Storage
+            ['key' => 'storage_driver', 'value' => 'local', 'type' => 'string',  'group' => 'storage', 'label' => 'Storage Driver'],
+            ['key' => 's3_key',         'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'AWS Access Key ID'],
+            ['key' => 's3_secret',      'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'AWS Secret Access Key'],
+            ['key' => 's3_region',      'value' => 'us-east-1', 'type' => 'string', 'group' => 'storage', 'label' => 'AWS Region'],
+            ['key' => 's3_bucket',      'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'S3 Bucket'],
+            ['key' => 's3_url',         'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'S3 Public URL (CDN, optional)'],
+            ['key' => 's3_endpoint',    'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'S3 Endpoint (optional, for S3-compatible)'],
+            ['key' => 's3_path_style',  'value' => '0',     'type' => 'boolean', 'group' => 'storage', 'label' => 'Use Path-Style Endpoint'],
 
             // Finance
             ['key' => 'platform_commission',   'value' => '10',  'type' => 'integer', 'group' => 'finance', 'label' => 'Platform Commission (%)'],

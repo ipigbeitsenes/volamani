@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
             Route::get('/{product}/edit', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'edit'])->name('edit');
             Route::put('/{product}', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'update'])->name('update');
             Route::delete('/{product}', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'destroy'])->name('destroy');
+            Route::post('/{product}/promote', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'promote'])->name('promote');
             Route::delete('/gallery/{image}', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'deleteGalleryImage'])->name('gallery.delete');
             Route::delete('/files/{file}', [\App\Http\Controllers\Vendor\ProductManagementController::class, 'deleteFile'])->name('files.delete');
         });
@@ -47,8 +48,17 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'index'])->name('index');
             Route::get('/{order}', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'show'])->name('show');
+            Route::post('/{order}/ship', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'markShipped'])->name('ship');
             Route::post('/{order}/deliver', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'markDelivered'])->name('deliver');
             Route::post('/{order}/upload', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'uploadDeliverable'])->name('upload');
+        });
+
+        // Returns / RMA received
+        Route::prefix('returns')->name('returns.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'index'])->name('index');
+            Route::post('/{return}/approve', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'approve'])->name('approve');
+            Route::post('/{return}/reject', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'reject'])->name('reject');
+            Route::post('/{return}/confirm', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'confirm'])->name('confirm');
         });
 
         // Quotations for product requests
@@ -101,6 +111,13 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
         // Storefront settings
         Route::get('/storefront', [\App\Http\Controllers\Vendor\StorefrontSettingsController::class, 'index'])->name('storefront');
         Route::put('/storefront', [\App\Http\Controllers\Vendor\StorefrontSettingsController::class, 'update'])->name('storefront.update');
+        Route::post('/storefront/branding', [\App\Http\Controllers\Vendor\StorefrontSettingsController::class, 'updateBranding'])->name('storefront.branding');
+
+        // Custom category requests
+        Route::prefix('category-requests')->name('category-requests.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Vendor\CategoryRequestController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\Vendor\CategoryRequestController::class, 'store'])->name('store');
+        });
 
         // KYC
         Route::prefix('kyc')->name('kyc.')->group(function () {

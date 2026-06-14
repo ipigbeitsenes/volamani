@@ -40,6 +40,6 @@ class BankTransferProof extends Model
 
     public function proofUrl(): ?string
     {
-        return $this->proof_file ? asset('storage/' . $this->proof_file) : null;
+        return media_url($this->proof_file);
     }
 }

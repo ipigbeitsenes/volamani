@@ -2,8 +2,8 @@
     <a href="{{ route('marketplace.services.show', $service->slug) }}">
         <img src="{{ $service->thumbnail_url }}"
              alt="{{ $service->title }}"
-             class="card-img-top"
-             style="height: 180px; object-fit: cover;">
+             class="card-img-top bg-light"
+             style="height: 180px; object-fit: contain;">
     </a>
 
     <div class="card-body d-flex flex-column">

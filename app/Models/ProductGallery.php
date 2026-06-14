@@ -18,6 +18,6 @@ class ProductGallery extends Model
 
     public function getUrlAttribute(): string
     {
-        return asset('storage/' . $this->path);
+        return media_url($this->path, '');
     }
 }

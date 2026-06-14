@@ -29,6 +29,8 @@ class Vendor extends Model
         'city',
         'state',
         'category',
+        'store_type',
+        'store_focus',
         'status',
         'is_featured',
         'views_count',
@@ -38,6 +40,9 @@ class Vendor extends Model
         'verified_at',
         'commission_rate',
         'plan',
+        'shipping_fee',
+        'free_shipping_threshold',
+        'ships_to',
         'average_rating',
         'reviews_count',
         'trust_score',
@@ -52,6 +57,10 @@ class Vendor extends Model
             'approved_at'    => 'datetime',
             'verified_at'    => 'datetime',
             'status'         => Status::class,
+            'store_type'     => \App\Enums\StoreType::class,
+            'store_focus'    => \App\Enums\StoreFocus::class,
+            'shipping_fee'   => 'integer',
+            'free_shipping_threshold' => 'integer',
             'average_rating' => 'float',
             'trust_score'    => 'integer',
             'followers_count' => 'integer',
@@ -127,6 +136,11 @@ class Vendor extends Model
         return $this->hasMany(Follow::class);
     }
 
+    public function categoryRequests(): HasMany
+    {
+        return $this->hasMany(CategoryRequest::class)->latest();
+    }
+
     /** Users who follow this store — recipients for new-listing announcements. */
     public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -170,18 +184,40 @@ class Vendor extends Model
         return $this->verified_at !== null;
     }
 
+    public function sellsPhysical(): bool
+    {
+        return (bool) $this->store_focus?->sellsPhysical();
+    }
+
+    public function sellsDigital(): bool
+    {
+        return (bool) $this->store_focus?->sellsDigital();
+    }
+
+    public function sellsServices(): bool
+    {
+        return (bool) $this->store_focus?->sellsServices();
+    }
+
+    /** Flat shipping fee (kobo) for an order of the given item subtotal — 0 if the free-shipping threshold is met. */
+    public function shippingFeeFor(int $subtotalKobo): int
+    {
+        if ($this->free_shipping_threshold !== null && $subtotalKobo >= $this->free_shipping_threshold) {
+            return 0;
+        }
+
+        return (int) ($this->shipping_fee ?? 0);
+    }
+
     public function getLogoUrlAttribute(): string
     {
-        return $this->logo
-            ? asset('storage/' . $this->logo)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($this->business_name) . '&size=80&background=1a56db&color=fff';
+        return media_url($this->logo)
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->business_name) . '&size=80&background=1a56db&color=fff';
     }
 
     public function getBannerUrlAttribute(): string
     {
-        return $this->banner
-            ? asset('storage/' . $this->banner)
-            : '';
+        return media_url($this->banner, '');
     }
 
     public function getStorefrontUrlAttribute(): string

@@ -16,6 +16,15 @@ class DashboardController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
+        // Internal staff teams land on their own consoles.
+        if ($user->hasRole('support')) {
+            return redirect()->route('support.dashboard');
+        }
+
+        if ($user->hasRole('finance')) {
+            return redirect()->route('finance.dashboard');
+        }
+
         // Only route to the vendor dashboard when the vendor account is actually
         // approved/active. A vendor-role user whose Vendor record is pending or
         // suspended would otherwise bounce between here and EnsureVendorApproved

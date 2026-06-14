@@ -12,6 +12,16 @@ return [
 
     'platform_fee_percent' => (int) env('PLATFORM_FEE_PERCENT', 10),
 
+    // Fee deducted from a vendor withdrawal (percent of the gross amount).
+    'withdrawal_fee_percent' => (float) env('WITHDRAWAL_FEE_PERCENT', 1.5),
+
+    // Paid promotion: a vendor pays this flat fee (kobo) from their wallet to
+    // feature a product for `days` days.
+    'promotion' => [
+        'fee'  => (int) env('PROMOTION_FEE_KOBO', 1_000_00), // ₦1,000
+        'days' => (int) env('PROMOTION_DAYS', 7),
+    ],
+
     'bank_transfer' => [
         'bank_name'      => env('BANK_NAME', 'Access Bank'),
         'account_name'   => env('BANK_ACCOUNT_NAME', 'Volamani Technologies Ltd'),

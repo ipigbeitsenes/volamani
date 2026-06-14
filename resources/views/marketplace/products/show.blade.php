@@ -7,11 +7,15 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('marketplace.products.index') }}">Products</a></li>
-            <li class="breadcrumb-item">
-                <a href="{{ route('marketplace.products.index', ['category' => $product->category_id]) }}">
-                    {{ $product->category->name }}
-                </a>
-            </li>
+            @if($product->displayCategory())
+                <li class="breadcrumb-item">
+                    @if($product->isDigital())
+                        <a href="{{ route('marketplace.products.index', ['category' => $product->category_id]) }}">{{ $product->displayCategory() }}</a>
+                    @else
+                        {{ $product->displayCategory() }}
+                    @endif
+                </li>
+            @endif
             <li class="breadcrumb-item active">{{ Str::limit($product->name, 50) }}</li>
         </ol>
     </nav>
@@ -20,23 +24,23 @@
         {{-- Left: Media --}}
         <div class="col-lg-7">
             {{-- Main Thumbnail --}}
-            <div class="mb-3 rounded overflow-hidden" style="max-height: 400px;">
+            <div class="mb-3 rounded overflow-hidden bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                 <img id="mainImage" src="{{ $product->thumbnail_url }}"
                      alt="{{ $product->name }}"
-                     class="img-fluid w-100" style="object-fit: cover; max-height: 400px;">
+                     class="img-fluid mw-100" style="max-height: 400px; object-fit: contain;">
             </div>
 
             {{-- Gallery --}}
             @if($product->gallery->count() > 0)
                 <div class="d-flex gap-2 flex-wrap">
                     <img src="{{ $product->thumbnail_url }}"
-                         class="gallery-thumb rounded border cursor-pointer"
-                         style="width:70px;height:70px;object-fit:cover;"
+                         class="gallery-thumb rounded border cursor-pointer bg-light"
+                         style="width:70px;height:70px;object-fit:contain;"
                          onclick="document.getElementById('mainImage').src=this.src">
                     @foreach($product->gallery as $img)
                         <img src="{{ $img->url }}"
-                             class="gallery-thumb rounded border cursor-pointer"
-                             style="width:70px;height:70px;object-fit:cover;"
+                             class="gallery-thumb rounded border cursor-pointer bg-light"
+                             style="width:70px;height:70px;object-fit:contain;"
                              onclick="document.getElementById('mainImage').src=this.src">
                     @endforeach
                 </div>
@@ -129,18 +133,89 @@
 
                     {{-- Meta --}}
                     <ul class="list-unstyled small text-muted mb-3">
-                        <li><i class="bi bi-tag me-2"></i>Type: {{ $product->type->label() }}</li>
-                        <li><i class="bi bi-grid me-2"></i>Category: {{ $product->category->name }}</li>
-                        @if($product->is_downloadable)
-                            <li><i class="bi bi-download me-2"></i>Instant download after purchase</li>
-                            @if($product->download_limit)
-                                <li><i class="bi bi-arrow-repeat me-2"></i>Download limit: {{ $product->download_limit }} times</li>
+                        @if($product->isPhysical())
+                            <li><i class="bi bi-box-seam me-2"></i>Physical product —
+                                <span class="badge bg-{{ $product->physicalDetail?->condition->badge() ?? 'secondary' }}">{{ $product->physicalDetail?->condition->label() ?? 'New' }}</span>
+                            </li>
+                            @if($product->physicalDetail?->brand)
+                                <li><i class="bi bi-award me-2"></i>Brand: {{ $product->physicalDetail->brand }}</li>
+                            @endif
+                            @if($product->displayCategory())
+                                <li><i class="bi bi-grid me-2"></i>Category: {{ $product->displayCategory() }}</li>
+                            @endif
+                            @if($product->physicalDetail?->weightLabel())
+                                <li><i class="bi bi-speedometer me-2"></i>Weight: {{ $product->physicalDetail->weightLabel() }}</li>
+                            @endif
+                            <li>
+                                <i class="bi bi-{{ $product->inStock() ? 'check-circle text-success' : 'x-circle text-danger' }} me-2"></i>
+                                {{ $product->inStock() ? 'In stock' : 'Out of stock' }}
+                                @if($product->stockQuantity() !== null && $product->inStock())
+                                    <span class="text-muted">({{ number_format($product->stockQuantity()) }} available)</span>
+                                @endif
+                            </li>
+                        @else
+                            <li><i class="bi bi-tag me-2"></i>Type: {{ $product->type->label() }}</li>
+                            @if($product->displayCategory())
+                                <li><i class="bi bi-grid me-2"></i>Category: {{ $product->displayCategory() }}</li>
+                            @endif
+                            @if($product->is_downloadable)
+                                <li><i class="bi bi-download me-2"></i>Instant download after purchase</li>
+                                @if($product->download_limit)
+                                    <li><i class="bi bi-arrow-repeat me-2"></i>Download limit: {{ $product->download_limit }} times</li>
+                                @endif
                             @endif
                         @endif
                         <li><i class="bi bi-bag-check me-2"></i>{{ number_format($product->sales_count) }} sales</li>
                     </ul>
 
-                    @if($hasPurchased)
+                    @if($product->isPhysical())
+                        @if($product->inStock())
+                            <form method="POST" action="{{ route('cart.physical.add', $product->id) }}">
+                                @csrf
+                                @if($product->hasVariants())
+                                    <label class="form-label small fw-semibold">Choose an option</label>
+                                    <div class="mb-3">
+                                        @foreach($product->variants->where('is_active', true) as $variant)
+                                            <div class="form-check border rounded p-2 mb-2 {{ $variant->inStock() ? '' : 'opacity-50' }}">
+                                                <input class="form-check-input" type="radio" name="variant_id" id="pv{{ $variant->id }}"
+                                                       value="{{ $variant->id }}" {{ $loop->first && $variant->inStock() ? 'checked' : '' }} {{ $variant->inStock() ? '' : 'disabled' }}>
+                                                <label class="form-check-label d-flex justify-content-between w-100" for="pv{{ $variant->id }}">
+                                                    <span>{{ $variant->name }}</span>
+                                                    <span>
+                                                        <span class="fw-semibold text-primary">{{ money($variant->effectivePrice()) }}</span>
+                                                        <span class="badge {{ $variant->inStock() ? 'bg-success' : 'bg-secondary' }} ms-1">{{ $variant->inStock() ? $variant->stock_quantity . ' left' : 'Out' }}</span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <label class="form-label small fw-semibold mb-0">Qty</label>
+                                    <input type="number" name="qty" value="1" min="1" max="999" class="form-control" style="max-width:90px;">
+                                </div>
+                                @auth
+                                    <button type="submit" class="btn btn-outline-primary w-100 mb-2"><i class="bi bi-cart-plus me-1"></i>Add to Cart</button>
+                                @else
+                                    <a href="{{ route('login') }}?redirect={{ urlencode(request()->url()) }}" class="btn btn-outline-primary w-100 mb-2">Login to Add to Cart</a>
+                                @endauth
+                            </form>
+                            @auth
+                                <a href="{{ route('checkout.physical', $product) }}" class="btn btn-primary w-100 btn-lg mb-2">
+                                    <i class="bi bi-bag-check me-1"></i>Buy Now
+                                </a>
+                            @endauth
+                            <div class="form-text mb-2"><i class="bi bi-truck me-1"></i>Shipping calculated at checkout. Funds are released to the seller only after you confirm delivery.</div>
+                        @else
+                            <button class="btn btn-secondary w-100 btn-lg mb-2" disabled>Out of stock</button>
+                        @endif
+                        @if($product->vendor->whatsapp)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->vendor->whatsapp) }}?text={{ urlencode('Hi, I\'m interested in: ' . $product->name) }}"
+                               target="_blank" rel="noopener" class="btn btn-outline-success w-100">
+                                <i class="bi bi-whatsapp me-1"></i>Ask the Seller
+                            </a>
+                        @endif
+                    @elseif($hasPurchased)
                         <div class="alert alert-success py-2">
                             <i class="bi bi-check-circle me-1"></i> You already own this product.
                             <a href="#downloads" data-bs-toggle="tab" class="alert-link">Go to downloads</a>

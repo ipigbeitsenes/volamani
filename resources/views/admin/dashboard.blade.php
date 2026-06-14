@@ -43,6 +43,8 @@
                 ['Product reviews', $stats['queues']['products'], route('admin.products.index'), 'bi-box-seam'],
                 ['Open disputes', $stats['queues']['disputes'], route('admin.disputes.index'), 'bi-exclamation-triangle'],
                 ['Bank transfers', $stats['queues']['bank_transfers'], route('admin.payments.index'), 'bi-bank'],
+                ['Returns', $stats['queues']['returns'] ?? 0, route('admin.returns.index'), 'bi-arrow-return-left'],
+                ['Category requests', $stats['queues']['category_requests'] ?? 0, route('admin.category-requests.index'), 'bi-tags'],
             ];
         @endphp
         @foreach($queues as [$label, $count, $url, $icon])

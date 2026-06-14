@@ -15,6 +15,7 @@ class CreateProductRequestRequest extends FormRequest
     {
         return [
             'title'         => ['required', 'string', 'max:255'],
+            'vendor_id'     => ['nullable', 'exists:vendors,id'],
             'category_id'   => ['nullable', 'exists:product_categories,id'],
             'description'   => ['required', 'string', 'min:50'],
             'budget_min'    => ['nullable', 'numeric', 'min:0'],

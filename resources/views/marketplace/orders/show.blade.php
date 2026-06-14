@@ -21,7 +21,43 @@
     @if(! $order->isPaid())
         <div class="alert alert-warning d-flex justify-content-between align-items-center">
             <span><i class="bi bi-exclamation-circle me-1"></i>This order is awaiting payment.</span>
-            <a href="{{ route('checkout.product', $order->items->first()->product_id ?? 0) }}" class="btn btn-sm btn-warning">Complete payment</a>
+            @if(! $order->requires_shipping)
+                <a href="{{ route('checkout.product', $order->items->first()->product_id ?? 0) }}" class="btn btn-sm btn-warning">Complete payment</a>
+            @endif
+        </div>
+    @endif
+
+    @if($order->requires_shipping)
+        <div class="card mb-3">
+            <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+                <span>Shipping</span>
+                @if($order->shipped_at)
+                    <span class="badge bg-info-subtle text-info">Shipped {{ $order->shipped_at->format('d M') }}</span>
+                @endif
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="small text-muted mb-1">Deliver to</div>
+                        @foreach($order->shippingAddressLines() as $line)
+                            <div>{{ $line }}</div>
+                        @endforeach
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="small text-muted mb-1">Tracking</div>
+                        @if($order->tracking_number)
+                            <div class="fw-semibold">{{ $order->tracking_number }}</div>
+                            @if($order->courier)<div class="small text-muted">{{ $order->courier }}</div>@endif
+                        @else
+                            <div class="text-muted">{{ $order->shipped_at ? 'No tracking number provided' : 'Not shipped yet' }}</div>
+                        @endif
+                        <div class="d-flex justify-content-between small mt-2">
+                            <span class="text-muted">Shipping fee</span>
+                            <span>{{ $order->shipping_fee ? money($order->shipping_fee) : 'Free' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
@@ -76,6 +112,80 @@
                 </div>
             </div>
         </div>
+    @endif
+
+    {{-- Returns / RMA (physical orders) --}}
+    @if($order->requires_shipping)
+        @php $activeReturn = $order->activeReturn(); $latestReturn = $order->returnRequests->first(); @endphp
+        @if($activeReturn)
+            <div class="card mt-3">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold"><i class="bi bi-arrow-return-left me-1"></i>Return {{ $activeReturn->reference }}</span>
+                    <span class="badge bg-{{ $activeReturn->status->badge() }}">{{ $activeReturn->status->label() }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="small text-muted mb-2">Reason: {{ $activeReturn->reason->label() }}</div>
+                    @if($activeReturn->decision_note)
+                        <div class="small mb-2"><strong>Seller note:</strong> {{ $activeReturn->decision_note }}</div>
+                    @endif
+                    @if($activeReturn->canMarkShipped())
+                        <form method="POST" action="{{ route('returns.shipped', $activeReturn) }}" class="row g-2 align-items-end mb-2">
+                            @csrf
+                            <div class="col-sm-8">
+                                <label class="form-label small">Return tracking <span class="text-muted">(optional)</span></label>
+                                <input name="return_tracking" class="form-control form-control-sm" placeholder="Courier tracking number">
+                            </div>
+                            <div class="col-sm-4"><button class="btn btn-primary btn-sm w-100">I've shipped it back</button></div>
+                        </form>
+                    @elseif($activeReturn->status === \App\Enums\ReturnStatus::ShippedBack)
+                        <div class="small text-muted">Awaiting the seller to confirm receipt and refund.</div>
+                    @endif
+                    @if($activeReturn->canCancel())
+                        <form method="POST" action="{{ route('returns.cancel', $activeReturn) }}">
+                            @csrf
+                            <button class="btn btn-link btn-sm text-muted p-0">Cancel return</button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+        @elseif($order->canRequestReturn())
+            <div class="card mt-3">
+                <div class="card-body">
+                    <button class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse" data-bs-target="#returnForm">
+                        <i class="bi bi-arrow-return-left me-1"></i>Request a return
+                    </button>
+                    <span class="small text-muted ms-2">Return window closes {{ $order->returnWindowClosesAt()->format('d M Y') }}.</span>
+                    <div class="collapse mt-3" id="returnForm">
+                        <form method="POST" action="{{ route('returns.store', $order) }}" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-2">
+                                <label class="form-label small">Reason</label>
+                                <select name="reason" class="form-select form-select-sm" required>
+                                    @foreach(\App\Enums\ReturnReason::cases() as $r)
+                                        <option value="{{ $r->value }}">{{ $r->label() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">What's wrong? <span class="text-danger">*</span></label>
+                                <textarea name="description" rows="3" minlength="10" class="form-control form-control-sm" required
+                                          placeholder="Describe the problem (at least 10 characters)"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Photos <span class="text-muted">(optional, up to 5)</span></label>
+                                <input type="file" name="photos[]" accept="image/*" multiple class="form-control form-control-sm">
+                            </div>
+                            <button class="btn btn-danger btn-sm">Submit return request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @elseif($latestReturn && in_array($latestReturn->status, [\App\Enums\ReturnStatus::Refunded, \App\Enums\ReturnStatus::Rejected, \App\Enums\ReturnStatus::Cancelled], true))
+            <div class="alert mt-3 alert-{{ $latestReturn->status === \App\Enums\ReturnStatus::Refunded ? 'success' : 'secondary' }}">
+                Return {{ $latestReturn->reference }} — {{ $latestReturn->status->label() }}.
+                @if($latestReturn->decision_note) {{ $latestReturn->decision_note }}@endif
+            </div>
+        @endif
     @endif
 </div>
 @endsection

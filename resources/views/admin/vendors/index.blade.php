@@ -35,7 +35,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <img src="{{ $vendor->logo_url }}" class="rounded" width="36" height="36" alt="">
+                                        <img src="{{ $vendor->logo_url }}" class="rounded bg-white border" width="36" height="36" style="object-fit:contain;padding:1px" alt="">
                                         <div class="fw-semibold">{{ $vendor->business_name }}</div>
                                     </div>
                                 </td>

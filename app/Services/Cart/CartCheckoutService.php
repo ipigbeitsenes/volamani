@@ -40,24 +40,22 @@ class CartCheckoutService
     /**
      * Pay for the entire cart from the buyer's wallet.
      *
-     * @return array{status:string, payables?:array, total?:int, shortfall?:int}
-     *   status ∈ empty | own_item | insufficient | paid
+     * @param  array|null  $address  Shipping address (required when the cart has physical items)
+     * @return array{status:string, payables?:array, total?:int, shortfall?:int, item?:string}
+     *   status ∈ empty | own_item | address_required | unavailable | insufficient | paid
      */
-    public function checkoutWithWallet(User $buyer): array
+    public function checkoutWithWallet(User $buyer, ?array $address = null): array
     {
         $lines = $this->cart->lines();
         if (! $lines) {
             return ['status' => 'empty'];
         }
 
-        // Block buying your own listings.
-        foreach ($lines as $line) {
-            if ($line['vendor'] && $line['vendor']->user_id === $buyer->id) {
-                return ['status' => 'own_item'];
-            }
+        if ($guard = $this->preCheck($lines, $buyer, $address)) {
+            return $guard;
         }
 
-        $total  = array_sum(array_column($lines, 'subtotal'));
+        $total  = $this->cart->grandTotal(); // items + physical shipping
         $wallet = $this->walletService->getOrCreate($buyer);
 
         if (! $wallet->canWithdraw($total)) {
@@ -68,8 +66,8 @@ class CartCheckoutService
             ];
         }
 
-        $payables = DB::transaction(function () use ($lines, $buyer, $wallet) {
-            $payables = $this->createPayables($lines, $buyer);
+        $payables = DB::transaction(function () use ($lines, $buyer, $wallet, $address) {
+            $payables = $this->createPayables($lines, $buyer, $address);
 
             foreach ($payables as $payable) {
                 $amount  = (int) $payable->total_amount;
@@ -116,24 +114,22 @@ class CartCheckoutService
      * @return array{status:string, gateway?:string, result?:array}
      *   status ∈ empty | own_item | multi | redirect
      */
-    public function checkoutWithGateway(User $buyer, string $gateway): array
+    public function checkoutWithGateway(User $buyer, string $gateway, ?array $address = null): array
     {
         $lines = $this->cart->lines();
         if (! $lines) {
             return ['status' => 'empty'];
         }
 
-        foreach ($lines as $line) {
-            if ($line['vendor'] && $line['vendor']->user_id === $buyer->id) {
-                return ['status' => 'own_item'];
-            }
-        }
-
         if ($this->cart->payableCount() !== 1) {
             return ['status' => 'multi'];
         }
 
-        $payable = DB::transaction(fn () => $this->createPayables($lines, $buyer)[0]);
+        if ($guard = $this->preCheck($lines, $buyer, $address)) {
+            return $guard;
+        }
+
+        $payable = DB::transaction(fn () => $this->createPayables($lines, $buyer, $address)[0]);
         $amount  = (int) $payable->total_amount;
 
         $result = $gateway === PaymentGateway::BankTransfer->value
@@ -148,34 +144,116 @@ class CartCheckoutService
     }
 
     /**
-     * Build Orders (products grouped per vendor) + ServiceOrders (one each).
-     *
-     * @return array<int, Model>  freshly created pending payables
+     * Shared guards for both checkout paths: reject own listings, require a
+     * shipping address when physical items are present, and block out-of-stock
+     * physical lines. Returns a status array to short-circuit, or null to proceed.
      */
-    private function createPayables(array $lines, User $buyer): array
+    private function preCheck(array $lines, User $buyer, ?array $address): ?array
     {
-        $payables   = [];
-        $byVendor   = [];
+        $hasPhysical = false;
 
         foreach ($lines as $line) {
-            if ($line['kind'] === 'product') {
-                $byVendor[$line['vendor']->id][] = $line;
-            } else {
-                // each service package → its own ServiceOrder
-                $package = $line['model'];
-                $payables[] = $this->serviceListing->placeOrder(
-                    $package->service,
-                    $package,
-                    $buyer,
-                );
+            if ($line['vendor'] && $line['vendor']->user_id === $buyer->id) {
+                return ['status' => 'own_item'];
+            }
+            if ($line['kind'] === 'physical') {
+                $hasPhysical = true;
+                if (! ($line['in_stock'] ?? true)) {
+                    return ['status' => 'unavailable', 'item' => $line['name']];
+                }
             }
         }
 
-        foreach ($byVendor as $vendorId => $vendorLines) {
+        if ($hasPhysical && ! $this->hasAddress($address)) {
+            return ['status' => 'address_required'];
+        }
+
+        return null;
+    }
+
+    private function hasAddress(?array $address): bool
+    {
+        return $address
+            && ! empty($address['ship_to_name'])
+            && ! empty($address['ship_to_phone'])
+            && ! empty($address['ship_to_address']);
+    }
+
+    /**
+     * Build Orders (digital products per vendor + physical products per vendor)
+     * + ServiceOrders (one each). Digital and physical from the same vendor are
+     * separate orders so escrow/shipping stay coherent.
+     *
+     * @return array<int, Model>  freshly created pending payables
+     */
+    private function createPayables(array $lines, User $buyer, ?array $address = null): array
+    {
+        $payables = [];
+        $digital  = [];
+        $physical = [];
+
+        foreach ($lines as $line) {
+            if ($line['kind'] === 'product') {
+                $digital[$line['vendor']->id][] = $line;
+            } elseif ($line['kind'] === 'physical') {
+                $physical[$line['vendor']->id][] = $line;
+            } else {
+                $package = $line['model'];
+                $payables[] = $this->serviceListing->placeOrder($package->service, $package, $buyer);
+            }
+        }
+
+        foreach ($digital as $vendorId => $vendorLines) {
             $payables[] = $this->createProductOrder($buyer, $vendorId, $vendorLines);
         }
 
+        foreach ($physical as $vendorId => $vendorLines) {
+            $payables[] = $this->createPhysicalOrder($buyer, $vendorLines[0]['vendor'], $vendorLines, $address);
+        }
+
         return $payables;
+    }
+
+    private function createPhysicalOrder(User $buyer, $vendor, array $lines, ?array $address): Order
+    {
+        $subtotal   = array_sum(array_column($lines, 'subtotal'));
+        $shipping   = $vendor->shippingFeeFor($subtotal);
+        $total      = $subtotal + $shipping;
+        $feePercent = (float) config('payment.platform_fee_percent', 10);
+        $fee        = (int) round($subtotal * $feePercent / 100); // commission on goods only
+        $address  ??= [];
+
+        $order = Order::create([
+            'buyer_id'          => $buyer->id,
+            'vendor_id'         => $vendor->id,
+            'status'            => OrderStatus::Pending,
+            'payment_status'    => PaymentStatus::Pending,
+            'requires_shipping' => true,
+            'total_amount'      => $total,
+            'platform_fee'      => $fee,
+            'vendor_earnings'   => $total - $fee,
+            'shipping_fee'      => $shipping,
+            'ship_to_name'      => $address['ship_to_name'] ?? null,
+            'ship_to_phone'     => $address['ship_to_phone'] ?? null,
+            'ship_to_address'   => $address['ship_to_address'] ?? null,
+            'ship_to_city'      => $address['ship_to_city'] ?? null,
+            'ship_to_state'     => $address['ship_to_state'] ?? null,
+            'currency'          => 'NGN',
+        ]);
+
+        foreach ($lines as $line) {
+            $order->items()->create([
+                'product_id' => $line['id'],
+                'variant_id' => $line['variant_id'] ?: null,
+                'name'       => $line['name'],
+                'type'       => 'product',
+                'quantity'   => $line['qty'],
+                'unit_price' => $line['unit_price'],
+                'subtotal'   => $line['subtotal'],
+            ]);
+        }
+
+        return $order;
     }
 
     private function createProductOrder(User $buyer, int $vendorId, array $lines): Order

@@ -68,7 +68,31 @@
                         <textarea name="description" rows="5" class="form-control"
                                   placeholder="Describe your business, expertise, and what makes you unique...">{{ old('description', $vendor->description) }}</textarea>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small">Store Focus <span class="text-danger">*</span></label>
+                        <div class="row g-2">
+                            @foreach(\App\Enums\StoreFocus::cases() as $focus)
+                            <div class="col-6 col-md-3">
+                                <input type="radio" class="btn-check" name="store_focus" id="focus_{{ $focus->value }}"
+                                       value="{{ $focus->value }}" {{ old('store_focus', $vendor->store_focus?->value ?? 'digital') === $focus->value ? 'checked' : '' }} required>
+                                <label class="btn btn-outline-primary w-100 text-start py-2" for="focus_{{ $focus->value }}">
+                                    <i class="bi {{ $focus->icon() }} d-block mb-1"></i>
+                                    <span class="small">{{ $focus->label() }}</span>
+                                </label>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="form-text">Determines which catalog tools you see. You can change this anytime.</div>
+                    </div>
                     <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium small">Store Type <span class="text-danger">*</span></label>
+                            <select name="store_type" class="form-select" required>
+                                @foreach(\App\Enums\StoreType::cases() as $type)
+                                    <option value="{{ $type->value }}" {{ old('store_type', $vendor->store_type?->value ?? 'individual') === $type->value ? 'selected' : '' }}>{{ $type->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-md-6">
                             <label class="form-label fw-medium small">Category</label>
                             <select name="category" class="form-select">
@@ -123,6 +147,46 @@
                 </div>
             </div>
 
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="fw-bold mb-0">Shipping <small class="text-muted fw-normal">(physical products)</small></h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium small">Flat Shipping Fee (₦)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₦</span>
+                                <input type="number" step="0.01" min="0" name="shipping_fee"
+                                       class="form-control @error('shipping_fee') is-invalid @enderror"
+                                       value="{{ old('shipping_fee', $vendor->shipping_fee ? from_kobo($vendor->shipping_fee) : '') }}"
+                                       placeholder="0.00">
+                                @error('shipping_fee')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="form-text">Charged once per order. Leave 0 for free shipping.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium small">Free Shipping Over (₦)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₦</span>
+                                <input type="number" step="0.01" min="0" name="free_shipping_threshold"
+                                       class="form-control @error('free_shipping_threshold') is-invalid @enderror"
+                                       value="{{ old('free_shipping_threshold', $vendor->free_shipping_threshold ? from_kobo($vendor->free_shipping_threshold) : '') }}"
+                                       placeholder="optional">
+                                @error('free_shipping_threshold')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="form-text">Orders at/above this total ship free.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium small">Ships To</label>
+                            <input type="text" name="ships_to" class="form-control"
+                                   value="{{ old('ships_to', $vendor->ships_to) }}"
+                                   placeholder="e.g. Nationwide (Nigeria), 2–5 business days">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 py-3">
                     <h6 class="fw-bold mb-0">Social Media Links</h6>
@@ -151,8 +215,8 @@
                     <h6 class="fw-bold mb-0">Store Logo</h6>
                 </div>
                 <div class="card-body text-center">
-                    <img src="{{ $vendor->logo_url }}" class="rounded-circle border mb-3"
-                         width="80" height="80" id="logoPreview" alt="Logo">
+                    <img src="{{ $vendor->logo_url }}" class="rounded border mb-3 bg-white p-1"
+                         style="height:80px;width:auto;max-width:100%;object-fit:contain" id="logoPreview" alt="Logo">
                     <input type="file" name="logo" id="logoInput" class="form-control form-control-sm"
                            accept="image/*" onchange="previewImage(this, 'logoPreview')">
                     <div class="form-text">Recommended: 200×200px, max 2MB</div>

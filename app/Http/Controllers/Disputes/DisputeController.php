@@ -29,13 +29,9 @@ class DisputeController extends Controller
     {
         $this->authorizeEscrowParty($escrow);
 
-        if ($escrow->isProductEscrow() && ! $escrow->canRaiseTicket()) {
-            $this->flashError('The 24-hour window to open a support ticket for this purchase has closed.');
-
-            return redirect()->route('escrows.show', $escrow);
+        if ($redirect = $this->guardCanOpen($escrow)) {
+            return $redirect;
         }
-
-        abort_unless($escrow->canDispute(), 422, 'These funds can no longer be disputed.');
 
         $escrow->load('escrowable');
 
@@ -45,6 +41,13 @@ class DisputeController extends Controller
     public function store(OpenDisputeRequest $request, Escrow $escrow): RedirectResponse
     {
         $this->authorizeEscrowParty($escrow);
+
+        // Re-check on submit: the eligibility may have changed since the form
+        // loaded (e.g. a ticket was already opened in another tab). Redirect with
+        // a clear message instead of throwing a raw 422 error page.
+        if ($redirect = $this->guardCanOpen($escrow)) {
+            return $redirect;
+        }
 
         $dispute = $this->disputeService->open(
             $escrow,
@@ -95,6 +98,33 @@ class DisputeController extends Controller
         );
 
         return redirect()->route('disputes.show', $dispute);
+    }
+
+    /**
+     * Shared eligibility gate for opening a ticket. Returns a friendly redirect
+     * when the escrow can't accept a new ticket, or null when it's good to go.
+     */
+    private function guardCanOpen(Escrow $escrow): ?RedirectResponse
+    {
+        // Already ticketed → send them to the existing one (checked first so the
+        // message is accurate; a disputed escrow also fails canRaiseTicket()).
+        $existing = Dispute::where('escrow_id', $escrow->id)->latest()->first();
+        if ($existing) {
+            return redirect()->route('disputes.show', $existing)
+                ->with('info', 'You already have a support ticket open for this purchase.');
+        }
+
+        if ($escrow->isProductEscrow() && ! $escrow->canRaiseTicket()) {
+            return redirect()->route('escrows.show', $escrow)
+                ->with('error', 'The 24-hour window to open a support ticket for this purchase has closed.');
+        }
+
+        if (! $escrow->isProductEscrow() && ! $escrow->canDispute()) {
+            return redirect()->route('escrows.show', $escrow)
+                ->with('error', 'These funds can no longer be disputed.');
+        }
+
+        return null;
     }
 
     private function authorizeEscrowParty(Escrow $escrow): void

@@ -11,7 +11,7 @@
             <div class="card border-0 shadow-sm text-center p-4">
                 <div class="mb-3 position-relative d-inline-block mx-auto">
                     <img src="{{ $user->avatar_url }}" class="rounded-circle border border-3 border-primary"
-                         width="88" height="88" alt="{{ $user->name }}">
+                         width="88" height="88" style="object-fit:cover" alt="{{ $user->name }}">
                     <label for="avatarUpload" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:28px;height:28px;cursor:pointer">
                         <i class="bi bi-camera small"></i>
                     </label>
@@ -20,7 +20,7 @@
                 <p class="text-muted small mb-2">{{ $user->email }}</p>
                 @if($user->username)
                     <a href="{{ $user->storefront_url }}" class="small text-primary text-decoration-none">
-                        <i class="bi bi-shop me-1"></i>@{{ $user->username }}
+                        <i class="bi bi-shop me-1"></i>{{ '@' . $user->username }}
                     </a>
                 @endif
                 <hr>

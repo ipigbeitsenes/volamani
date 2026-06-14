@@ -22,7 +22,7 @@
         .sidebar {
             width: var(--vl-sidebar-width);
             background: var(--vl-sidebar-bg);
-            min-height: 100vh;
+            height: 100vh;
             position: fixed;
             top: 0; left: 0;
             z-index: 100;
@@ -113,6 +113,9 @@
             <a href="{{ route('vendor.orders.index') }}" class="nav-link {{ active_prefix('vendor/orders') }}">
                 <i class="bi bi-bag-check"></i> Orders
             </a>
+            <a href="{{ route('vendor.returns.index') }}" class="nav-link {{ active_prefix('vendor/returns') }}">
+                <i class="bi bi-arrow-return-left"></i> Returns
+            </a>
             <a href="{{ route('vendor.quotations.index') }}" class="nav-link {{ active_prefix('vendor/quotations') }}">
                 <i class="bi bi-file-earmark-text"></i> Quotations
             </a>
@@ -152,6 +155,9 @@
             <a href="{{ route('vendor.storefront') }}" class="nav-link {{ active_route('vendor.storefront') }}">
                 <i class="bi bi-shop"></i> Storefront
             </a>
+            <a href="{{ route('vendor.category-requests.index') }}" class="nav-link {{ active_prefix('vendor/category-requests') }}">
+                <i class="bi bi-tags"></i> Category Requests
+            </a>
             <a href="{{ route('vendor.kyc.index') }}" class="nav-link {{ active_prefix('vendor/kyc') }}">
                 <i class="bi bi-shield-check"></i> Verification
             </a>
@@ -179,6 +185,7 @@
                 <a href="{{ route('home') }}" class="btn btn-sm btn-outline-primary" target="_blank">
                     <i class="bi bi-globe me-1"></i>View Store
                 </a>
+                @include('layouts.partials.notification-bell')
                 <div class="dropdown">
                     <button class="btn btn-sm d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                         <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=32&background=1a56db&color=fff"

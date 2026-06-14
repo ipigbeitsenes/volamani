@@ -33,8 +33,8 @@
                     @foreach($product->gallery as $img)
                         <div class="position-relative">
                             <img src="{{ $img->url }}"
-                                 class="rounded border"
-                                 style="width:100px;height:100px;object-fit:cover;">
+                                 class="rounded border bg-light"
+                                 style="width:100px;height:100px;object-fit:contain;">
                             <button type="button"
                                 class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 lh-1"
                                 style="width:20px;height:20px;font-size:11px;"

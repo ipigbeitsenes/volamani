@@ -3,6 +3,7 @@
 namespace App\Services\Products;
 
 use App\Actions\Products\CreateProductAction;
+use App\Actions\Products\PromoteProductAction;
 use App\Actions\Products\UpdateProductAction;
 use App\Enums\ProductStatus;
 use App\Models\Product;
@@ -18,7 +19,13 @@ class ProductService extends BaseService
     public function __construct(
         private CreateProductAction $createAction,
         private UpdateProductAction $updateAction,
+        private PromoteProductAction $promoteAction,
     ) {}
+
+    public function promoteProduct(Product $product, \App\Models\User $vendorUser): \Illuminate\Support\Carbon
+    {
+        return $this->promoteAction->execute($product, $vendorUser);
+    }
 
     public function createProduct(Vendor $vendor, array $data): Product
     {

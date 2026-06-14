@@ -17,6 +17,8 @@ class CreateVendorAction
                 'tagline'       => $data['tagline'] ?? null,
                 'description'   => $data['description'] ?? null,
                 'category'      => $data['category'] ?? null,
+                'store_type'    => $data['store_type'] ?? 'individual',
+                'store_focus'   => $data['store_focus'] ?? 'digital',
                 'whatsapp'      => $data['whatsapp'] ?? $user->whatsapp,
                 'city'          => $data['city'] ?? null,
                 'state'         => $data['state'] ?? null,

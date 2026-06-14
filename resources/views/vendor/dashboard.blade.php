@@ -144,6 +144,35 @@
 
     {{-- Quick actions --}}
     <div class="col-lg-4">
+        {{-- Store branding (logo / banner) --}}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0">Store Branding</h6>
+                <a href="{{ route('vendor.storefront') }}" class="small text-muted text-decoration-none">More settings</a>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('vendor.storefront.branding') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="{{ $vendor->logo_url }}" id="dashLogoPreview" class="rounded border bg-white p-1"
+                             style="height:64px;width:auto;max-width:170px;object-fit:contain" alt="Logo">
+                        <div class="flex-grow-1">
+                            <label class="form-label small fw-medium mb-1">Store Logo</label>
+                            <input type="file" name="logo" accept="image/*" class="form-control form-control-sm"
+                                   onchange="(function(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=e=>document.getElementById('dashLogoPreview').src=e.target.result;r.readAsDataURL(i.files[0]);}})(this)">
+                            <div class="form-text">Square image, max 2MB.</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium mb-1">Store Banner</label>
+                        <input type="file" name="banner" accept="image/*" class="form-control form-control-sm">
+                        <div class="form-text">Recommended 1200×300px, max 5MB.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-upload me-1"></i>Update branding</button>
+                </form>
+            </div>
+        </div>
+
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-white border-0 py-3">
                 <h6 class="fw-bold mb-0">Quick Actions</h6>
@@ -158,8 +187,9 @@
                 <a href="{{ route('vendor.invoices.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-receipt text-primary"></i>Create Invoice
                 </a>
-                <a href="{{ route('vendor.wallet.withdraw') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
-                    <i class="bi bi-arrow-up-circle text-success"></i>Request Withdrawal
+                <a href="{{ route('vendor.wallet.withdraw') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between gap-2">
+                    <span><i class="bi bi-arrow-up-circle text-success me-2"></i>Request Withdrawal</span>
+                    <small class="text-muted">{{ rtrim(rtrim(number_format(config('payment.withdrawal_fee_percent'), 1), '0'), '.') }}% fee</small>
                 </a>
                 <a href="{{ route('vendor.kyc.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-shield-check text-warning"></i>KYC Verification

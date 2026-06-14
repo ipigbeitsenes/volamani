@@ -68,14 +68,58 @@ class OrderService
         return $this->repo->loadForVendor($order);
     }
 
-    /** Vendor marks a paid order as delivered and notifies the buyer. */
+    /** Vendor marks a physical order shipped, recording tracking details. */
+    public function markShipped(Order $order, ?string $trackingNumber, ?string $courier): bool
+    {
+        if (! $order->canShip()) {
+            return false;
+        }
+
+        $order->update([
+            'status'          => OrderStatus::Shipped,
+            'tracking_number' => $trackingNumber,
+            'courier'         => $courier,
+            'shipped_at'      => now(),
+        ]);
+
+        $tracking = $trackingNumber ? " Tracking: {$trackingNumber}" . ($courier ? " ({$courier})" : '') . '.' : '';
+        $this->notifyBuyer(
+            $order,
+            'Order shipped',
+            'Your order ' . $order->reference . ' is on its way.' . $tracking,
+        );
+
+        return true;
+    }
+
+    /**
+     * Vendor marks a paid order as delivered and notifies the buyer. For physical
+     * orders this also arms the escrow FALLBACK auto-release timer (N business
+     * days from delivery), so a silent buyer can't freeze the vendor's funds —
+     * while still letting the buyer "confirm receipt" to release immediately.
+     */
     public function markDelivered(Order $order): bool
     {
         if (! $order->isPaid() || in_array($order->status, [OrderStatus::Completed, OrderStatus::Delivered, OrderStatus::Cancelled, OrderStatus::Refunded], true)) {
             return false;
         }
 
-        $order->update(['status' => OrderStatus::Delivered]);
+        DB::transaction(function () use ($order) {
+            $order->update([
+                'status'       => OrderStatus::Delivered,
+                'delivered_at' => now(),
+            ]);
+
+            if ($order->requires_shipping) {
+                $escrow = $this->escrow->forPayable($order);
+                if ($escrow && $escrow->auto_release_at === null && $escrow->status === \App\Enums\EscrowStatus::Holding) {
+                    $days = (int) config('business_days.release_days', 3);
+                    $escrow->update([
+                        'auto_release_at' => app(\App\Support\BusinessDayCalculator::class)->addBusinessDays(now(), max(1, $days)),
+                    ]);
+                }
+            }
+        });
 
         $this->notifyBuyer(
             $order,

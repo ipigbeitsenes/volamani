@@ -2,6 +2,8 @@
 
 namespace App\Actions\Products;
 
+use App\Actions\Products\Concerns\SyncsPhysicalProduct;
+use App\Enums\ProductKind;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\ProductFile;
@@ -9,13 +11,16 @@ use App\Models\ProductGallery;
 use App\Models\Vendor;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CreateProductAction
 {
+    use SyncsPhysicalProduct;
+
     public function execute(Vendor $vendor, array $data): Product
     {
         return DB::transaction(function () use ($vendor, $data) {
+            $isPhysical = ($data['kind'] ?? 'digital') === ProductKind::Physical->value;
+
             $thumbnail = null;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {
                 $thumbnail = $data['thumbnail']->store('products/thumbnails', 'public');
@@ -23,18 +28,21 @@ class CreateProductAction
 
             $product = Product::create([
                 'vendor_id'          => $vendor->id,
-                'category_id'        => $data['category_id'],
+                'kind'               => $isPhysical ? ProductKind::Physical->value : ProductKind::Digital->value,
+                'category_id'        => $isPhysical ? null : $data['category_id'],
+                'physical_category_id' => $isPhysical ? $data['physical_category_id'] : null,
                 'name'               => $data['name'],
                 'short_description'  => $data['short_description'] ?? null,
                 'description'        => $data['description'],
-                'type'               => $data['type'],
+                // `type` is the digital sub-type; physical products park on 'other'.
+                'type'               => $isPhysical ? 'other' : $data['type'],
                 'price'              => to_kobo($data['price']),
                 'compare_price'      => isset($data['compare_price']) ? to_kobo($data['compare_price']) : null,
                 'thumbnail'          => $thumbnail,
                 'preview_url'        => $data['preview_url'] ?? null,
-                'is_downloadable'    => $data['is_downloadable'] ?? true,
-                'download_limit'     => $data['download_limit'] ?? null,
-                'download_expiry_hours' => $data['download_expiry_hours'] ?? 48,
+                'is_downloadable'    => ! $isPhysical,
+                'download_limit'     => $isPhysical ? null : ($data['download_limit'] ?? null),
+                'download_expiry_hours' => $isPhysical ? 48 : ($data['download_expiry_hours'] ?? 48),
                 'status'             => ProductStatus::Pending,
                 'seo_title'          => $data['seo_title'] ?? null,
                 'seo_description'    => $data['seo_description'] ?? null,
@@ -55,6 +63,12 @@ class CreateProductAction
                         ]);
                     }
                 }
+            }
+
+            if ($isPhysical) {
+                $this->syncPhysical($product, $data);
+
+                return $product->load(['physicalCategory', 'secondaryPhysicalCategories', 'tags', 'gallery', 'physicalDetail', 'variants']);
             }
 
             if (!empty($data['files'])) {

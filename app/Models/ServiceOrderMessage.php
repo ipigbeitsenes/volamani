@@ -32,6 +32,6 @@ class ServiceOrderMessage extends Model
 
     public function getAttachmentUrlAttribute(): ?string
     {
-        return $this->attachment ? asset('storage/' . $this->attachment) : null;
+        return media_url($this->attachment);
     }
 }

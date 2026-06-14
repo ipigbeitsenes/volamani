@@ -14,8 +14,8 @@
     @endif
     <div class="container position-relative py-5">
         <div class="d-flex align-items-end gap-4">
-            <img src="{{ $vendor->logo_url }}" class="rounded-3 border border-3 border-white shadow"
-                 width="96" height="96" style="object-fit:cover" alt="{{ $vendor->business_name }}">
+            <img src="{{ $vendor->logo_url }}" class="rounded-3 border border-3 border-white shadow bg-white p-1"
+                 style="height:96px;width:auto;max-width:280px;object-fit:contain" alt="{{ $vendor->business_name }}">
             <div class="pb-1">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <h2 class="fw-bold text-white mb-0">{{ $vendor->business_name }}</h2>
@@ -109,14 +109,7 @@
                     <div class="row g-3">
                         @foreach($products as $product)
                         <div class="col-6 col-md-4">
-                            <a href="{{ route('marketplace.products.show', $product->slug) }}" class="card text-decoration-none border-0 shadow-sm h-100">
-                                <img src="{{ $product->thumbnail_url }}"
-                                     class="card-img-top" style="height:160px;object-fit:cover" alt="{{ $product->name }}">
-                                <div class="card-body p-3">
-                                    <h6 class="fw-semibold text-dark mb-1 text-truncate">{{ $product->name }}</h6>
-                                    <div class="fw-bold text-primary">{{ money($product->price) }}</div>
-                                </div>
-                            </a>
+                            @include('marketplace.products._card', ['product' => $product])
                         </div>
                         @endforeach
                     </div>
@@ -173,7 +166,7 @@
                     @foreach($recentReviews as $review)
                     <div class="d-flex gap-3 mb-4 pb-4 border-bottom">
                         <img src="{{ $review->user->avatar_url }}" class="rounded-circle flex-shrink-0"
-                             width="40" height="40" alt="">
+                             width="40" height="40" style="object-fit:cover" alt="">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-1">
                                 <span class="fw-semibold small">{{ $review->user->name }}</span>
@@ -199,6 +192,17 @@
             <div class="card border-0 shadow-sm mb-3">
                 <div class="card-body p-3">
                     <h6 class="fw-bold mb-3">Contact Vendor</h6>
+                    @auth
+                        @if(auth()->id() !== $vendor->user_id)
+                            <a href="{{ route('requests.create', ['vendor' => $vendor->id]) }}" class="btn btn-primary w-100 mb-2 fw-semibold">
+                                <i class="bi bi-megaphone me-2"></i>Request a Custom Order
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}?redirect={{ urlencode(route('storefront.show', $vendor->user->username)) }}" class="btn btn-primary w-100 mb-2 fw-semibold">
+                            <i class="bi bi-megaphone me-2"></i>Request a Custom Order
+                        </a>
+                    @endauth
                     @if($vendor->whatsapp)
                         <a href="https://wa.me/{{ preg_replace('/\D/', '', $vendor->whatsapp) }}?text=Hi, I found you on Volamani" target="_blank"
                            class="btn btn-success w-100 mb-2 fw-semibold">

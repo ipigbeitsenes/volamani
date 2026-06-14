@@ -30,6 +30,9 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'addProduct'])->name('products.add');
     Route::patch('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'removeProduct'])->name('products.remove');
+    Route::post('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'addPhysical'])->name('physical.add');
+    Route::patch('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'updatePhysical'])->name('physical.update');
+    Route::delete('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'removePhysical'])->name('physical.remove');
     Route::post('/services/{package}', [\App\Http\Controllers\Cart\CartController::class, 'addService'])->name('services.add');
     Route::delete('/services/{package}', [\App\Http\Controllers\Cart\CartController::class, 'removeService'])->name('services.remove');
     Route::delete('/', [\App\Http\Controllers\Cart\CartController::class, 'clear'])->name('clear');
@@ -40,6 +43,19 @@ Route::prefix('cart')->name('cart.')->group(function () {
     });
 });
 
+// Payment-gateway RETURN endpoints — intentionally PUBLIC (no auth).
+// The browser returns here from an external gateway (Paystack), where the
+// session cookie may not survive the round-trip (e.g. host mismatch like
+// localhost vs 127.0.0.1, browser privacy modes, or the session expiring while
+// on the gateway page). These verify the payment by its reference, not by the
+// session, so they never need to bounce the user to login. Actual fulfilment is
+// driven server-side by the webhook + verifyByReference.
+Route::prefix('checkout')->name('checkout.')->group(function () {
+    Route::get('/callback', [\App\Http\Controllers\Payment\CheckoutController::class, 'callback'])->name('callback');
+    Route::get('/success',  [\App\Http\Controllers\Payment\CheckoutController::class, 'success'])->name('success');
+    Route::get('/failed',   [\App\Http\Controllers\Payment\CheckoutController::class, 'failed'])->name('failed');
+});
+
 // Authenticated marketplace routes
 Route::middleware('auth')->group(function () {
 
@@ -48,17 +64,24 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [\App\Http\Controllers\Orders\OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [\App\Http\Controllers\Orders\OrderController::class, 'show'])->name('show');
         Route::post('/{order}/complete', [\App\Http\Controllers\Orders\OrderController::class, 'markComplete'])->name('complete');
+        Route::post('/{order}/returns', [\App\Http\Controllers\Returns\ReturnController::class, 'store'])->name('returns.store');
+    });
+
+    // Returns / RMA (buyer)
+    Route::prefix('returns')->name('returns.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Returns\ReturnController::class, 'index'])->name('index');
+        Route::post('/{return}/shipped', [\App\Http\Controllers\Returns\ReturnController::class, 'markShipped'])->name('shipped');
+        Route::post('/{return}/cancel', [\App\Http\Controllers\Returns\ReturnController::class, 'cancel'])->name('cancel');
     });
 
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/product/{product}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'product'])->name('product');
+        Route::get('/physical/{product}',         [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'show'])->name('physical');
+        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->name('physical.process');
         Route::get('/service-order/{serviceOrder}', [\App\Http\Controllers\Payment\CheckoutController::class, 'serviceOrder'])->name('service-order');
         Route::get('/consultation/{session}',     [\App\Http\Controllers\Payment\CheckoutController::class, 'consultation'])->name('consultation');
         Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->name('process');
-        Route::get('/callback',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'callback'])->name('callback');
-        Route::get('/success',                    [\App\Http\Controllers\Payment\CheckoutController::class, 'success'])->name('success');
-        Route::get('/failed',                     [\App\Http\Controllers\Payment\CheckoutController::class, 'failed'])->name('failed');
         Route::get('/bank-transfer/{payment}',    [\App\Http\Controllers\Payment\CheckoutController::class, 'bankTransfer'])->name('bank-transfer');
         Route::post('/bank-transfer/{payment}/proof', [\App\Http\Controllers\Payment\BankTransferController::class, 'uploadProof'])->name('bank-transfer.proof');
         Route::get('/pending/{payment}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'pending'])->name('pending');
@@ -145,8 +168,8 @@ Route::middleware('auth')->group(function () {
 
     // Consultations (booking)
     Route::prefix('consultations')->name('consultations.')->group(function () {
-        Route::get('/book/{consultant}', [\App\Http\Controllers\Consultations\BookingController::class, 'book'])->name('book');
-        Route::post('/book/{consultant}', [\App\Http\Controllers\Consultations\BookingController::class, 'store'])->name('book.store');
+        Route::get('/book/{consultant:slug}', [\App\Http\Controllers\Consultations\BookingController::class, 'book'])->name('book');
+        Route::post('/book/{consultant:slug}', [\App\Http\Controllers\Consultations\BookingController::class, 'store'])->name('book.store');
         Route::get('/my-sessions', [\App\Http\Controllers\Consultations\BookingController::class, 'mySessions'])->name('sessions');
         Route::get('/sessions/{session}', [\App\Http\Controllers\Consultations\BookingController::class, 'show'])->name('sessions.show');
         Route::post('/sessions/{session}/cancel', [\App\Http\Controllers\Consultations\BookingController::class, 'cancel'])->name('sessions.cancel');

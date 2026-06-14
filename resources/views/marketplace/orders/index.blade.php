@@ -4,7 +4,10 @@
 
 @section('content')
 <div class="container py-4" style="max-width: 920px;">
-    <h1 class="h4 fw-bold mb-4">My Orders</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 fw-bold mb-0">My Orders</h1>
+        <a href="{{ route('returns.index') }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-return-left me-1"></i>My Returns</a>
+    </div>
 
     <div class="card">
         <div class="card-body p-0">

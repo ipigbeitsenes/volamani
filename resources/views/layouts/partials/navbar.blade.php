@@ -16,7 +16,7 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link {{ active_route('marketplace.products.index') }}" href="{{ route('marketplace.products.index') }}">
-                        Digital Products
+                        Products
                     </a>
                 </li>
                 <li class="nav-item">
@@ -74,17 +74,6 @@
                         <a class="btn btn-primary btn-sm px-3" href="{{ route('register') }}">Get Started</a>
                     </li>
                 @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('orders.index') }}">
-                            <i class="bi bi-bag me-1"></i>Orders
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link position-relative" href="{{ route('wallet.index') }}">
-                            <i class="bi bi-wallet2 me-1"></i>Wallet
-                        </a>
-                    </li>
-
                     @php
                         $vlmUnread = auth()->user()->unreadNotifications()->count();
                         $vlmRecent = auth()->user()->notifications()->limit(6)->get();

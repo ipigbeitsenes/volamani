@@ -48,11 +48,11 @@
             </div>
 
             {{-- Thumbnail --}}
-            <div class="mb-4 rounded overflow-hidden">
+            <div class="mb-4 rounded overflow-hidden bg-light d-flex align-items-center justify-content-center" style="height: 380px;">
                 <img src="{{ $service->thumbnail_url }}"
                      alt="{{ $service->title }}"
-                     class="img-fluid w-100"
-                     style="max-height: 380px; object-fit: cover;">
+                     class="img-fluid mw-100"
+                     style="max-height: 380px; object-fit: contain;">
             </div>
 
             {{-- Description --}}

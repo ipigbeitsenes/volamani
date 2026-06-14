@@ -47,8 +47,8 @@
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body d-flex gap-3">
-                        <img src="{{ $vendor->logo_url }}" class="rounded-3 flex-shrink-0" width="56" height="56"
-                             style="object-fit:cover" alt="{{ $vendor->business_name }}">
+                        <img src="{{ $vendor->logo_url }}" class="rounded-3 flex-shrink-0 bg-white border" width="56" height="56"
+                             style="object-fit:contain;padding:2px" alt="{{ $vendor->business_name }}">
                         <div class="flex-grow-1 min-width-0">
                             <div class="d-flex align-items-center gap-1">
                                 <a href="{{ route('storefront.show', $vendor->user->username ?? $vendor->slug) }}"

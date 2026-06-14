@@ -33,6 +33,21 @@
         </div>
     </div>
 
+    @if($order->requires_shipping)
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-semibold">Ship To</div>
+            <div class="card-body">
+                @foreach($order->shippingAddressLines() as $line)
+                    <div>{{ $line }}</div>
+                @endforeach
+                <div class="d-flex justify-content-between small mt-2 pt-2 border-top">
+                    <span class="text-muted">Shipping fee (included in your earnings)</span>
+                    <span>{{ $order->shipping_fee ? money($order->shipping_fee) : 'Free' }}</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
     @if($order->notes)
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-white fw-semibold">Notes</div>
@@ -44,23 +59,54 @@
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white fw-semibold">Fulfilment</div>
             <div class="card-body">
-                <div class="d-flex flex-wrap gap-3 align-items-start">
-                    @if($order->status !== \App\Enums\OrderStatus::Delivered)
+                @if($order->requires_shipping)
+                    {{-- Physical: ship (with tracking) then mark delivered. Buyer confirms to release escrow. --}}
+                    @if($order->canShip())
+                        <form method="POST" action="{{ route('vendor.orders.ship', $order) }}" class="mb-3">
+                            @csrf
+                            <label class="form-label small fw-semibold">Mark as shipped</label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <input type="text" name="tracking_number" class="form-control form-control-sm" placeholder="Tracking number (optional)">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" name="courier" class="form-control form-control-sm" placeholder="Courier (optional)">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary btn-sm w-100"><i class="bi bi-box-seam me-1"></i>Ship</button>
+                                </div>
+                            </div>
+                        </form>
+                    @endif
+                    @if($order->canMarkDelivered())
                         <form method="POST" action="{{ route('vendor.orders.deliver', $order) }}">
                             @csrf
                             <button class="btn btn-success btn-sm"><i class="bi bi-truck me-1"></i>Mark as delivered</button>
+                            <span class="small text-muted ms-2">The buyer confirms receipt to release your payment.</span>
                         </form>
+                    @elseif($order->status === \App\Enums\OrderStatus::Delivered)
+                        <div class="text-success small"><i class="bi bi-check-circle me-1"></i>Delivered — awaiting buyer confirmation (or auto-release).</div>
                     @endif
-                    <form method="POST" action="{{ route('vendor.orders.upload', $order) }}" enctype="multipart/form-data" class="flex-grow-1">
-                        @csrf
-                        <label class="form-label small fw-semibold">Upload a deliverable for the buyer</label>
-                        <div class="input-group">
-                            <input type="file" name="file" class="form-control" required>
-                            <button class="btn btn-outline-primary">Upload</button>
-                        </div>
-                        @error('file')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
-                    </form>
-                </div>
+                @else
+                    {{-- Digital / custom work --}}
+                    <div class="d-flex flex-wrap gap-3 align-items-start">
+                        @if($order->status !== \App\Enums\OrderStatus::Delivered)
+                            <form method="POST" action="{{ route('vendor.orders.deliver', $order) }}">
+                                @csrf
+                                <button class="btn btn-success btn-sm"><i class="bi bi-truck me-1"></i>Mark as delivered</button>
+                            </form>
+                        @endif
+                        <form method="POST" action="{{ route('vendor.orders.upload', $order) }}" enctype="multipart/form-data" class="flex-grow-1">
+                            @csrf
+                            <label class="form-label small fw-semibold">Upload a deliverable for the buyer</label>
+                            <div class="input-group">
+                                <input type="file" name="file" class="form-control" required>
+                                <button class="btn btn-outline-primary">Upload</button>
+                            </div>
+                            @error('file')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </form>
+                    </div>
+                @endif
             </div>
         </div>
     @endif

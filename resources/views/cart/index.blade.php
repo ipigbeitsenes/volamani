@@ -30,12 +30,24 @@
                                     <tr>
                                         <td>
                                             <div class="fw-semibold">{{ $line['name'] }}</div>
-                                            <small class="text-muted text-capitalize">{{ $line['kind'] }}</small>
+                                            <small class="text-muted">
+                                                {{ $line['kind'] === 'physical' ? 'Physical · ships separately' : ($line['kind'] === 'service' ? 'Service' : 'Digital') }}
+                                            </small>
+                                            @if(! ($line['in_stock'] ?? true))
+                                                <span class="badge bg-danger ms-1">Out of stock</span>
+                                            @endif
                                         </td>
                                         <td style="width: 140px;">
                                             @if($line['kind'] === 'product')
                                                 <form method="POST" action="{{ route('cart.products.update', $line['id']) }}" class="d-flex align-items-center gap-1">
                                                     @csrf @method('PATCH')
+                                                    <input type="number" name="qty" value="{{ $line['qty'] }}" min="1" class="form-control form-control-sm" style="width: 70px;">
+                                                    <button class="btn btn-sm btn-outline-secondary" title="Update"><i class="bi bi-arrow-repeat"></i></button>
+                                                </form>
+                                            @elseif($line['kind'] === 'physical')
+                                                <form method="POST" action="{{ route('cart.physical.update', $line['id']) }}" class="d-flex align-items-center gap-1">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="variant_id" value="{{ $line['variant_id'] }}">
                                                     <input type="number" name="qty" value="{{ $line['qty'] }}" min="1" class="form-control form-control-sm" style="width: 70px;">
                                                     <button class="btn btn-sm btn-outline-secondary" title="Update"><i class="bi bi-arrow-repeat"></i></button>
                                                 </form>
@@ -45,8 +57,18 @@
                                         </td>
                                         <td class="text-end fw-semibold">{{ money($line['subtotal']) }}</td>
                                         <td class="text-end" style="width: 50px;">
-                                            <form method="POST" action="{{ $line['kind'] === 'product' ? route('cart.products.remove', $line['id']) : route('cart.services.remove', $line['id']) }}">
+                                            @php
+                                                $removeAction = match($line['kind']) {
+                                                    'product'  => route('cart.products.remove', $line['id']),
+                                                    'physical' => route('cart.physical.remove', $line['id']),
+                                                    default    => route('cart.services.remove', $line['id']),
+                                                };
+                                            @endphp
+                                            <form method="POST" action="{{ $removeAction }}">
                                                 @csrf @method('DELETE')
+                                                @if($line['kind'] === 'physical')
+                                                    <input type="hidden" name="variant_id" value="{{ $line['variant_id'] }}">
+                                                @endif
                                                 <button class="btn btn-sm btn-link text-danger p-0" title="Remove"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </td>
@@ -80,9 +102,19 @@
                             <span>{{ count($summary['groups']) }}</span>
                         </div>
                         <hr>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Subtotal</span>
+                            <span>{{ money($summary['total']) }}</span>
+                        </div>
+                        @if($shipping > 0)
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Shipping</span>
+                                <span>{{ money($shipping) }}</span>
+                            </div>
+                        @endif
                         <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
                             <span>Total</span>
-                            <span class="text-primary">{{ money($summary['total']) }}</span>
+                            <span class="text-primary">{{ money($grandTotal) }}</span>
                         </div>
                         @auth
                             <a href="{{ route('cart.checkout') }}" class="btn btn-primary w-100">

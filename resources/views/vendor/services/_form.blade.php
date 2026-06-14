@@ -172,7 +172,7 @@
             <div class="card-body">
                 @if(!empty($service->thumbnail ?? null))
                     <div class="mb-2">
-                        <img src="{{ $service->thumbnail_url }}" class="img-thumbnail w-100" style="max-height:140px;object-fit:cover;">
+                        <img src="{{ $service->thumbnail_url }}" class="img-thumbnail w-100 bg-light" style="height:140px;object-fit:contain;">
                     </div>
                 @endif
                 <input type="file" name="thumbnail" accept="image/*"

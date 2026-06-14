@@ -9,7 +9,12 @@
         {{-- Sidebar Filters --}}
         <div class="col-lg-3 mb-4">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white fw-semibold">Filter Products</div>
+                <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center" role="button"
+                     data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+                    <span><i class="bi bi-funnel me-1"></i>Filter Products</span>
+                    <i class="bi bi-chevron-down d-lg-none"></i>
+                </div>
+                <div class="collapse d-lg-block" id="filterCollapse">
                 <div class="card-body">
                     <form action="{{ route('marketplace.products.index') }}" method="GET" id="filterForm">
                         {{-- Search --}}
@@ -77,6 +82,7 @@
                         <a href="{{ route('marketplace.products.index') }}" class="btn btn-outline-secondary btn-sm w-100 mt-2">Clear All</a>
                     </form>
                 </div>
+                </div>{{-- /#filterCollapse --}}
             </div>
         </div>
 

@@ -28,6 +28,15 @@ class OpenDisputeAction
     ): Dispute {
         abort_unless($this->isParty($escrow, $raisedBy), 403, 'You are not a party to this transaction.');
 
+        // Reported first so an already-ticketed escrow gives the right reason
+        // (otherwise the status-based window/dispute checks below fire first and
+        // mislead with "the 24-hour window has closed").
+        abort_if(
+            Dispute::where('escrow_id', $escrow->id)->whereNull('deleted_at')->exists(),
+            422,
+            'A dispute already exists for this transaction.'
+        );
+
         if ($escrow->isProductEscrow()) {
             // Digital purchases: only the buyer may raise a ticket, and only
             // within the 24h post-purchase window.
@@ -44,12 +53,6 @@ class OpenDisputeAction
         } else {
             abort_unless($escrow->canDispute(), 422, 'These funds can no longer be disputed.');
         }
-
-        abort_if(
-            Dispute::where('escrow_id', $escrow->id)->whereNull('deleted_at')->exists(),
-            422,
-            'A dispute already exists for this transaction.'
-        );
 
         return DB::transaction(function () use ($escrow, $raisedBy, $reason, $description, $attachment) {
             $dispute = Dispute::create([

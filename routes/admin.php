@@ -6,8 +6,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Users
-    Route::prefix('users')->name('users.')->group(function () {
+    // Users (super-admin only — managing users / other admins)
+    Route::middleware('permission:users.manage')->prefix('users')->name('users.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('index');
         Route::get('/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'show'])->name('show');
         Route::put('/{user}/status', [\App\Http\Controllers\Admin\UserManagementController::class, 'updateStatus'])->name('status');
@@ -32,8 +32,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{kyc}/reject', [\App\Http\Controllers\Admin\KYCManagementController::class, 'reject'])->name('reject');
     });
 
-    // Withdrawal approvals
-    Route::prefix('withdrawals')->name('withdrawals.')->group(function () {
+    // Withdrawal approvals (super-admin only — payouts)
+    Route::middleware('permission:withdrawals.approve')->prefix('withdrawals')->name('withdrawals.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('index');
         Route::get('/{withdrawal}', [\App\Http\Controllers\Admin\WithdrawalController::class, 'show'])->name('show');
         Route::post('/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('approve');
@@ -57,12 +57,27 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{dispute}/escalate', [\App\Http\Controllers\Admin\AdminDisputeController::class, 'escalate'])->name('escalate');
     });
 
+    // Returns / RMA oversight
+    Route::prefix('returns')->name('returns.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ReturnController::class, 'index'])->name('index');
+        Route::post('/{return}/approve', [\App\Http\Controllers\Admin\ReturnController::class, 'approve'])->name('approve');
+        Route::post('/{return}/reject', [\App\Http\Controllers\Admin\ReturnController::class, 'reject'])->name('reject');
+        Route::post('/{return}/confirm', [\App\Http\Controllers\Admin\ReturnController::class, 'confirm'])->name('confirm');
+    });
+
     // Review moderation
     Route::prefix('reviews')->name('reviews.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ReviewModerationController::class, 'index'])->name('index');
         Route::post('/{review}/approve', [\App\Http\Controllers\Admin\ReviewModerationController::class, 'approve'])->name('approve');
         Route::post('/{review}/hide', [\App\Http\Controllers\Admin\ReviewModerationController::class, 'hide'])->name('hide');
         Route::delete('/{review}', [\App\Http\Controllers\Admin\ReviewModerationController::class, 'destroy'])->name('destroy');
+    });
+
+    // Custom category requests
+    Route::prefix('category-requests')->name('category-requests.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\CategoryRequestController::class, 'index'])->name('index');
+        Route::post('/{categoryRequest}/approve', [\App\Http\Controllers\Admin\CategoryRequestController::class, 'approve'])->name('approve');
+        Route::post('/{categoryRequest}/reject', [\App\Http\Controllers\Admin\CategoryRequestController::class, 'reject'])->name('reject');
     });
 
     // Products moderation
@@ -102,8 +117,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{account}/activate', [\App\Http\Controllers\Admin\AffiliateController::class, 'activate'])->name('activate');
     });
 
-    // Commission settings
-    Route::prefix('commissions')->name('commissions.')->group(function () {
+    // Commission settings (super-admin only)
+    Route::middleware('permission:commissions.manage')->prefix('commissions')->name('commissions.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\CommissionController::class, 'index'])->name('index');
         Route::put('/', [\App\Http\Controllers\Admin\CommissionController::class, 'update'])->name('update');
     });
@@ -117,8 +132,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{user}/unlock', [\App\Http\Controllers\Admin\SecurityController::class, 'unlock'])->name('unlock');
     });
 
-    // Settings
-    Route::prefix('settings')->name('settings.')->group(function () {
+    // Settings (super-admin only)
+    Route::middleware('permission:settings.manage')->prefix('settings')->name('settings.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('index');
         Route::put('/', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('update');
     });

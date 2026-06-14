@@ -1,9 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.account')
 
 @section('title', 'Dashboard')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item active">Dashboard</li>
+@endsection
+
 @section('content')
-<div class="container py-4">
+<div class="container-fluid px-0">
 
     {{-- Welcome bar --}}
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
@@ -12,9 +16,6 @@
             <p class="text-muted mb-0 small">Here's what's happening with your account</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('marketplace.products.index') }}" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-shop me-1"></i>Browse Marketplace
-            </a>
             <a href="{{ route('vendor.onboarding') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-rocket me-1"></i>Start Selling
             </a>
@@ -165,42 +166,6 @@
         </div>
     </div>
 
-    {{-- Manage your account — full navigation --}}
-    <div class="card border-0 shadow-sm mt-4">
-        <div class="card-header bg-white border-0 py-3">
-            <h6 class="fw-bold mb-0">Manage your account</h6>
-            <span class="text-muted small">Everything you can do on Volamani, in one place.</span>
-        </div>
-        <div class="card-body">
-            <div class="row g-3">
-                @foreach([
-                    ['Orders & Downloads','Your purchased products and download links','bi-bag-check','primary', route('orders.index')],
-                    ['Service Orders','Track freelance deliveries, revisions & messages','bi-briefcase','info', route('service-orders.index')],
-                    ['Consultations','Your booked expert sessions','bi-calendar2-check','warning', route('consultations.sessions')],
-                    ['My Requests','Reverse requests you posted & quotes received','bi-megaphone','success', route('requests.my')],
-                    ['Wallet','Balance, funding, withdrawals & history','bi-wallet2','primary', route('wallet.index')],
-                    ['Escrow','Funds held safely on your active purchases','bi-shield-lock','warning', route('escrows.index')],
-                    ['Support Tickets','Raise or track issues on your purchases','bi-life-preserver','danger', route('disputes.index')],
-                    ['Invoices','Invoices & quotations sent to you','bi-receipt','secondary', route('invoices.index')],
-                    ['Discover Stores','Browse and follow vendors','bi-shop','primary', route('vendors.index')],
-                    ['Following','Stores you follow for new listings','bi-person-heart','danger', route('follow.index')],
-                    ['Match Me','Get matched with the right businesses','bi-diagram-3','primary', route('matching.index')],
-                    ['Identity (KYC)','Verify your identity to unlock withdrawals','bi-patch-check','success', route('kyc.index')],
-                    ['Settings','Profile, security & notification preferences','bi-gear','secondary', route('profile.index')],
-                ] as $link)
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <a href="{{ $link[4] }}" class="d-flex align-items-start gap-2 p-3 rounded-3 border h-100 text-decoration-none text-dark hover-lift">
-                            <i class="bi {{ $link[2] }} fs-5 text-{{ $link[3] }}"></i>
-                            <span class="min-width-0">
-                                <span class="d-block fw-semibold small">{{ $link[0] }}</span>
-                                <span class="d-block text-muted" style="font-size:.74rem;line-height:1.25">{{ $link[1] }}</span>
-                            </span>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 

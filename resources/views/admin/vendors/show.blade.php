@@ -8,7 +8,7 @@
 
     <div class="card shadow-sm mb-3">
         <div class="card-body d-flex flex-wrap align-items-center gap-3">
-            <img src="{{ $vendor->logo_url }}" class="rounded" width="64" height="64" alt="">
+            <img src="{{ $vendor->logo_url }}" class="rounded bg-white border" width="64" height="64" style="object-fit:contain;padding:2px" alt="">
             <div class="flex-grow-1">
                 <h5 class="fw-bold mb-0">{{ $vendor->business_name }}</h5>
                 <div class="text-muted small">{{ $vendor->tagline }}</div>

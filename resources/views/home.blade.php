@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Volamani')
-@section('meta_description', "Africa's complete digital business ecosystem. Buy digital products, hire freelancers, and grow your business online.")
+@section('meta_description', "Volamani helps individuals, startups, companies and agencies grow their online presence — a branded storefront to sell digital products, services and physical goods, with escrow-protected payments that bring buyers and sellers together.")
 
 @section('content')
 
@@ -15,22 +15,22 @@
         <div class="row align-items-center g-5 py-4">
             <div class="col-lg-6">
                 <span class="badge rounded-pill mb-3 px-3 py-2 fw-semibold glass text-white">
-                    <i class="bi bi-stars text-warning me-1"></i> Built for Africa — Naira-first
+                    <i class="bi bi-stars text-warning me-1"></i> Grow your online presence — Naira-first
                 </span>
                 <h1 class="display-3 fw-bold text-white lh-1 mb-4">
-                    Sell anything.<br>
-                    Get paid <span style="background:linear-gradient(120deg,#fbbf24,#f59e0b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">securely.</span>
+                    Grow online.<br>
+                    Bring buyers &amp; sellers <span style="background:linear-gradient(120deg,#fbbf24,#f59e0b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">together.</span>
                 </h1>
-                <p class="fs-5 mb-4" style="color:rgba(255,255,255,.72);max-width:520px;">
-                    Digital products, freelance services, consultations and custom requests —
-                    one dashboard, one wallet, escrow on every deal.
+                <p class="fs-5 mb-4" style="color:rgba(255,255,255,.72);max-width:540px;">
+                    Volamani gives individuals, startups, companies and agencies a branded storefront to sell
+                    digital products, services and physical goods — with escrow-protected payments on every deal.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="{{ route('marketplace.products.index') }}" class="btn btn-warning btn-lg fw-bold px-4">
-                        <i class="bi bi-grid-1x2-fill me-2"></i>Explore Marketplace
+                    <a href="{{ route('register') }}" class="btn btn-warning btn-lg fw-bold px-4">
+                        <i class="bi bi-shop me-2"></i>Create Your Store
                     </a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-light btn-lg px-4">
-                        Start Selling Free
+                    <a href="{{ route('marketplace.products.index') }}" class="btn btn-outline-light btn-lg px-4">
+                        Explore Marketplace
                     </a>
                 </div>
                 <div class="d-flex flex-wrap gap-4 mt-5">
@@ -162,6 +162,40 @@
     </div>
 </section>
 
+{{-- ──────────────────── Who it's for ──────────────────── --}}
+<section class="section bg-white border-top">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="eyebrow"><i class="bi bi-people"></i> Who it's for</span>
+            <h2 class="fw-bold mt-2">Built to grow every kind of seller</h2>
+            <p class="lead-muted">From a one-person side hustle to a full agency — establish your online presence and reach more buyers.</p>
+        </div>
+        <div class="row g-4">
+            @foreach([
+                ['bi-person','Individuals','primary','Freelancers, creators and independent sellers — launch a storefront in minutes and start earning.'],
+                ['bi-rocket-takeoff','Startups','success','Validate, sell and collect payments fast, with escrow building buyer trust from day one.'],
+                ['bi-building','Companies','info','Give your business a professional online presence and a second sales channel that runs itself.'],
+                ['bi-diagram-3','Agencies','warning','Showcase services, manage clients and take bookings — all under your own branded store.'],
+            ] as $a)
+            <div class="col-6 col-lg-3">
+                <div class="card hover-lift h-100 text-center p-3">
+                    <div class="card-body">
+                        <div class="feature-tile mx-auto mb-3 bg-{{ $a[2] }} bg-opacity-10 text-{{ $a[2] }}">
+                            <i class="bi {{ $a[0] }}"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">{{ $a[1] }}</h5>
+                        <p class="text-muted small mb-0">{{ $a[3] }}</p>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ route('register') }}" class="btn btn-primary px-4">Start growing free <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+    </div>
+</section>
+
 {{-- ──────────────────── Pillars ──────────────────── --}}
 <section class="section bg-surface">
     <div class="container">
@@ -249,6 +283,62 @@
         </div>
     </div>
 </section>
+
+{{-- ──────────────────── Subscription Plans ──────────────────── --}}
+@if($plans->isNotEmpty())
+<section class="section bg-surface border-top">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="eyebrow"><i class="bi bi-stars"></i> Seller plans</span>
+            <h2 class="fw-bold mt-2">Plans that grow with you</h2>
+            <p class="lead-muted">Lower commission, higher limits and featured placement as you scale. Upgrade anytime.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            @foreach($plans as $plan)
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 {{ $plan->is_popular ? 'border-primary shadow' : 'border-0 shadow-sm' }} position-relative">
+                    @if($plan->is_popular)
+                        <span class="badge bg-primary position-absolute top-0 start-50 translate-middle px-3 py-2 rounded-pill">Most popular</span>
+                    @endif
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-1">{{ $plan->name }}</h5>
+                        @if($plan->tagline)<p class="text-muted small mb-3">{{ $plan->tagline }}</p>@endif
+
+                        <div class="mb-3">
+                            <span class="display-6 fw-bold">{{ $plan->isFree() ? 'Free' : money($plan->price) }}</span>
+                            @unless($plan->isFree())<span class="text-muted">{{ $plan->billing_interval->shortLabel() }}</span>@endunless
+                        </div>
+
+                        <ul class="list-unstyled small mb-4 flex-grow-1">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ $plan->productLimitLabel() }} products</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ $plan->serviceLimitLabel() }} services</li>
+                            @if($plan->commission_rate !== null)
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ rtrim(rtrim(number_format($plan->commission_rate, 2), '0'), '.') }}% commission</li>
+                            @endif
+                            @if($plan->featured_listing)
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Featured store placement</li>
+                            @endif
+                            @if($plan->hasTrial())
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ $plan->trial_days }}-day free trial</li>
+                            @endif
+                            @foreach(($plan->perks ?? []) as $perk)
+                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ $perk }}</li>
+                            @endforeach
+                        </ul>
+
+                        @auth
+                            <a href="{{ route('vendor.subscription.index') }}" class="btn {{ $plan->is_popular ? 'btn-primary' : 'btn-outline-primary' }} w-100">Choose {{ $plan->name }}</a>
+                        @else
+                            <a href="{{ route('register') }}" class="btn {{ $plan->is_popular ? 'btn-primary' : 'btn-outline-primary' }} w-100">Get started</a>
+                        @endauth
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- ──────────────────── CTA ──────────────────── --}}
 <section class="section">

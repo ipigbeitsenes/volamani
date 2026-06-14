@@ -14,7 +14,7 @@
                     <h5 class="card-title">Order Summary</h5>
                     @if ($product->thumbnail_url)
                         <img src="{{ $product->thumbnail_url }}" alt="{{ $product->name }}"
-                            class="img-fluid rounded mb-3" style="max-height:140px;object-fit:cover;width:100%">
+                            class="img-fluid rounded mb-3 bg-light" style="height:140px;object-fit:contain;width:100%">
                     @endif
                     <h6>{{ $product->name }}</h6>
                     <p class="small text-muted mb-3">by {{ $product->vendor->business_name }}</p>

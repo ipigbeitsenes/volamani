@@ -13,7 +13,7 @@ class ProductRequest extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'buyer_id', 'category_id', 'title', 'description',
+        'buyer_id', 'vendor_id', 'category_id', 'title', 'description',
         'budget_min', 'budget_max', 'attachments', 'deadline_at',
         'status', 'quotations_count', 'accepted_quotation_id',
         'closed_at', 'is_public', 'location',
@@ -35,6 +35,12 @@ class ProductRequest extends Model
     public function buyer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    /** The target vendor when this is a direct request (null = open board). */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
     public function category(): BelongsTo
@@ -62,6 +68,17 @@ class ProductRequest extends Model
     public function scopeForBuyer($query, int $userId)
     {
         return $query->where('buyer_id', $userId);
+    }
+
+    /** Direct requests sent to a specific vendor. */
+    public function scopeForVendor($query, int $vendorId)
+    {
+        return $query->where('vendor_id', $vendorId);
+    }
+
+    public function isDirect(): bool
+    {
+        return $this->vendor_id !== null;
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────

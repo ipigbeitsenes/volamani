@@ -56,9 +56,15 @@
                             @enderror
                             <div class="form-text">Minimum: ₦500</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            Fund via Paystack
-                        </button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="method" value="paystack" class="btn btn-primary">
+                                <i class="bi bi-credit-card me-1"></i>Fund via Paystack
+                            </button>
+                            <button type="submit" name="method" value="bank_transfer" class="btn btn-outline-primary">
+                                <i class="bi bi-bank me-1"></i>Fund via Bank Transfer
+                            </button>
+                        </div>
+                        <div class="form-text mt-2">Bank transfer is confirmed by an admin after you upload your payment proof.</div>
                     </form>
                 </div>
             </div>

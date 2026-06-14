@@ -21,13 +21,23 @@ class QuotationController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('vendor.quotations.index', compact('quotations'));
+        // Open direct requests sent to this store (awaiting a quotation).
+        $directRequests = ProductRequest::with('buyer', 'category')
+            ->forVendor($vendor->id)
+            ->where('status', \App\Enums\RequestStatus::Open->value)
+            ->latest()
+            ->get();
+
+        return view('vendor.quotations.index', compact('quotations', 'directRequests'));
     }
 
     public function store(SubmitQuotationRequest $request, int $productRequestId)
     {
         $productRequest = ProductRequest::findOrFail($productRequestId);
         $vendor         = $request->user()->vendor;
+
+        // A direct request can only be quoted by the vendor it was sent to.
+        abort_if($productRequest->vendor_id !== null && $productRequest->vendor_id !== $vendor->id, 403);
 
         $this->requestService->submitQuotation($productRequest, $vendor, $request->validated());
 

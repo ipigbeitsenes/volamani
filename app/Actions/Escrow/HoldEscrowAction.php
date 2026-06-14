@@ -102,14 +102,17 @@ class HoldEscrowAction
     }
 
     /**
-     * Digital products auto-release after a buyer-protection window measured in
-     * business working days (weekends + Nigerian public holidays skipped), unless
-     * a support ticket freezes the funds first. Service orders and consultations
-     * release on explicit completion (no timed auto-release).
+     * Digital product orders auto-release after a buyer-protection window measured
+     * in business working days (weekends + Nigerian public holidays skipped),
+     * unless a support ticket freezes the funds first.
+     *
+     * PHYSICAL orders have NO timer at payment — funds release only once delivery
+     * is confirmed (buyer "confirm receipt", or a fallback timer set at delivery
+     * time). Service orders and consultations release on explicit completion.
      */
     private function autoReleaseAt(Model $escrowable): ?\Illuminate\Support\Carbon
     {
-        if ($escrowable instanceof Order) {
+        if ($escrowable instanceof Order && ! $escrowable->requires_shipping) {
             $days = (int) config('business_days.release_days', 3);
             return app(\App\Support\BusinessDayCalculator::class)
                 ->addBusinessDays(now(), max(1, $days));
