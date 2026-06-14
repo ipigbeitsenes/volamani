@@ -46,7 +46,9 @@ sweep none guest
 
 for role in "admin superadmin@volamani.com SuperAdmin@123456" \
             "vendor pixel@example.com password" \
-            "buyer chioma@example.com password"; do
+            "buyer chioma@example.com password" \
+            "support support@volamani.com Support@123456" \
+            "finance finance@volamani.com Finance@123456"; do
   set -- $role
   jar=$OUT/$1.jar
   rc=$(login "$jar" "$2" "$3")
@@ -55,4 +57,4 @@ for role in "admin superadmin@volamani.com SuperAdmin@123456" \
 done
 
 echo "=== 5xx detail (all roles) ==="
-grep -h '^5' $OUT/guest.txt $OUT/admin.txt $OUT/vendor.txt $OUT/buyer.txt 2>/dev/null | sort -u || echo "NONE"
+grep -h '^5' $OUT/guest.txt $OUT/admin.txt $OUT/vendor.txt $OUT/buyer.txt $OUT/support.txt $OUT/finance.txt 2>/dev/null | sort -u || echo "NONE"

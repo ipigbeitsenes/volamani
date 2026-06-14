@@ -31,7 +31,7 @@ class NavigationRendersTest extends TestCase
         $this->actingAs($user)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Manage your account')
+            ->assertSee('Welcome back')
             ->assertSee('Support Tickets')
             ->assertSee('Service Orders');
     }
