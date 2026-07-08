@@ -143,6 +143,13 @@
                     <span class="badge bg-danger rounded-pill ms-auto">{{ $vlCbOpen }}</span>
                 @endif
             </a>
+            @php($vlFlaggedBuyers = \App\Models\User::where('buyer_flagged', true)->count())
+            <a href="{{ route('admin.buyers.index') }}" class="nav-link {{ active_prefix('admin/buyers') }}">
+                <i class="bi bi-person-exclamation"></i> Buyer Standing
+                @if($vlFlaggedBuyers > 0)
+                    <span class="badge bg-warning text-dark rounded-pill ms-auto">{{ $vlFlaggedBuyers }}</span>
+                @endif
+            </a>
             @php($vlChatUnread = app(\App\Repositories\Chat\ChatRepository::class)->unansweredCount())
             <a href="{{ route('admin.live-chat.index') }}" class="nav-link {{ active_prefix('admin/live-chat') }}">
                 <i class="bi bi-chat-dots"></i> Live Chat

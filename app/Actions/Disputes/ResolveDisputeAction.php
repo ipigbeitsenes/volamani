@@ -2,7 +2,9 @@
 
 namespace App\Actions\Disputes;
 
+use App\Actions\Buyers\AddBuyerStrikeAction;
 use App\Actions\Vendors\AddStrikeAction;
+use App\Enums\BuyerStrikeReason;
 use App\Enums\DisputeResolution;
 use App\Enums\DisputeStatus;
 use App\Enums\StrikeReason;
@@ -15,8 +17,9 @@ use Illuminate\Support\Facades\DB;
 class ResolveDisputeAction
 {
     public function __construct(
-        private EscrowService   $escrowService,
-        private AddStrikeAction $addStrike,
+        private EscrowService        $escrowService,
+        private AddStrikeAction       $addStrike,
+        private AddBuyerStrikeAction  $addBuyerStrike,
     ) {}
 
     /**
@@ -68,6 +71,20 @@ class ResolveDisputeAction
                     $dispute->vendor,
                     StrikeReason::LostDispute,
                     "Dispute {$dispute->reference} resolved in the buyer's favour",
+                    $dispute->id,
+                    $admin,
+                );
+            }
+
+            // A full release to the seller (or a dismissal) means the buyer's
+            // complaint was not upheld — record a buyer abuse strike. Partial
+            // "split" outcomes are ambiguous, so they never strike the buyer.
+            if (in_array($resolution, [DisputeResolution::ReleaseToVendor, DisputeResolution::Dismissed], true)
+                && $dispute->buyer) {
+                $this->addBuyerStrike->execute(
+                    $dispute->buyer,
+                    BuyerStrikeReason::LostDispute,
+                    "Dispute {$dispute->reference} resolved in the seller's favour",
                     $dispute->id,
                     $admin,
                 );

@@ -40,6 +40,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_login_ip',
         'failed_login_attempts',
         'locked_until',
+        'buyer_strikes',
+        'buyer_strikes_updated_at',
+        'buyer_flagged',
+        'buyer_flagged_at',
+        'purchases_suspended',
+        'purchases_suspended_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -55,7 +61,32 @@ class User extends Authenticatable implements MustVerifyEmail
             'user_type'         => UserType::class,
             'kyc_status'        => KYCStatus::class,
             'password'          => 'hashed',
+            'buyer_strikes'            => 'integer',
+            'buyer_strikes_updated_at' => 'datetime',
+            'buyer_flagged'            => 'boolean',
+            'buyer_flagged_at'         => 'datetime',
+            'purchases_suspended'      => 'boolean',
+            'purchases_suspended_at'   => 'datetime',
         ];
+    }
+
+    // ─── Buyer abuse standing ───────────────────────────────────────────────
+
+    public function buyerStrikes(): HasMany
+    {
+        return $this->hasMany(BuyerStrike::class);
+    }
+
+    /** Blocked from new purchases / disputes for repeated buyer-protection abuse. */
+    public function purchasesSuspended(): bool
+    {
+        return (bool) $this->purchases_suspended;
+    }
+
+    /** Flagged for admin review (soft) but not yet blocked. */
+    public function isFlaggedBuyer(): bool
+    {
+        return (bool) $this->buyer_flagged;
     }
 
     protected static function booted(): void

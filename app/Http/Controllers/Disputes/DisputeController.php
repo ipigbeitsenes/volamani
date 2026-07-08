@@ -106,6 +106,12 @@ class DisputeController extends Controller
      */
     private function guardCanOpen(Escrow $escrow): ?RedirectResponse
     {
+        // Buyers restricted for repeated unupheld claims can't open new tickets.
+        if (auth()->user()?->purchasesSuspended()) {
+            return redirect()->route('escrows.show', $escrow)
+                ->with('error', 'Your account is restricted from opening new disputes. Please contact support.');
+        }
+
         // Already ticketed → send them to the existing one (checked first so the
         // message is accurate; a disputed escrow also fails canRaiseTicket()).
         $existing = Dispute::where('escrow_id', $escrow->id)->latest()->first();

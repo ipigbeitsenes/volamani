@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             // Application middleware
             'vendor.approved'    => \App\Http\Middleware\EnsureVendorApproved::class,
             'kyc.verified'       => \App\Http\Middleware\EnsureKYCVerified::class,
+            'buyer.active'       => \App\Http\Middleware\EnsureBuyerNotSuspended::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

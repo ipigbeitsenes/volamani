@@ -45,6 +45,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Buyer abuse strikes → flag / block (serial "fake buyer" protection)
+    |--------------------------------------------------------------------------
+    | The buyer-side mirror of vendor strikes. A buyer accumulates a strike when
+    | a dispute THEY raised is resolved fully in the seller's favour, or a
+    | chargeback THEY filed is won by the merchant (a friendly-fraud signal).
+    |
+    |   buyer_flag_threshold    — active strikes that auto-flag the account for
+    |                             admin review (soft; does not block anything).
+    |   buyer_suspend_threshold — active strikes that block the buyer from making
+    |                             new purchases and opening new disputes until an
+    |                             admin lifts it (or strikes are cleared below it).
+    |
+    | Admin-overridable via `buyer_flag_threshold` / `buyer_suspend_threshold`.
+    */
+    'buyer_flag_threshold'    => 2,
+    'buyer_suspend_threshold' => 4,
+
+    /*
+    |--------------------------------------------------------------------------
     | Trust-tier limits
     |--------------------------------------------------------------------------
     | Per-tier guardrails resolved by TrustTier::limits(). All money values are

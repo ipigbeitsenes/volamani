@@ -2,7 +2,9 @@
 
 namespace App\Actions\Chargebacks;
 
+use App\Actions\Buyers\AddBuyerStrikeAction;
 use App\Actions\Vendors\AddStrikeAction;
+use App\Enums\BuyerStrikeReason;
 use App\Enums\ChargebackStatus;
 use App\Enums\EscrowStatus;
 use App\Enums\StrikeReason;
@@ -16,9 +18,10 @@ use Illuminate\Support\Facades\DB;
 class ResolveChargebackAction
 {
     public function __construct(
-        private EscrowService   $escrowService,
-        private WalletService   $walletService,
-        private AddStrikeAction $addStrike,
+        private EscrowService        $escrowService,
+        private WalletService        $walletService,
+        private AddStrikeAction       $addStrike,
+        private AddBuyerStrikeAction  $addBuyerStrike,
     ) {}
 
     /**
@@ -50,6 +53,18 @@ class ResolveChargebackAction
                         "Chargeback {$chargeback->reference} won — clawback reversed",
                         $chargeback,
                         ['chargeback_reference' => $chargeback->reference]
+                    );
+                }
+
+                // Merchant won → the buyer's bank dispute was overturned, a strong
+                // friendly-fraud signal. Strike the buyer.
+                if ($chargeback->buyer) {
+                    $this->addBuyerStrike->execute(
+                        $chargeback->buyer,
+                        BuyerStrikeReason::FraudulentChargeback,
+                        "Chargeback {$chargeback->reference} won by the merchant",
+                        $chargeback->id,
+                        $admin,
                     );
                 }
             } else {

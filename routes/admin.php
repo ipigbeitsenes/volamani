@@ -27,6 +27,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/strikes/{strike}/clear', [\App\Http\Controllers\Admin\VendorStrikeController::class, 'clear'])->name('strikes.clear');
     });
 
+    // Buyer abuse strikes (serial "fake buyer" protection)
+    Route::prefix('buyers')->name('buyers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\BuyerStrikeController::class, 'index'])->name('index');
+        Route::get('/{user}', [\App\Http\Controllers\Admin\BuyerStrikeController::class, 'show'])->name('show');
+        Route::post('/{user}/strikes', [\App\Http\Controllers\Admin\BuyerStrikeController::class, 'store'])->name('strikes.store');
+        Route::post('/{user}/reinstate', [\App\Http\Controllers\Admin\BuyerStrikeController::class, 'reinstate'])->name('reinstate');
+        Route::post('/strikes/{strike}/clear', [\App\Http\Controllers\Admin\BuyerStrikeController::class, 'clear'])->name('strikes.clear');
+    });
+
     // KYC management
     Route::prefix('kyc')->name('kyc.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\KYCManagementController::class, 'index'])->name('index');

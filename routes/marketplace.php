@@ -11,7 +11,7 @@ Route::prefix('marketplace')->name('marketplace.')->group(function () {
     Route::get('/services', [\App\Http\Controllers\Freelance\ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/{slug}', [\App\Http\Controllers\Freelance\ServiceController::class, 'show'])->name('services.show');
     Route::post('/services/{slug}/order', [\App\Http\Controllers\Freelance\ServiceController::class, 'placeOrder'])
-        ->middleware('auth')->name('services.order');
+        ->middleware(['auth', 'buyer.active'])->name('services.order');
 
     Route::get('/requests', [\App\Http\Controllers\Requests\ProductRequestController::class, 'index'])->name('requests.index');
     Route::get('/requests/{id}', [\App\Http\Controllers\Requests\ProductRequestController::class, 'show'])->name('requests.show');
@@ -39,7 +39,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'checkout'])->name('checkout');
-        Route::post('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'process'])->middleware('throttle:20,1')->name('process');
+        Route::post('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active'])->name('process');
     });
 });
 
@@ -78,10 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/product/{product}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'product'])->name('product');
         Route::get('/physical/{product}',         [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'show'])->name('physical');
-        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->middleware('throttle:20,1')->name('physical.process');
+        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active'])->name('physical.process');
         Route::get('/service-order/{serviceOrder}', [\App\Http\Controllers\Payment\CheckoutController::class, 'serviceOrder'])->name('service-order');
         Route::get('/consultation/{session}',     [\App\Http\Controllers\Payment\CheckoutController::class, 'consultation'])->name('consultation');
-        Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->middleware('throttle:20,1')->name('process');
+        Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active'])->name('process');
         Route::get('/bank-transfer/{payment}',    [\App\Http\Controllers\Payment\CheckoutController::class, 'bankTransfer'])->name('bank-transfer');
         Route::post('/bank-transfer/{payment}/proof', [\App\Http\Controllers\Payment\BankTransferController::class, 'uploadProof'])->name('bank-transfer.proof');
         Route::get('/pending/{payment}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'pending'])->name('pending');
