@@ -227,3 +227,4 @@ The code is production‑ready; these are the **operational** steps before going
 All 22 core modules (0–21) are complete, plus physical commerce, support & finance consoles, the super‑admin split, returns/RMA, referral payouts, and the buyer‑protection ticket model. The platform runs end‑to‑end on Docker with a clean route sweep and a green test suite.
 
 **Known follow‑ups (not blockers):** broader automated test coverage for the newest flows (physical checkout, returns, role split); the operational items in the checklist above; and remaining buyer‑protection ideas (chargebacks, dispute SLAs, KYC‑tiered limits, a public policy page).
+# volamanimultivendor
