@@ -31,7 +31,10 @@ class SecurityHeaders
                 "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com",
                 "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:",
                 "img-src 'self' data: https:",
-                "connect-src 'self' https://api.paystack.co",
+                // jsdelivr is allowed so the browser can fetch Bootstrap's
+                // .css.map / .js.map source maps (requested via connect-src when
+                // DevTools is open) without CSP console errors.
+                "connect-src 'self' https://api.paystack.co https://cdn.jsdelivr.net",
                 "frame-ancestors 'self'",
                 // Paystack: the pay button posts to us, then we 302-redirect the
                 // buyer to Paystack's hosted checkout. Without these origins the
