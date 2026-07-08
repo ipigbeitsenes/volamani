@@ -23,9 +23,7 @@
         .sidebar {
             width: var(--vl-sidebar-width);
             background: var(--vl-sidebar-bg);
-            min-height: 100vh;
             position: fixed; top: 0; left: 0; z-index: 100;
-            overflow-y: auto;
         }
         .sidebar-brand {
             font-weight: 800; font-size: 1.4rem; color: #fff;
@@ -51,11 +49,6 @@
         }
         .page-content { padding: 1.5rem; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: transform .3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-        }
     </style>
     @stack('styles')
 </head>
@@ -113,7 +106,7 @@
 <div class="main-content">
     <div class="topbar d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+            <button class="btn btn-sm btn-outline-secondary d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
             <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0 small">@yield('breadcrumb')</ol></nav>
         </div>
         <div class="d-flex align-items-center gap-3">
@@ -171,13 +164,9 @@
 </div>
 
 @include('layouts.partials.chat-widget')
+@include('layouts.partials.dashboard-sidebar')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.getElementById('sidebarToggle')?.addEventListener('click', function () {
-        document.getElementById('sidebar').classList.toggle('open');
-    });
-</script>
 @stack('scripts')
 </body>
 </html>

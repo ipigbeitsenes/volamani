@@ -76,11 +76,6 @@
         .page-content { padding: 1.5rem; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; }
         .stat-card { border-left: 4px solid var(--vl-primary); }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-        }
     </style>
 
     @stack('styles')
@@ -179,7 +174,7 @@
         <!-- Top bar -->
         <div class="topbar d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle">
+                <button class="btn btn-sm btn-outline-secondary d-lg-none" id="sidebarToggle">
                     <i class="bi bi-list"></i>
                 </button>
                 <nav aria-label="breadcrumb">
@@ -247,13 +242,9 @@
     </div>
 
     @include('layouts.partials.chat-widget')
+    @include('layouts.partials.dashboard-sidebar')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        });
-    </script>
     @stack('scripts')
 </body>
 </html>

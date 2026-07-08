@@ -72,19 +72,6 @@
         }
         .page-content { padding: 1.5rem; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; }
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.5);
-            z-index: 99;
-        }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .sidebar-backdrop.show { display: block; }
-        }
     </style>
 
     @stack('styles')
@@ -122,12 +109,10 @@
         </div>
     </nav>
 
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-
     <div class="main-content">
         <div class="topbar d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle">
+                <button class="btn btn-sm btn-outline-secondary d-lg-none" id="sidebarToggle">
                     <i class="bi bi-list"></i>
                 </button>
                 <nav aria-label="breadcrumb">
@@ -184,21 +169,9 @@
         </div>
     </div>
 
+    @include('layouts.partials.dashboard-sidebar')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        (function () {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            document.getElementById('sidebarToggle')?.addEventListener('click', function () {
-                sidebar.classList.toggle('open');
-                backdrop.classList.toggle('show');
-            });
-            backdrop?.addEventListener('click', function () {
-                sidebar.classList.remove('open');
-                backdrop.classList.remove('show');
-            });
-        })();
-    </script>
     @stack('scripts')
 </body>
 </html>
