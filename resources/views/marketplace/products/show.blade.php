@@ -160,18 +160,17 @@
                         @endif
                     </div>
 
-                    {{-- Ratings --}}
-                    @if($product->reviews_count > 0)
-                        <div class="mb-3 d-flex align-items-center gap-2">
-                            <div class="text-warning">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <i class="bi bi-star{{ $i <= round($product->average_rating) ? '-fill' : '' }}"></i>
-                                @endfor
-                            </div>
-                            <span class="fw-semibold">{{ number_format($product->average_rating, 1) }}</span>
-                            <span class="text-muted small">({{ $product->reviews_count }} reviews)</span>
-                        </div>
-                    @endif
+                    {{-- Ratings (always shown) --}}
+                    <div class="mb-3">
+                        <x-rating-stars :rating="$product->average_rating" :count="$product->reviews_count" size="lg" />
+                    </div>
+
+                    {{-- Share / copy link --}}
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 pb-3 border-bottom">
+                        <span class="text-muted small fw-semibold me-1">Share:</span>
+                        <x-share :url="route('marketplace.products.show', $product->slug)"
+                                 :title="$product->name" size="sm" :label="false" />
+                    </div>
 
                     {{-- Meta --}}
                     <ul class="list-unstyled small text-muted mb-3">

@@ -39,15 +39,10 @@
             </a>
         </h6>
 
-        <div class="mb-2">
-            @if($product->average_rating > 0)
-                <span class="text-warning small">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="bi bi-star{{ $i <= round($product->average_rating) ? '-fill' : '' }}"></i>
-                    @endfor
-                </span>
-                <span class="text-muted small">({{ $product->reviews_count }})</span>
-            @endif
+        <div class="mb-2 d-flex align-items-center justify-content-between gap-2">
+            <x-rating-stars :rating="$product->average_rating" :count="$product->reviews_count" size="sm" />
+            <x-share :url="route('marketplace.products.show', $product->slug)"
+                     :title="$product->name" size="sm" :label="false" :copy-button="false" />
         </div>
 
         <div class="mt-auto d-flex justify-content-between align-items-center">

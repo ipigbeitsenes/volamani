@@ -33,18 +33,17 @@
                          alt="{{ $service->vendor->business_name }}">
                     <span class="fw-semibold small">{{ $service->vendor->business_name }}</span>
                 </a>
-                @if($service->average_rating > 0)
-                    <div class="text-warning small">
-                        @for($i = 1; $i <= 5; $i++)
-                            <i class="bi bi-star{{ $i <= round($service->average_rating) ? '-fill' : '' }}"></i>
-                        @endfor
-                        <span class="text-dark fw-semibold">{{ number_format($service->average_rating, 1) }}</span>
-                        <span class="text-muted">({{ $service->reviews_count }})</span>
-                    </div>
-                @endif
+                <x-rating-stars :rating="$service->average_rating" :count="$service->reviews_count" size="md" />
                 <span class="text-muted small">
                     <i class="bi bi-bag-check me-1"></i>{{ number_format($service->orders_count) }} orders
                 </span>
+            </div>
+
+            {{-- Share / copy link --}}
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                <span class="text-muted small fw-semibold me-1">Share:</span>
+                <x-share :url="route('marketplace.services.show', $service->slug)"
+                         :title="$service->title" size="sm" :label="false" />
             </div>
 
             {{-- Thumbnail --}}

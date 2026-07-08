@@ -21,16 +21,11 @@
             </a>
         </h6>
 
-        @if($service->average_rating > 0)
-            <div class="mb-2">
-                <span class="text-warning small">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="bi bi-star{{ $i <= round($service->average_rating) ? '-fill' : '' }}"></i>
-                    @endfor
-                </span>
-                <span class="text-muted small">({{ $service->reviews_count }})</span>
-            </div>
-        @endif
+        <div class="mb-2 d-flex align-items-center justify-content-between gap-2">
+            <x-rating-stars :rating="$service->average_rating" :count="$service->reviews_count" size="sm" />
+            <x-share :url="route('marketplace.services.show', $service->slug)"
+                     :title="$service->title" size="sm" :label="false" :copy-button="false" />
+        </div>
 
         <div class="mt-auto d-flex justify-content-between align-items-center">
             <div class="text-muted small">
