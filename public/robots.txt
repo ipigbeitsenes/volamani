@@ -1,2 +1,32 @@
+# Volamani — https://www.volamani.com
 User-agent: *
-Disallow:
+Allow: /
+
+# Private / non-content areas — no value in the search index.
+Disallow: /admin
+Disallow: /support
+Disallow: /finance
+Disallow: /vendor
+Disallow: /wallet
+Disallow: /escrows
+Disallow: /disputes
+Disallow: /orders
+Disallow: /returns
+Disallow: /invoices
+Disallow: /kyc
+Disallow: /notifications
+Disallow: /checkout
+Disallow: /cart
+Disallow: /service-orders
+Disallow: /consultations
+Disallow: /matching
+Disallow: /pricing-calculator
+Disallow: /i/
+Disallow: /r/
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /*?*sort=
+Disallow: /*?*page=
+
+Sitemap: https://www.volamani.com/sitemap.xml

@@ -1,6 +1,48 @@
 @extends('layouts.app')
 
-@section('title', $product->seo_title ?? $product->name . ' — Volamani')
+@php
+    $seoName  = $product->seo_title ?: $product->name;
+    $seoDesc  = \Illuminate\Support\Str::limit(strip_tags($product->seo_description ?: ($product->short_description ?: $product->description)), 155);
+    $seoImg   = $product->thumbnail_url;
+    if ($seoImg && ! \Illuminate\Support\Str::startsWith($seoImg, ['http://', 'https://', '//', 'data:'])) {
+        $seoImg = url($seoImg);
+    }
+    $seoAvailable = $product->isDigital() || $product->inStock();
+    $seoReviewCount = (int) ($product->reviews_count ?? $product->reviews()->count());
+@endphp
+
+@section('title', $seoName)
+@section('meta_description', $seoDesc)
+@section('og_type', 'product')
+@section('og_image', $seoImg)
+
+@push('schema')
+<script type="application/ld+json">
+{!! json_encode(array_filter([
+    '@context' => 'https://schema.org',
+    '@type'    => 'Product',
+    'name'     => $product->name,
+    'description' => $seoDesc,
+    'image'    => $seoImg,
+    'sku'      => (string) $product->id,
+    'category' => $product->displayCategory(),
+    'brand'    => $product->vendor ? ['@type' => 'Brand', 'name' => $product->vendor->business_name] : null,
+    'offers'   => [
+        '@type'         => 'Offer',
+        'url'           => route('marketplace.products.show', $product->slug),
+        'priceCurrency' => 'NGN',
+        'price'         => number_format($product->price / 100, 2, '.', ''),
+        'availability'  => 'https://schema.org/' . ($seoAvailable ? 'InStock' : 'OutOfStock'),
+        'seller'        => $product->vendor ? ['@type' => 'Organization', 'name' => $product->vendor->business_name] : null,
+    ],
+    'aggregateRating' => ($product->average_rating > 0 && $seoReviewCount > 0) ? [
+        '@type'       => 'AggregateRating',
+        'ratingValue' => number_format($product->average_rating, 1),
+        'reviewCount' => $seoReviewCount,
+    ] : null,
+], fn ($v) => $v !== null), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @section('content')
 <div class="container py-4">

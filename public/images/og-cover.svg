@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b1220"/>
+      <stop offset="0.55" stop-color="#15275f"/>
+      <stop offset="1" stop-color="#1a56db"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c7d2fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1020" cy="120" r="260" fill="#4f46e5" opacity="0.18"/>
+  <circle cx="180" cy="560" r="220" fill="#3b82f6" opacity="0.15"/>
+  <g transform="translate(96,150)">
+    <rect x="0" y="0" width="96" height="96" rx="22" fill="#1a56db"/>
+    <text x="48" y="70" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-size="60" font-weight="800" fill="#ffffff" text-anchor="middle">V</text>
+    <text x="120" y="70" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-size="58" font-weight="800" fill="#ffffff">Volamani</text>
+  </g>
+  <text x="96" y="360" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-size="74" font-weight="800" fill="url(#ink)">Africa's digital business</text>
+  <text x="96" y="446" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-size="74" font-weight="800" fill="url(#ink)">marketplace</text>
+  <text x="98" y="520" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="500" fill="#93c5fd">Digital products · Freelance services · Physical goods · Secure escrow</text>
+</svg>

@@ -6,7 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#0b1220">
     @include('layouts.partials.favicon')
-    <title>@yield('title', 'Sign In') — Volamani</title>
+    <title>@yield('title', 'Sign In') — {{ settings('site_name', config('app.name', 'Volamani')) }}</title>
+    <meta name="description" content="@yield('meta_description', 'Sign in or create your account to buy and sell on ' . settings('site_name', 'Volamani') . '.')">
+    {{-- Account/auth screens carry no unique content — keep them out of the search index. --}}
+    <meta name="robots" content="noindex, follow">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">

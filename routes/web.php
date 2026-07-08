@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// XML sitemap for search engines (referenced from robots.txt).
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 // Public informational pages (footer links)
 Route::controller(\App\Http\Controllers\PageController::class)->name('pages.')->group(function () {
     Route::get('/about',        'about')->name('about');

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Volamani')
+{{-- No @section('title') on purpose: the home page uses the branded default
+     "Volamani — Africa's Digital Business Ecosystem" from layouts.partials.seo. --}}
 @section('meta_description', "Volamani helps individuals, startups, companies and agencies grow their online presence — a branded storefront to sell digital products, services and physical goods, with escrow-protected payments that bring buyers and sellers together.")
 
 @push('styles')
