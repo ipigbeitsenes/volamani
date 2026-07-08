@@ -31,6 +31,13 @@ class ChatConversation extends Model
     {
         static::creating(function (self $conversation) {
             $conversation->token ??= (string) Str::uuid();
+            // Set defaults on the instance itself — DB column defaults are NOT
+            // reflected back on the model returned by create(), which otherwise
+            // leaves status null and crashes status->value on the first response.
+            $conversation->status         ??= ChatConversationStatus::Open;
+            $conversation->bot_replied    ??= false;
+            $conversation->agent_unread   ??= 0;
+            $conversation->visitor_unread ??= 0;
         });
     }
 
