@@ -9,13 +9,16 @@
 @section('content')
 <div class="container-fluid px-0">
 
-    {{-- Welcome bar --}}
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    {{-- Page header --}}
+    <div class="vl-page-head">
         <div>
-            <h4 class="fw-bold mb-0">Welcome back, {{ $user->name }}!</h4>
-            <p class="text-muted mb-0 small">Here's what's happening with your account</p>
+            <h1>Welcome back, {{ \Illuminate\Support\Str::of($user->name)->explode(' ')->first() }} 👋</h1>
+            <p class="vl-sub">Here's what's happening with your account today.</p>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('marketplace.products.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-shop me-1"></i>Browse
+            </a>
             <a href="{{ route('vendor.onboarding') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-rocket me-1"></i>Start Selling
             </a>
@@ -54,34 +57,38 @@
             $walletBalance = $user->wallet?->balance ?? 0;
             $totalOrders   = $user->orders()->count();
         @endphp
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3">
-                <div class="text-muted small mb-1">Wallet Balance</div>
-                <div class="fw-bold fs-4">{{ money($walletBalance) }}</div>
-                <a href="{{ route('wallet.index') }}" class="small text-primary mt-1">View wallet</a>
+        <div class="col-6 col-lg-3">
+            <div class="vl-stat">
+                <span class="vl-stat__ico"><i class="bi bi-wallet2"></i></span>
+                <div class="vl-stat__label">Wallet Balance</div>
+                <div class="vl-stat__value">{{ money($walletBalance) }}</div>
+                <a href="{{ route('wallet.index') }}" class="vl-stat__foot text-primary fw-semibold">View wallet <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3">
-                <div class="text-muted small mb-1">Total Orders</div>
-                <div class="fw-bold fs-4">{{ $totalOrders }}</div>
-                <a href="{{ route('orders.index') }}" class="small text-primary mt-1">View orders</a>
+        <div class="col-6 col-lg-3">
+            <div class="vl-stat">
+                <span class="vl-stat__ico"><i class="bi bi-bag-check"></i></span>
+                <div class="vl-stat__label">Total Orders</div>
+                <div class="vl-stat__value">{{ number_format($totalOrders) }}</div>
+                <a href="{{ route('orders.index') }}" class="vl-stat__foot text-primary fw-semibold">View orders <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3">
-                <div class="text-muted small mb-1">Referrals</div>
-                <div class="fw-bold fs-4">{{ $user->referrals()->count() }}</div>
-                <span class="small text-muted mt-1">Code: <strong>{{ $user->referral_code }}</strong></span>
+        <div class="col-6 col-lg-3">
+            <div class="vl-stat">
+                <span class="vl-stat__ico"><i class="bi bi-share"></i></span>
+                <div class="vl-stat__label">Referrals</div>
+                <div class="vl-stat__value">{{ number_format($user->referrals()->count()) }}</div>
+                <span class="vl-stat__foot text-muted">Code: <strong>{{ $user->referral_code }}</strong></span>
             </div>
         </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3">
-                <div class="text-muted small mb-1">KYC Status</div>
-                <div class="mt-1">
+        <div class="col-6 col-lg-3">
+            <div class="vl-stat">
+                <span class="vl-stat__ico"><i class="bi bi-patch-check"></i></span>
+                <div class="vl-stat__label">KYC Status</div>
+                <div class="vl-stat__value" style="font-size:1.1rem;">
                     <span class="badge bg-{{ $user->kyc_status?->badge() ?? 'secondary' }}">{{ $user->kyc_status?->label() ?? 'Unverified' }}</span>
                 </div>
-                <a href="{{ route('kyc.index') }}" class="small text-primary mt-1">Manage KYC</a>
+                <a href="{{ route('kyc.index') }}" class="vl-stat__foot text-primary fw-semibold">Manage KYC <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>

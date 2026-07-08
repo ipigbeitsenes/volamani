@@ -50,6 +50,7 @@
         .page-content { padding: 1.5rem; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; }
     </style>
+    @include('layouts.partials.dashboard-shell')
     @stack('styles')
 </head>
 <body>

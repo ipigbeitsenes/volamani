@@ -32,14 +32,14 @@
 </div>
 @endif
 
-{{-- Welcome --}}
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+{{-- Page header --}}
+<div class="vl-page-head">
     <div>
-        <h4 class="fw-bold mb-0">{{ $vendor->business_name }}</h4>
-        <p class="text-muted mb-0 small">{{ $vendor->tagline ?? 'Welcome to your vendor dashboard' }}</p>
+        <h1>{{ $vendor->business_name }}</h1>
+        <p class="vl-sub">{{ $vendor->tagline ?? 'Welcome to your vendor dashboard' }}</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ $vendor->storefront_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+        <a href="{{ $vendor->storefront_url }}" target="_blank" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-eye me-1"></i>View Storefront
         </a>
         <a href="{{ route('vendor.products.create') }}" class="btn btn-primary btn-sm">
@@ -75,39 +75,43 @@
 
 {{-- Stats --}}
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm stat-card h-100 p-3">
-            <div class="text-muted small mb-1">Wallet Balance</div>
-            <div class="fw-bold fs-4">{{ money($stats['balance']) }}</div>
-            <a href="{{ route('vendor.wallet.index') }}" class="small text-primary mt-1">Manage</a>
+    <div class="col-6 col-lg-3">
+        <div class="vl-stat">
+            <span class="vl-stat__ico"><i class="bi bi-wallet2"></i></span>
+            <div class="vl-stat__label">Wallet Balance</div>
+            <div class="vl-stat__value">{{ money($stats['balance']) }}</div>
+            <a href="{{ route('vendor.wallet.index') }}" class="vl-stat__foot text-primary fw-semibold">Manage <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm stat-card h-100 p-3" style="border-left-color:#059669 !important">
-            <div class="text-muted small mb-1">Total Orders</div>
-            <div class="fw-bold fs-4">{{ $stats['total_orders'] }}</div>
+    <div class="col-6 col-lg-3">
+        <div class="vl-stat">
+            <span class="vl-stat__ico"><i class="bi bi-bag-check"></i></span>
+            <div class="vl-stat__label">Total Orders</div>
+            <div class="vl-stat__value">{{ number_format($stats['total_orders']) }}</div>
             @if(($stats['orders_to_fulfil'] ?? 0) > 0)
-                <a href="{{ route('vendor.orders.index') }}" class="small text-warning fw-semibold mt-1">{{ $stats['orders_to_fulfil'] }} to fulfil →</a>
+                <a href="{{ route('vendor.orders.index') }}" class="vl-stat__foot text-warning fw-semibold">{{ $stats['orders_to_fulfil'] }} to fulfil <i class="bi bi-arrow-right"></i></a>
             @else
-                <a href="{{ route('vendor.orders.index') }}" class="small text-primary mt-1">View all</a>
+                <a href="{{ route('vendor.orders.index') }}" class="vl-stat__foot text-primary fw-semibold">View all <i class="bi bi-arrow-right"></i></a>
             @endif
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm stat-card h-100 p-3" style="border-left-color:#f59e0b !important">
-            <div class="text-muted small mb-1">Products Listed</div>
-            <div class="fw-bold fs-4">{{ $stats['total_products'] }}</div>
-            <a href="{{ route('vendor.products.index') }}" class="small text-primary mt-1">Manage</a>
+    <div class="col-6 col-lg-3">
+        <div class="vl-stat">
+            <span class="vl-stat__ico"><i class="bi bi-box-seam"></i></span>
+            <div class="vl-stat__label">Products Listed</div>
+            <div class="vl-stat__value">{{ number_format($stats['total_products']) }}</div>
+            <a href="{{ route('vendor.products.index') }}" class="vl-stat__foot text-primary fw-semibold">Manage <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm stat-card h-100 p-3" style="border-left-color:#8b5cf6 !important">
-            <div class="text-muted small mb-1">Avg Rating</div>
-            <div class="fw-bold fs-4">
+    <div class="col-6 col-lg-3">
+        <div class="vl-stat">
+            <span class="vl-stat__ico"><i class="bi bi-star"></i></span>
+            <div class="vl-stat__label">Avg Rating</div>
+            <div class="vl-stat__value">
                 {{ $stats['avg_rating'] > 0 ? $stats['avg_rating'] : '—' }}
-                @if($stats['avg_rating'] > 0)<i class="bi bi-star-fill text-warning small"></i>@endif
+                @if($stats['avg_rating'] > 0)<i class="bi bi-star-fill text-warning" style="font-size:1rem;"></i>@endif
             </div>
-            <span class="small text-muted">{{ $stats['total_reviews'] }} reviews</span>
+            <span class="vl-stat__foot text-muted">{{ $stats['total_reviews'] }} reviews</span>
         </div>
     </div>
 </div>

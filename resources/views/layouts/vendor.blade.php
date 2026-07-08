@@ -78,6 +78,7 @@
         .stat-card { border-left: 4px solid var(--vl-primary); }
     </style>
 
+    @include('layouts.partials.dashboard-shell')
     @stack('styles')
 </head>
 <body>
