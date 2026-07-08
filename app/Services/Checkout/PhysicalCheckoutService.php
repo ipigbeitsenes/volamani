@@ -46,6 +46,10 @@ class PhysicalCheckoutService
             return ['status' => 'own_item'];
         }
 
+        if ($product->vendor && ! $product->vendor->deliversTo($address['ship_to_state'] ?? null, $address['ship_to_city'] ?? null)) {
+            return ['status' => 'no_delivery', 'location' => $address['ship_to_city'] ?? $address['ship_to_state'] ?? 'your location'];
+        }
+
         if (! $this->canFulfil($product, $variant, $qty)) {
             return ['status' => 'unavailable'];
         }

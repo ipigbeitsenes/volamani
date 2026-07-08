@@ -3,6 +3,7 @@
 namespace App\Actions\Wallet;
 
 use App\Enums\TransactionType;
+use App\Enums\TrustTier;
 use App\Enums\WithdrawalStatus;
 use App\Models\User;
 use App\Models\Wallet;
@@ -28,6 +29,27 @@ class RequestWithdrawalAction
             abort_unless($wallet->canWithdraw($amount), 422,
                 'Insufficient balance. Available: ' . money($wallet->availableBalance())
             );
+
+            // Trust-tier daily withdrawal cap. Lower-trust sellers are limited;
+            // top-rated sellers are uncapped (cap === null). Non-vendors default
+            // to the entry tier as a conservative guard.
+            $tier = $user->vendor?->trustTier() ?? TrustTier::New;
+            $cap  = $tier->withdrawalCapDaily();
+
+            if ($cap !== null) {
+                $todayTotal = (int) WalletWithdrawal::where('user_id', $user->id)
+                    ->whereIn('status', [
+                        WithdrawalStatus::Pending, WithdrawalStatus::Processing,
+                        WithdrawalStatus::Approved, WithdrawalStatus::Paid,
+                    ])
+                    ->whereDate('created_at', now()->toDateString())
+                    ->sum('amount');
+
+                abort_if($todayTotal + $amount > $cap, 422,
+                    "This request exceeds your daily withdrawal limit of " . money($cap)
+                    . " for {$tier->label()}s. You have already requested " . money($todayTotal) . " today."
+                );
+            }
 
             $withdrawal = WalletWithdrawal::create([
                 'wallet_id'      => $wallet->id,

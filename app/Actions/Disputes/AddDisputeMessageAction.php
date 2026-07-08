@@ -37,12 +37,30 @@ class AddDisputeMessageAction
                 'is_staff'        => $isStaff,
             ]);
 
-            // Staff reply puts the ball in the parties' court; a party reply flags it for review.
+            // Staff reply puts the ball in the parties' court (party response window);
+            // a party reply flags it for staff review (admin SLA window). Either way
+            // the SLA clock restarts, so a prior breach is cleared for the new cycle.
             $dispute->update([
-                'status' => $isStaff ? DisputeStatus::AwaitingResponse : DisputeStatus::UnderReview,
+                'status'          => $isStaff ? DisputeStatus::AwaitingResponse : DisputeStatus::UnderReview,
+                'response_due_at' => now()->addHours($isStaff ? $this->responseHours() : $this->adminHours()),
+                'sla_breached'    => false,
             ]);
 
             return $entry;
         });
+    }
+
+    private function responseHours(): int
+    {
+        $v = settings('dispute_response_hours');
+
+        return (int) (($v === null || $v === '') ? config('protection.dispute_response_hours', 48) : $v);
+    }
+
+    private function adminHours(): int
+    {
+        $v = settings('dispute_admin_sla_hours');
+
+        return (int) (($v === null || $v === '') ? config('protection.dispute_admin_sla_hours', 72) : $v);
     }
 }

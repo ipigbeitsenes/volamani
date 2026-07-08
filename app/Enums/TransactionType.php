@@ -15,6 +15,8 @@ enum TransactionType: string
     case Bonus           = 'bonus';
     case AffiliateEarning = 'affiliate_earning';
     case WalletFunding   = 'wallet_funding';
+    case ReserveRelease  = 'reserve_release';   // rolling chargeback reserve paid out to vendor
+    case Chargeback      = 'chargeback';        // clawback from vendor for a lost chargeback
 
     public function label(): string
     {
@@ -30,6 +32,8 @@ enum TransactionType: string
             self::Bonus            => 'Bonus',
             self::AffiliateEarning => 'Affiliate Earning',
             self::WalletFunding    => 'Wallet Funding',
+            self::ReserveRelease   => 'Reserve Release',
+            self::Chargeback       => 'Chargeback',
         };
     }
 
@@ -42,6 +46,7 @@ enum TransactionType: string
             self::Bonus,
             self::AffiliateEarning,
             self::WalletFunding,
+            self::ReserveRelease,
         ]);
     }
 }

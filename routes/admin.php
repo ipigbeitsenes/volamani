@@ -21,6 +21,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{vendor}/approve', [\App\Http\Controllers\Admin\VendorApprovalController::class, 'approve'])->name('approve');
         Route::post('/{vendor}/reject', [\App\Http\Controllers\Admin\VendorApprovalController::class, 'reject'])->name('reject');
         Route::post('/{vendor}/suspend', [\App\Http\Controllers\Admin\VendorApprovalController::class, 'suspend'])->name('suspend');
+
+        // Strikes (buyer-protection standing)
+        Route::post('/{vendor}/strikes', [\App\Http\Controllers\Admin\VendorStrikeController::class, 'store'])->name('strikes.store');
+        Route::post('/strikes/{strike}/clear', [\App\Http\Controllers\Admin\VendorStrikeController::class, 'clear'])->name('strikes.clear');
     });
 
     // KYC management
@@ -65,6 +69,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{return}/confirm', [\App\Http\Controllers\Admin\ReturnController::class, 'confirm'])->name('confirm');
     });
 
+    // Chargebacks (payment-gateway disputes)
+    Route::prefix('chargebacks')->name('chargebacks.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ChargebackController::class, 'index'])->name('index');
+        Route::get('/{chargeback}', [\App\Http\Controllers\Admin\ChargebackController::class, 'show'])->name('show');
+        Route::post('/{chargeback}/resolve', [\App\Http\Controllers\Admin\ChargebackController::class, 'resolve'])->name('resolve');
+    });
+
     // Review moderation
     Route::prefix('reviews')->name('reviews.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ReviewModerationController::class, 'index'])->name('index');
@@ -106,6 +117,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/plans/{plan}/toggle', [\App\Http\Controllers\Admin\SubscriptionController::class, 'togglePlan'])->name('plans.toggle');
     });
 
+    // Platform documents — Volamani-issued invoices & contracts of sale
+    Route::prefix('documents')->name('documents.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'store'])->name('store');
+        Route::get('/{document}', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'show'])->name('show');
+        Route::get('/{document}/edit', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'edit'])->name('edit');
+        Route::put('/{document}', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'update'])->name('update');
+        Route::delete('/{document}', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'destroy'])->name('destroy');
+        Route::get('/{document}/print', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'print'])->name('print');
+        Route::post('/{document}/send', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'send'])->name('send');
+        Route::post('/{document}/payment', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'recordPayment'])->name('payment');
+        Route::post('/{document}/cancel', [\App\Http\Controllers\Admin\PlatformDocumentController::class, 'cancel'])->name('cancel');
+    });
+
     // Affiliate program
     Route::prefix('affiliates')->name('affiliates.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\AffiliateController::class, 'index'])->name('index');
@@ -121,6 +147,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::middleware('permission:commissions.manage')->prefix('commissions')->name('commissions.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\CommissionController::class, 'index'])->name('index');
         Route::put('/', [\App\Http\Controllers\Admin\CommissionController::class, 'update'])->name('update');
+    });
+
+    // Live chat console — read/answer visitor conversations + widget settings.
+    // NB: static /settings routes are declared before the /{conversation} bind.
+    Route::prefix('live-chat')->name('live-chat.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\LiveChatController::class, 'index'])->name('index');
+        Route::get('/settings', [\App\Http\Controllers\Admin\LiveChatController::class, 'settings'])->name('settings');
+        Route::put('/settings', [\App\Http\Controllers\Admin\LiveChatController::class, 'updateSettings'])->name('settings.update');
+        Route::get('/{conversation}', [\App\Http\Controllers\Admin\LiveChatController::class, 'show'])->name('show');
+        Route::get('/{conversation}/poll', [\App\Http\Controllers\Admin\LiveChatController::class, 'poll'])->name('poll');
+        Route::post('/{conversation}/reply', [\App\Http\Controllers\Admin\LiveChatController::class, 'reply'])->name('reply');
+        Route::post('/{conversation}/close', [\App\Http\Controllers\Admin\LiveChatController::class, 'close'])->name('close');
+        Route::post('/{conversation}/reopen', [\App\Http\Controllers\Admin\LiveChatController::class, 'reopen'])->name('reopen');
     });
 
     // Audit logs

@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
             Route::post('/{order}/ship', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'markShipped'])->name('ship');
             Route::post('/{order}/deliver', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'markDelivered'])->name('deliver');
             Route::post('/{order}/upload', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'uploadDeliverable'])->name('upload');
+            Route::post('/{order}/cancel', [\App\Http\Controllers\Vendor\VendorOrderController::class, 'cancel'])->name('cancel');
         });
 
         // Returns / RMA received
@@ -59,6 +60,13 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
             Route::post('/{return}/approve', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'approve'])->name('approve');
             Route::post('/{return}/reject', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'reject'])->name('reject');
             Route::post('/{return}/confirm', [\App\Http\Controllers\Vendor\VendorReturnController::class, 'confirm'])->name('confirm');
+        });
+
+        // Chargebacks — view + contest payment-gateway disputes
+        Route::prefix('chargebacks')->name('chargebacks.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Vendor\VendorChargebackController::class, 'index'])->name('index');
+            Route::get('/{chargeback}', [\App\Http\Controllers\Vendor\VendorChargebackController::class, 'show'])->name('show');
+            Route::post('/{chargeback}/contest', [\App\Http\Controllers\Vendor\VendorChargebackController::class, 'contest'])->name('contest');
         });
 
         // Quotations for product requests
@@ -157,6 +165,7 @@ Route::middleware(['auth', 'verified'])->prefix('vendor')->name('vendor.')->grou
 
         Route::prefix('invoices')->name('invoices.')->group($documents);
         Route::prefix('estimates')->name('estimates.')->group($documents);
+        Route::prefix('contracts')->name('contracts.')->group($documents);
 
         // Analytics
         Route::get('/analytics', [\App\Http\Controllers\Vendor\AnalyticsController::class, 'index'])->name('analytics');

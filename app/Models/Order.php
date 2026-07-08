@@ -21,7 +21,8 @@ class Order extends Model
         'ship_to_name', 'ship_to_phone', 'ship_to_address', 'ship_to_city', 'ship_to_state',
         'tracking_number', 'courier',
         'payment_reference', 'payment_method', 'currency',
-        'notes', 'paid_at', 'shipped_at', 'delivered_at', 'completed_at', 'cancelled_at',
+        'notes', 'cancellation_reason', 'cancelled_by',
+        'paid_at', 'shipped_at', 'delivered_at', 'completed_at', 'cancelled_at',
     ];
 
     protected function casts(): array
@@ -85,6 +86,28 @@ class Order extends Model
     public function isCompleted(): bool
     {
         return $this->status === OrderStatus::Completed;
+    }
+
+    /**
+     * Whether the SELLER may cancel this order (e.g. can't deliver / undeliverable
+     * address / technical issue). Allowed while paid and still in flight, but NOT
+     * once completed, already cancelled/refunded, or under an active dispute
+     * (a dispute must be resolved by support, not unilaterally cancelled).
+     */
+    public function canVendorCancel(): bool
+    {
+        return $this->isPaid()
+            && ! in_array($this->status, [
+                OrderStatus::Completed,
+                OrderStatus::Cancelled,
+                OrderStatus::Refunded,
+                OrderStatus::Disputed,
+            ], true);
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
     }
 
     public function canBeDisputed(): bool

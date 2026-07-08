@@ -20,9 +20,10 @@ class InitiatePaymentAction
         int     $amountKobo,
         Model   $payable,
         string  $gatewayName = 'paystack',
-        array   $metadata    = []
+        array   $metadata    = [],
+        ?string $email       = null
     ): array {
-        return DB::transaction(function () use ($user, $amountKobo, $payable, $gatewayName, $metadata) {
+        return DB::transaction(function () use ($user, $amountKobo, $payable, $gatewayName, $metadata, $email) {
             $payment = Payment::create([
                 'user_id'      => $user->id,
                 'payable_type' => get_class($payable),
@@ -49,7 +50,7 @@ class InitiatePaymentAction
             $gateway  = $this->manager->driver($gatewayName);
             $response = $gateway->initiate(
                 $amountKobo,
-                $user->email,
+                $email ?: $user->email,
                 $payment->reference,
                 array_merge($metadata, ['payment_id' => $payment->id])
             );

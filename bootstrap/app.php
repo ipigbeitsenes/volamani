@@ -15,6 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
+        // Machine-to-machine gateway webhooks authenticate via a signed payload
+        // (verifyWebhookSignature), not a session CSRF token. Without this they
+        // 419 before reaching the signature check and fulfilment never runs.
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/*',
+        ]);
+
         $middleware->alias([
             // Spatie laravel-permission (role:, permission:, role_or_permission:)
             'role'               => \Spatie\Permission\Middleware\RoleMiddleware::class,

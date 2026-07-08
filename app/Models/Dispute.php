@@ -19,7 +19,7 @@ class Dispute extends Model
         'reference', 'escrow_id', 'buyer_id', 'vendor_id', 'raised_by',
         'reason', 'description', 'status',
         'resolution', 'resolution_amount', 'resolution_note', 'resolved_by',
-        'resolved_at', 'escalated_at',
+        'resolved_at', 'escalated_at', 'response_due_at', 'sla_breached',
     ];
 
     protected function casts(): array
@@ -31,6 +31,8 @@ class Dispute extends Model
             'resolution_amount' => 'integer',
             'resolved_at'       => 'datetime',
             'escalated_at'      => 'datetime',
+            'response_due_at'   => 'datetime',
+            'sla_breached'      => 'boolean',
         ];
     }
 
@@ -108,5 +110,26 @@ class Dispute extends Model
         return $this->buyer_id === $user->id
             || $this->raised_by === $user->id
             || ($this->vendor && $this->vendor->user_id === $user->id);
+    }
+
+    // ─── SLA helpers ──────────────────────────────────────────────────────────
+
+    /** An open dispute whose awaited-response deadline has passed. */
+    public function isSlaOverdue(): bool
+    {
+        return $this->isOpen()
+            && $this->response_due_at !== null
+            && $this->response_due_at->isPast();
+    }
+
+    public function slaCountdownLabel(): ?string
+    {
+        if (! $this->response_due_at || ! $this->isOpen()) {
+            return null;
+        }
+
+        return $this->response_due_at->isPast()
+            ? 'overdue by ' . $this->response_due_at->diffForHumans(null, true)
+            : 'due ' . $this->response_due_at->diffForHumans();
     }
 }

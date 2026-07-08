@@ -22,6 +22,10 @@ class SettingsSeeder extends Seeder
             ['key' => 'maintenance_mode', 'value' => '0',                           'type' => 'boolean', 'group' => 'general', 'label' => 'Maintenance Mode'],
             ['key' => 'registration_enabled', 'value' => '1',                       'type' => 'boolean', 'group' => 'general', 'label' => 'New Registrations Enabled'],
 
+            // Branding
+            ['key' => 'site_logo',    'value' => '', 'type' => 'string', 'group' => 'branding', 'label' => 'Site Logo'],
+            ['key' => 'site_favicon', 'value' => '', 'type' => 'string', 'group' => 'branding', 'label' => 'Favicon'],
+
             // Storage
             ['key' => 'storage_driver', 'value' => 'local', 'type' => 'string',  'group' => 'storage', 'label' => 'Storage Driver'],
             ['key' => 's3_key',         'value' => '',      'type' => 'string',  'group' => 'storage', 'label' => 'AWS Access Key ID'],
@@ -63,6 +67,29 @@ class SettingsSeeder extends Seeder
             ['key' => 'min_product_price', 'value' => '10000', 'type' => 'integer', 'group' => 'marketplace', 'label' => 'Min Product Price (kobo)'],
             ['key' => 'download_expiry_hours', 'value' => '48', 'type' => 'integer', 'group' => 'marketplace', 'label' => 'Download Link Expiry (hours)'],
             ['key' => 'max_download_attempts', 'value' => '5',  'type' => 'integer', 'group' => 'marketplace', 'label' => 'Max Download Attempts'],
+
+            // Live chat widget
+            ['key' => 'chat_enabled',         'value' => '1', 'type' => 'boolean', 'group' => 'chat', 'label' => 'Live Chat Enabled'],
+            ['key' => 'chat_greeting',        'value' => "👋 Hi there! Need any help? We're here for you.", 'type' => 'string', 'group' => 'chat', 'label' => 'Greeting Bubble'],
+            ['key' => 'chat_welcome',         'value' => 'Hello! Send us a message and our team will reply right here.', 'type' => 'string', 'group' => 'chat', 'label' => 'Welcome Message'],
+            ['key' => 'chat_support_email',   'value' => 'support@volamani.com', 'type' => 'string', 'group' => 'chat', 'label' => 'Fallback Support Email'],
+            ['key' => 'chat_bot_delay',       'value' => '60', 'type' => 'integer', 'group' => 'chat', 'label' => 'Offline Bot Delay (seconds)'],
+            ['key' => 'chat_offline_message', 'value' => "Thanks for reaching out! 🙏 All our chat agents are busy at the moment. Please email us at :email and we'll get back to you as soon as we can.", 'type' => 'string', 'group' => 'chat', 'label' => 'Offline Bot Message'],
+            ['key' => 'chat_team_name',       'value' => 'Volamani Support', 'type' => 'string', 'group' => 'chat', 'label' => 'Chat Team Name'],
+
+            // Buyer protection — chargeback reserve, dispute SLAs, strikes + policy page copy
+            ['key' => 'chargeback_reserve_percent',   'value' => '0',  'type' => 'integer', 'group' => 'protection', 'label' => 'Chargeback Reserve (% of each payout, 0 = off)'],
+            ['key' => 'chargeback_reserve_days',      'value' => '30', 'type' => 'integer', 'group' => 'protection', 'label' => 'Reserve Hold Period (days)'],
+            ['key' => 'dispute_response_hours',       'value' => '48', 'type' => 'integer', 'group' => 'protection', 'label' => 'Dispute Response Window (hours)'],
+            ['key' => 'dispute_admin_sla_hours',      'value' => '72', 'type' => 'integer', 'group' => 'protection', 'label' => 'Staff SLA Before Auto-escalate (hours)'],
+            ['key' => 'dispute_auto_refund_on_breach','value' => '0',  'type' => 'boolean', 'group' => 'protection', 'label' => 'Auto-refund Buyer When Seller Misses SLA'],
+            ['key' => 'strike_suspend_threshold',     'value' => '3',  'type' => 'integer', 'group' => 'protection', 'label' => 'Strikes Before Auto-suspend'],
+            ['key' => 'protection_support_email',     'value' => 'support@volamani.com', 'type' => 'string', 'group' => 'protection', 'label' => 'Protection Contact Email'],
+            ['key' => 'protection_intro',             'value' => 'Every purchase on Volamani is protected. Your money is held safely in escrow until you get what you paid for, and our team steps in whenever something goes wrong.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Intro'],
+            ['key' => 'protection_escrow_summary',    'value' => 'When you pay, your money is held in escrow — not released to the seller — until the order is delivered and the protection window passes. If you never receive your order, you get a full refund to your wallet.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Escrow'],
+            ['key' => 'protection_return_summary',    'value' => 'Physical items can be returned within the return window if they arrive damaged, wrong, or not as described. Once the seller confirms the returned item, your escrow is refunded in full.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Returns'],
+            ['key' => 'protection_dispute_process',   'value' => 'If an order goes wrong, open a support ticket or dispute from the order page. The seller has a fixed window to respond; if they do not, our team escalates and resolves it for you — releasing, refunding, or splitting the held funds fairly.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Disputes'],
+            ['key' => 'protection_chargeback_note',   'value' => 'If you paid by card and something is seriously wrong, your bank can also raise a chargeback. We honour valid chargebacks and recover the funds from the seller, so you are never left out of pocket.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Chargebacks'],
         ];
 
         foreach ($settings as $setting) {

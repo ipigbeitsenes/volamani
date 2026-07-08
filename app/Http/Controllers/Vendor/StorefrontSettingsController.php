@@ -31,6 +31,16 @@ class StorefrontSettingsController extends Controller
             ? to_kobo($data['free_shipping_threshold'])
             : null;
 
+        // Delivery-exclusion zones: states arrive as a checkbox array; cities as a
+        // comma-separated free-text field. Store both as clean string arrays.
+        $data['no_delivery_states'] = array_values(array_filter($data['no_delivery_states'] ?? []));
+        $data['no_delivery_cities'] = collect(explode(',', $data['no_delivery_cities'] ?? ''))
+            ->map(fn ($c) => trim($c))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
         $this->vendorService->updateStorefront(
             $vendor,
             $data,

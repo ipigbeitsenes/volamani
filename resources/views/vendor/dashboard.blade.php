@@ -20,6 +20,18 @@
 </div>
 @endif
 
+{{-- Orders awaiting the vendor's action --}}
+@if(($stats['orders_to_fulfil'] ?? 0) > 0)
+<div class="alert alert-info d-flex align-items-center gap-3 mb-4">
+    <i class="bi bi-truck fs-4 flex-shrink-0"></i>
+    <div class="flex-grow-1">
+        <strong>{{ $stats['orders_to_fulfil'] }} paid order(s) awaiting fulfilment.</strong>
+        Ship them to your buyers — or cancel &amp; refund if you can't deliver to the address.
+    </div>
+    <a href="{{ route('vendor.orders.index') }}" class="btn btn-sm btn-primary flex-shrink-0">View orders</a>
+</div>
+@endif
+
 {{-- Welcome --}}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
     <div>
@@ -36,6 +48,26 @@
     </div>
 </div>
 
+{{-- Store standing (trust tier, strikes, protection limits) --}}
+@php($tier = $vendor->trustTier())
+@if($vendor->suspended_for_strikes && $vendor->status->value === 'suspended')
+<div class="alert alert-danger d-flex align-items-center gap-3 mb-4">
+    <i class="bi bi-exclamation-octagon fs-4 flex-shrink-0"></i>
+    <div><strong>Your store is suspended.</strong> It reached our strike threshold. Please contact support about reinstatement.</div>
+</div>
+@endif
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body d-flex flex-wrap align-items-center gap-3">
+        <span class="badge bg-{{ $tier->badge() }} fs-6"><i class="bi {{ $tier->icon() }} me-1"></i>{{ $tier->label() }}</span>
+        <div class="small"><span class="text-muted">Trust score</span> <span class="fw-semibold">{{ $vendor->trust_score }}/100</span></div>
+        <div class="small"><span class="text-muted">Strikes</span> <span class="fw-semibold {{ $vendor->strikes > 0 ? 'text-danger' : '' }}">{{ $vendor->strikes }}</span></div>
+        <div class="small"><span class="text-muted">Daily payout limit</span> <span class="fw-semibold">{{ $tier->withdrawalCapDaily() === null ? 'Unlimited' : money($tier->withdrawalCapDaily()) }}</span></div>
+        <div class="small"><span class="text-muted">Active listings</span> <span class="fw-semibold">{{ $vendor->activeListingCount() }}@if($tier->maxActiveListings() !== null) / {{ $tier->maxActiveListings() }}@endif</span></div>
+        <div class="small"><span class="text-muted">Escrow hold</span> <span class="fw-semibold">{{ $tier->escrowReleaseDays() }} business days</span></div>
+        <a href="{{ route('buyer-protection') }}" class="btn btn-sm btn-outline-secondary ms-auto">Buyer protection</a>
+    </div>
+</div>
+
 {{-- Stats --}}
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
@@ -49,7 +81,11 @@
         <div class="card border-0 shadow-sm stat-card h-100 p-3" style="border-left-color:#059669 !important">
             <div class="text-muted small mb-1">Total Orders</div>
             <div class="fw-bold fs-4">{{ $stats['total_orders'] }}</div>
-            <a href="{{ route('vendor.orders.index') }}" class="small text-primary mt-1">View all</a>
+            @if(($stats['orders_to_fulfil'] ?? 0) > 0)
+                <a href="{{ route('vendor.orders.index') }}" class="small text-warning fw-semibold mt-1">{{ $stats['orders_to_fulfil'] }} to fulfil →</a>
+            @else
+                <a href="{{ route('vendor.orders.index') }}" class="small text-primary mt-1">View all</a>
+            @endif
         </div>
     </div>
     <div class="col-6 col-md-3">
@@ -103,6 +139,38 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+{{-- Billing: invoices & contracts --}}
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <a href="{{ route('vendor.invoices.index') }}" class="card border-0 shadow-sm stat-card h-100 p-3 text-decoration-none" style="border-left-color:#dc2626 !important">
+            <div class="text-muted small mb-1">Invoices Outstanding</div>
+            <div class="fw-bold fs-5 text-dark">{{ money($documents['outstanding']) }}</div>
+            <span class="small text-primary mt-1">View invoices</span>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a href="{{ route('vendor.invoices.index') }}" class="card border-0 shadow-sm stat-card h-100 p-3 text-decoration-none" style="border-left-color:#059669 !important">
+            <div class="text-muted small mb-1">Invoices Paid</div>
+            <div class="fw-bold fs-5 text-dark">{{ money($documents['paid_total']) }}</div>
+            <span class="small text-muted mt-1">{{ $documents['draft_count'] }} draft(s)</span>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a href="{{ route('vendor.contracts.index') }}" class="card border-0 shadow-sm stat-card h-100 p-3 text-decoration-none" style="border-left-color:#2563eb !important">
+            <div class="text-muted small mb-1">Contracts of Sale</div>
+            <div class="fw-bold fs-5 text-dark">{{ number_format($documents['contracts']) }}</div>
+            <span class="small text-primary mt-1">Manage</span>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a href="{{ route('vendor.contracts.create') }}" class="card border-0 shadow-sm h-100 p-3 text-decoration-none d-flex align-items-center justify-content-center text-center"
+           style="background:linear-gradient(120deg, rgba(37,99,235,.08), transparent);">
+            <i class="bi bi-file-earmark-check text-primary fs-4 mb-1"></i>
+            <span class="fw-semibold small text-dark">New Contract of Sale</span>
+        </a>
     </div>
 </div>
 
@@ -187,10 +255,18 @@
                 <a href="{{ route('vendor.invoices.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-receipt text-primary"></i>Create Invoice
                 </a>
+                <a href="{{ route('vendor.contracts.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                    <i class="bi bi-file-earmark-check text-primary"></i>Create Contract of Sale
+                </a>
                 <a href="{{ route('vendor.wallet.withdraw') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between gap-2">
                     <span><i class="bi bi-arrow-up-circle text-success me-2"></i>Request Withdrawal</span>
                     <small class="text-muted">{{ rtrim(rtrim(number_format(config('payment.withdrawal_fee_percent'), 1), '0'), '.') }}% fee</small>
                 </a>
+                @if($vendor->sellsPhysical())
+                <a href="{{ route('vendor.storefront') }}#shipping" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                    <i class="bi bi-truck text-primary"></i>Shipping &amp; Delivery Zones
+                </a>
+                @endif
                 <a href="{{ route('vendor.kyc.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-shield-check text-warning"></i>KYC Verification
                 </a>

@@ -22,9 +22,9 @@ class PaymentService
         private InitiateRefundAction     $refund,
     ) {}
 
-    public function initiatePaystackPayment(User $user, int $amountKobo, Model $payable, array $metadata = []): array
+    public function initiatePaystackPayment(User $user, int $amountKobo, Model $payable, array $metadata = [], ?string $email = null): array
     {
-        return $this->initiate->execute($user, $amountKobo, $payable, 'paystack', $metadata);
+        return $this->initiate->execute($user, $amountKobo, $payable, 'paystack', $metadata, $email);
     }
 
     public function initiateBankTransferPayment(User $user, int $amountKobo, Model $payable): array

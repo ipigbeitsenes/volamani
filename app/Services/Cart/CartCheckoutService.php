@@ -168,6 +168,16 @@ class CartCheckoutService
             return ['status' => 'address_required'];
         }
 
+        // Block physical items whose seller doesn't deliver to the buyer's address.
+        if ($hasPhysical) {
+            foreach ($lines as $line) {
+                if ($line['kind'] === 'physical' && $line['vendor']
+                    && ! $line['vendor']->deliversTo($address['ship_to_state'] ?? null, $address['ship_to_city'] ?? null)) {
+                    return ['status' => 'no_delivery', 'item' => $line['name']];
+                }
+            }
+        }
+
         return null;
     }
 

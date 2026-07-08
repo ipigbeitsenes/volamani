@@ -51,4 +51,18 @@ class DisputeRepository
     {
         return Dispute::whereIn('status', ['open', 'under_review', 'awaiting_response', 'escalated'])->count();
     }
+
+    /**
+     * Open disputes whose awaited-response deadline has elapsed and that have not
+     * already been auto-actioned this cycle. Excludes already-escalated ones.
+     */
+    public function dueForSla()
+    {
+        return Dispute::with(['escrow', 'vendor'])
+            ->whereIn('status', ['open', 'under_review', 'awaiting_response'])
+            ->whereNotNull('response_due_at')
+            ->where('response_due_at', '<=', now())
+            ->where('sla_breached', false)
+            ->get();
+    }
 }

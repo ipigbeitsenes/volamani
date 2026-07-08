@@ -60,6 +60,38 @@
         @endforeach
     </div>
 
+    {{-- Platform billing (Volamani-issued invoices & contracts) --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="text-uppercase text-muted small fw-bold mb-0">Platform billing</h6>
+        <a href="{{ route('admin.documents.create', ['type' => 'invoice']) }}" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New document
+        </a>
+    </div>
+    <div class="row g-3 mb-4">
+        @php
+            $billing = [
+                ['Invoices outstanding', money($platformDocs['outstanding']), 'bi-receipt', 'warning', route('admin.documents.index', ['type' => 'invoice'])],
+                ['Invoices collected', money($platformDocs['paid_total']), 'bi-cash-coin', 'success', route('admin.documents.index', ['type' => 'invoice'])],
+                ['Contracts of sale', number_format($platformDocs['contracts']), 'bi-file-earmark-check', 'primary', route('admin.documents.index', ['type' => 'contract'])],
+                ['Contracts signed', number_format($platformDocs['signed']), 'bi-patch-check', 'info', route('admin.documents.index', ['type' => 'contract'])],
+            ];
+        @endphp
+        @foreach($billing as [$label, $value, $icon, $color, $url])
+            <div class="col-6 col-xl-3">
+                <a href="{{ $url }}" class="card shadow-sm h-100 text-decoration-none">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded bg-{{ $color }} bg-opacity-10 text-{{ $color }}"
+                              style="width:48px;height:48px;font-size:1.3rem;"><i class="bi {{ $icon }}"></i></span>
+                        <div>
+                            <div class="text-muted small">{{ $label }}</div>
+                            <div class="h5 fw-bold mb-0 text-dark">{{ $value }}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        @endforeach
+    </div>
+
     <div class="row g-3">
         {{-- Revenue sparkline (CSS bars, no JS lib) --}}
         <div class="col-lg-7">

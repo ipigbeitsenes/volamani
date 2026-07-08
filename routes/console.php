@@ -16,3 +16,12 @@ Schedule::command('subscriptions:process')->dailyAt('02:00');
 
 // Un-feature products whose paid promotion has elapsed.
 Schedule::command('products:expire-promotions')->hourly();
+
+// Offline live-chat fallback: reply to conversations no agent has answered in time.
+Schedule::command('chat:auto-respond')->everyMinute();
+
+// Pay out rolling chargeback reserves whose holding window has elapsed.
+Schedule::command('reserve:release')->dailyAt('03:00');
+
+// Enforce dispute SLAs: auto-escalate disputes that have gone unanswered.
+Schedule::command('disputes:enforce-sla')->hourly();

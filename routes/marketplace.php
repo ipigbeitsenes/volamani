@@ -39,7 +39,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'checkout'])->name('checkout');
-        Route::post('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'process'])->name('process');
+        Route::post('/checkout', [\App\Http\Controllers\Cart\CartController::class, 'process'])->middleware('throttle:20,1')->name('process');
     });
 });
 
@@ -78,10 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/product/{product}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'product'])->name('product');
         Route::get('/physical/{product}',         [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'show'])->name('physical');
-        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->name('physical.process');
+        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->middleware('throttle:20,1')->name('physical.process');
         Route::get('/service-order/{serviceOrder}', [\App\Http\Controllers\Payment\CheckoutController::class, 'serviceOrder'])->name('service-order');
         Route::get('/consultation/{session}',     [\App\Http\Controllers\Payment\CheckoutController::class, 'consultation'])->name('consultation');
-        Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->name('process');
+        Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->middleware('throttle:20,1')->name('process');
         Route::get('/bank-transfer/{payment}',    [\App\Http\Controllers\Payment\CheckoutController::class, 'bankTransfer'])->name('bank-transfer');
         Route::post('/bank-transfer/{payment}/proof', [\App\Http\Controllers\Payment\BankTransferController::class, 'uploadProof'])->name('bank-transfer.proof');
         Route::get('/pending/{payment}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'pending'])->name('pending');
@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
     // Wallet
     Route::prefix('wallet')->name('wallet.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Wallet\WalletController::class, 'index'])->name('index');
-        Route::post('/fund', [\App\Http\Controllers\Wallet\WalletController::class, 'fund'])->name('fund');
+        Route::post('/fund', [\App\Http\Controllers\Wallet\WalletController::class, 'fund'])->middleware('throttle:20,1')->name('fund');
         Route::post('/withdraw', [\App\Http\Controllers\Wallet\WalletController::class, 'withdraw'])->name('withdraw');
         Route::get('/transactions', [\App\Http\Controllers\Wallet\WalletController::class, 'transactions'])->name('transactions');
     });

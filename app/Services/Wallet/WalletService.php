@@ -81,6 +81,29 @@ class WalletService
         });
     }
 
+    /**
+     * Move funds into the wallet's non-spendable reserve balance (rolling
+     * chargeback buffer). Like escrow holds, this writes NO balance-affecting
+     * ledger entry — reserves are tracked in wallet_reserves so reconciliation
+     * stays valid.
+     */
+    public function incrementReserve(Wallet $wallet, int $amountKobo): void
+    {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+            $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
+            $locked->update(['reserve_balance' => ($locked->reserve_balance ?? 0) + $amountKobo]);
+        });
+    }
+
+    /** Remove funds from the reserve balance (on payout or chargeback clawback). */
+    public function decrementReserve(Wallet $wallet, int $amountKobo): void
+    {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+            $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
+            $locked->update(['reserve_balance' => max(0, ($locked->reserve_balance ?? 0) - $amountKobo)]);
+        });
+    }
+
     public function initiateFunding(User $user, int $amountKobo, string $method = 'paystack'): array
     {
         return $this->fundAction->execute($user, $amountKobo, $method);

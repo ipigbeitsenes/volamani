@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('layouts.partials.favicon')
     <title>@yield('title', 'Vendor Dashboard') — Volamani</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -116,6 +117,9 @@
             <a href="{{ route('vendor.returns.index') }}" class="nav-link {{ active_prefix('vendor/returns') }}">
                 <i class="bi bi-arrow-return-left"></i> Returns
             </a>
+            <a href="{{ route('vendor.chargebacks.index') }}" class="nav-link {{ active_prefix('vendor/chargebacks') }}">
+                <i class="bi bi-shield-exclamation"></i> Chargebacks
+            </a>
             <a href="{{ route('vendor.quotations.index') }}" class="nav-link {{ active_prefix('vendor/quotations') }}">
                 <i class="bi bi-file-earmark-text"></i> Quotations
             </a>
@@ -124,6 +128,9 @@
             </a>
             <a href="{{ route('vendor.invoices.index') }}" class="nav-link {{ active_prefix('vendor/invoices') }}">
                 <i class="bi bi-receipt"></i> Invoices
+            </a>
+            <a href="{{ route('vendor.contracts.index') }}" class="nav-link {{ active_prefix('vendor/contracts') }}">
+                <i class="bi bi-file-earmark-check"></i> Contracts of Sale
             </a>
             <a href="{{ route('vendor.estimates.index') }}" class="nav-link {{ active_prefix('vendor/estimates') }}">
                 <i class="bi bi-calculator"></i> Pricing Estimates
@@ -238,6 +245,8 @@
             @yield('content')
         </div>
     </div>
+
+    @include('layouts.partials.chat-widget')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -33,6 +33,10 @@
                     {{ $dispute->resolution->description() }}
                     @if($dispute->resolution_note)<div class="small mt-1">{{ $dispute->resolution_note }}</div>@endif
                 </div>
+            @elseif($dispute->slaCountdownLabel())
+                <div class="alert alert-{{ $dispute->isSlaOverdue() ? 'warning' : 'light' }} border mt-3 mb-0 small">
+                    <i class="bi bi-clock-history me-1"></i>Awaiting a response — {{ $dispute->slaCountdownLabel() }}. If it stays unanswered our team will step in automatically.
+                </div>
             @endif
         </div>
     </div>

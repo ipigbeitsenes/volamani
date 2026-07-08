@@ -14,6 +14,8 @@ use App\Services\Notifications\NotificationService;
 use App\Services\Payment\PaymentService;
 use App\Services\Products\ProductService;
 use App\Services\Wallet\WalletService;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class AdminService
 {
@@ -258,6 +260,37 @@ class AdminService
             };
 
             Setting::set($setting->key, $value, $setting->type);
+        }
+    }
+
+    /**
+     * Store / replace / remove the branding assets (logo + favicon). Files are
+     * kept on the public disk so media_url() resolves them under local or S3.
+     */
+    public function updateBranding(?UploadedFile $logo, ?UploadedFile $favicon, bool $removeLogo = false, bool $removeFavicon = false): void
+    {
+        $this->storeBrandingAsset('site_logo', $logo, $removeLogo);
+        $this->storeBrandingAsset('site_favicon', $favicon, $removeFavicon);
+    }
+
+    private function storeBrandingAsset(string $key, ?UploadedFile $file, bool $remove): void
+    {
+        $current = Setting::get($key);
+
+        if ($remove && $current) {
+            Storage::disk('public')->delete($current);
+            Setting::set($key, '', 'string');
+
+            return;
+        }
+
+        if ($file) {
+            if ($current) {
+                Storage::disk('public')->delete($current);
+            }
+
+            $path = $file->store('branding', 'public');
+            Setting::set($key, $path, 'string');
         }
     }
 

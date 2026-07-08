@@ -73,6 +73,23 @@ if (! function_exists('media_url')) {
             return $fallback;
         }
 
-        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        // Already a full URL (e.g. an external avatar) — return untouched.
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '//', 'data:'])) {
+            return $path;
+        }
+
+        $url = \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+
+        // For local storage, strip the host so images load from whatever address
+        // the page is served on (localhost, 127.0.0.1, a forwarded port or a
+        // tunnel) instead of the hard-coded APP_URL host. S3/CDN URLs stay absolute.
+        if (settings('storage_driver', 'local') !== 's3'
+            && \Illuminate\Support\Str::startsWith($url, ['http://', 'https://'])) {
+            $relative = parse_url($url, PHP_URL_PATH);
+
+            return $relative !== false && $relative !== null ? $relative : $url;
+        }
+
+        return $url;
     }
 }

@@ -17,11 +17,12 @@ class DocumentSentNotification extends VolamaniNotification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $doc   = $this->document;
-        $label = $doc->type->label();
+        $doc    = $this->document;
+        $label  = $doc->type->label();
+        $issuer = $doc->issuerName();
 
         $mail = (new MailMessage)
-            ->subject("{$label} {$doc->number} from {$doc->vendor->business_name}")
+            ->subject("{$label} {$doc->number} from {$issuer}")
             ->greeting("Hello {$doc->client_name},")
             ->line("You have received {$label} {$doc->number} for " . money($doc->total) . '.');
 
@@ -31,19 +32,31 @@ class DocumentSentNotification extends VolamaniNotification
             $mail->line('Valid until ' . $doc->valid_until->format('d M Y') . '.');
         }
 
+        if ($doc->isInvoice() && $doc->balanceDue() > 0) {
+            $mail->line('You can view and pay this invoice securely online using the button below.');
+        } elseif ($doc->isContract()) {
+            $mail->line('Please review and sign this contract online using the button below.');
+        }
+
+        $action = match (true) {
+            $doc->isInvoice()  => "View & Pay {$label}",
+            $doc->isContract() => "View & Sign {$label}",
+            default            => "View {$label}",
+        };
+
         return $mail
-            ->action("View {$label}", route('invoices.show', $doc))
-            ->salutation('Thank you, ' . $doc->vendor->business_name);
+            ->action($action, $doc->publicUrl())
+            ->salutation('Thank you, ' . $issuer);
     }
 
     public function toArray(object $notifiable): array
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
+            'icon'     => $this->document->type->icon(),
             'title'    => "{$this->document->type->label()} {$this->document->number}",
-            'message'  => "{$this->document->vendor->business_name} sent you a {$this->document->type->value} for " . money($this->document->total) . '.',
-            'url'      => route('invoices.show', $this->document),
+            'message'  => "{$this->document->issuerName()} sent you a " . strtolower($this->document->type->label()) . ' for ' . money($this->document->total) . '.',
+            'url'      => $this->document->client_id ? route('invoices.show', $this->document) : $this->document->publicUrl(),
         ];
     }
 }

@@ -51,7 +51,7 @@ class HoldEscrowAction
                 'platform_fee'    => $details['fee'],
                 'vendor_earnings' => $details['earnings'],
                 'status'          => EscrowStatus::Holding,
-                'auto_release_at' => $this->autoReleaseAt($escrowable),
+                'auto_release_at' => $this->autoReleaseAt($escrowable, $details['vendor']),
                 'held_at'         => now(),
             ]);
 
@@ -110,10 +110,15 @@ class HoldEscrowAction
      * is confirmed (buyer "confirm receipt", or a fallback timer set at delivery
      * time). Service orders and consultations release on explicit completion.
      */
-    private function autoReleaseAt(Model $escrowable): ?\Illuminate\Support\Carbon
+    private function autoReleaseAt(Model $escrowable, ?\App\Models\Vendor $vendor = null): ?\Illuminate\Support\Carbon
     {
         if ($escrowable instanceof Order && ! $escrowable->requires_shipping) {
-            $days = (int) config('business_days.release_days', 3);
+            // Graduated hold: newer/lower-trust sellers hold longer; trusted ones
+            // release sooner. Falls back to the platform default when unknown.
+            $days = $vendor
+                ? $vendor->trustTier()->escrowReleaseDays()
+                : (int) config('business_days.release_days', 3);
+
             return app(\App\Support\BusinessDayCalculator::class)
                 ->addBusinessDays(now(), max(1, $days));
         }

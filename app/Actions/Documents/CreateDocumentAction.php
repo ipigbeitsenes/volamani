@@ -12,14 +12,18 @@ use Illuminate\Support\Facades\DB;
 class CreateDocumentAction
 {
     /**
-     * Create a draft invoice or quotation with its line items and computed totals.
+     * Create a draft invoice, quotation or contract with its line items and
+     * computed totals. Pass $vendor = null with $issuer = 'platform' for a
+     * document issued by Volamani itself.
      *
      * @param array $data  normalised attributes (money already in kobo) incl. 'items'
      */
-    public function execute(Vendor $vendor, DocumentType $type, array $data, User $creator): Document
+    public function execute(?Vendor $vendor, DocumentType $type, array $data, User $creator, string $issuer = 'vendor'): Document
     {
-        return DB::transaction(function () use ($vendor, $type, $data, $creator) {
-            $document = $vendor->documents()->create([
+        return DB::transaction(function () use ($vendor, $type, $data, $creator, $issuer) {
+            $document = Document::create([
+                'vendor_id'       => $vendor?->id,
+                'issuer'          => $vendor ? 'vendor' : $issuer,
                 'type'            => $type,
                 'number'          => $this->nextNumber($vendor, $type),
                 'client_id'       => $data['client_id'] ?? null,
@@ -61,13 +65,22 @@ class CreateDocumentAction
         }
     }
 
-    private function nextNumber(Vendor $vendor, DocumentType $type): string
+    /**
+     * Per-vendor sequence for vendor docs (INV-2026-0001); a global,
+     * platform-prefixed sequence for Volamani-issued ones (VOL-INV-2026-0001).
+     */
+    private function nextNumber(?Vendor $vendor, DocumentType $type): string
     {
-        $seq = Document::withTrashed()
-            ->where('vendor_id', $vendor->id)
-            ->where('type', $type->value)
-            ->count() + 1;
+        $query = Document::withTrashed()->where('type', $type->value);
 
-        return sprintf('%s-%s-%04d', $type->prefix(), date('Y'), $seq);
+        if ($vendor) {
+            $seq = $query->where('vendor_id', $vendor->id)->count() + 1;
+
+            return sprintf('%s-%s-%04d', $type->prefix(), date('Y'), $seq);
+        }
+
+        $seq = $query->whereNull('vendor_id')->count() + 1;
+
+        return sprintf('VOL-%s-%s-%04d', $type->prefix(), date('Y'), $seq);
     }
 }

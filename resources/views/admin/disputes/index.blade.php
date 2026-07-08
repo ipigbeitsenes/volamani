@@ -38,6 +38,7 @@
                                 <th>Reason</th>
                                 <th class="text-end">Amount</th>
                                 <th>Status</th>
+                                <th>SLA</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -53,6 +54,15 @@
                                         <span class="badge bg-{{ $dispute->status->badge() }}-subtle text-{{ $dispute->status->badge() }}">
                                             {{ $dispute->status->label() }}
                                         </span>
+                                    </td>
+                                    <td class="small">
+                                        @if($dispute->sla_breached)
+                                            <span class="badge bg-danger">SLA breached</span>
+                                        @elseif($dispute->slaCountdownLabel())
+                                            <span class="{{ $dispute->isSlaOverdue() ? 'text-danger fw-semibold' : 'text-muted' }}">{{ $dispute->slaCountdownLabel() }}</span>
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
                                     </td>
                                     <td class="text-end">
                                         <a href="{{ route('admin.disputes.show', $dispute) }}" class="btn btn-sm btn-outline-secondary">Manage</a>

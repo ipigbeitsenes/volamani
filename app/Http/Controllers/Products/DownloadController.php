@@ -28,6 +28,7 @@ class DownloadController extends Controller
             ->exists();
 
         abort_unless($belongsToOrder, 403, 'This file does not belong to your order.');
+        abort_if($productFile->product?->isPhysical(), 403, 'Physical products are not downloadable.');
 
         return $this->downloadService->serveFile($order, $productFile, $user);
     }
@@ -44,6 +45,7 @@ class DownloadController extends Controller
             ->exists();
 
         abort_unless($belongsToOrder, 403);
+        abort_if($productFile->product?->isPhysical(), 403, 'Physical products are not downloadable.');
 
         $link = $this->downloadService->generateLink($order, $productFile, $user);
 

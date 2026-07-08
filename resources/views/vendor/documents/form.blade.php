@@ -1,4 +1,4 @@
-@extends('layouts.vendor')
+@extends($docLayout ?? 'layouts.vendor')
 
 @section('title', ($document->exists ? 'Edit ' : 'New ') . $type->label())
 
@@ -19,6 +19,8 @@
     <form method="POST" action="{{ $document->exists ? route($routeBase . '.update', $document) : route($routeBase . '.store') }}">
         @csrf
         @if($document->exists) @method('PUT') @endif
+        {{-- Carries the document type for the platform (admin) form, which has no type in its route. --}}
+        <input type="hidden" name="type" value="{{ $type->value }}">
 
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-white"><h6 class="fw-bold mb-0">Client</h6></div>
@@ -65,7 +67,7 @@
                             <label class="form-label">Due date</label>
                             <input type="date" name="due_date" class="form-control" value="{{ old('due_date', optional($document->due_date)->toDateString()) }}">
                         </div>
-                    @else
+                    @elseif($type === \App\Enums\DocumentType::Quotation)
                         <div class="col-md-3">
                             <label class="form-label">Valid until</label>
                             <input type="date" name="valid_until" class="form-control" value="{{ old('valid_until', optional($document->valid_until)->toDateString()) }}">

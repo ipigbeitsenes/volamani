@@ -11,6 +11,14 @@
         @if(session($key))<div class="alert alert-{{ $variant }} mt-3">{{ session($key) }}</div>@endif
     @endforeach
 
+    @if($dispute->sla_breached)
+        <div class="alert alert-danger mt-3 mb-0"><i class="bi bi-alarm me-1"></i>This dispute breached its response SLA and was auto-escalated.</div>
+    @elseif($dispute->slaCountdownLabel())
+        <div class="alert alert-{{ $dispute->isSlaOverdue() ? 'danger' : 'info' }} mt-3 mb-0">
+            <i class="bi bi-clock-history me-1"></i>Response {{ $dispute->slaCountdownLabel() }}.
+        </div>
+    @endif
+
     <div class="row g-4 mt-1">
         {{-- Left: details + conversation --}}
         <div class="col-lg-8">

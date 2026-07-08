@@ -43,9 +43,14 @@ class Vendor extends Model
         'shipping_fee',
         'free_shipping_threshold',
         'ships_to',
+        'no_delivery_states',
+        'no_delivery_cities',
         'average_rating',
         'reviews_count',
         'trust_score',
+        'strikes',
+        'strikes_updated_at',
+        'suspended_for_strikes',
         'followers_count',
     ];
 
@@ -61,8 +66,13 @@ class Vendor extends Model
             'store_focus'    => \App\Enums\StoreFocus::class,
             'shipping_fee'   => 'integer',
             'free_shipping_threshold' => 'integer',
+            'no_delivery_states' => 'array',
+            'no_delivery_cities' => 'array',
             'average_rating' => 'float',
             'trust_score'    => 'integer',
+            'strikes'        => 'integer',
+            'strikes_updated_at' => 'datetime',
+            'suspended_for_strikes' => 'boolean',
             'followers_count' => 'integer',
         ];
     }
@@ -89,6 +99,25 @@ class Vendor extends Model
     public function approvedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function strikes(): HasMany
+    {
+        return $this->hasMany(VendorStrike::class)->latest();
+    }
+
+    public function activeStrikeCount(): int
+    {
+        return $this->strikes()->active()->count();
+    }
+
+    /** Live products + services (anything not rejected/archived) — for tier listing caps. */
+    public function activeListingCount(): int
+    {
+        $exclude = ['rejected', 'archived'];
+
+        return $this->products()->whereNotIn('status', $exclude)->count()
+            + $this->services()->whereNotIn('status', $exclude)->count();
     }
 
     public function products(): HasMany
@@ -197,6 +226,29 @@ class Vendor extends Model
     public function sellsServices(): bool
     {
         return (bool) $this->store_focus?->sellsServices();
+    }
+
+    /**
+     * Whether this vendor delivers to the given state / city. A vendor can
+     * exclude states and/or cities they cannot ship to. Matching is
+     * case-insensitive and trims whitespace; empty exclusion lists = ships
+     * everywhere.
+     */
+    public function deliversTo(?string $state, ?string $city = null): bool
+    {
+        $norm = fn (?string $v) => mb_strtolower(trim((string) $v));
+
+        $blockedStates = array_map($norm, $this->no_delivery_states ?? []);
+        if ($state && in_array($norm($state), $blockedStates, true)) {
+            return false;
+        }
+
+        $blockedCities = array_map($norm, $this->no_delivery_cities ?? []);
+        if ($city && in_array($norm($city), $blockedCities, true)) {
+            return false;
+        }
+
+        return true;
     }
 
     /** Flat shipping fee (kobo) for an order of the given item subtotal — 0 if the free-shipping threshold is met. */

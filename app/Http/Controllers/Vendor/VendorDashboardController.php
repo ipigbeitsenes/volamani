@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Vendor;
 
+use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
+use App\Models\Document;
+use App\Services\Documents\DocumentService;
 use App\Services\Escrow\EscrowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -10,10 +13,17 @@ use Illuminate\View\View;
 
 class VendorDashboardController extends Controller
 {
-    public function index(Request $request, EscrowService $escrowService): View
+    public function index(Request $request, EscrowService $escrowService, DocumentService $documentService): View
     {
         $vendor = $request->user()->vendor;
         $wallet = $request->user()->wallet;
+
+        // Billing: invoices outstanding/paid + contracts of sale.
+        $documents = Schema::hasTable('documents')
+            ? array_merge($documentService->vendorStats($vendor), [
+                'contracts' => Document::where('vendor_id', $vendor->id)->where('type', DocumentType::Contract)->count(),
+            ])
+            : ['outstanding' => 0, 'paid_total' => 0, 'draft_count' => 0, 'contracts' => 0];
 
         $stats = [
             'balance'        => $wallet?->balance ?? 0,
@@ -25,6 +35,17 @@ class VendorDashboardController extends Controller
                 ? $vendor->services()->count() : 0,
             'total_orders'   => Schema::hasTable('orders')
                 ? \App\Models\Order::where('vendor_id', $vendor->id)->count() : 0,
+            // Paid orders still needing the vendor to act (ship / mark delivered),
+            // or to cancel & refund if they can't fulfil them.
+            'orders_to_fulfil' => Schema::hasTable('orders')
+                ? \App\Models\Order::where('vendor_id', $vendor->id)
+                    ->where('payment_status', \App\Enums\PaymentStatus::Success->value)
+                    ->whereIn('status', [
+                        \App\Enums\OrderStatus::Paid->value,
+                        \App\Enums\OrderStatus::Processing->value,
+                        \App\Enums\OrderStatus::Shipped->value,
+                    ])->count()
+                : 0,
             'service_orders' => Schema::hasTable('service_orders')
                 ? \App\Models\ServiceOrder::where('vendor_id', $vendor->id)->count() : 0,
             'followers'      => (int) ($vendor->followers_count ?? 0),
@@ -38,6 +59,6 @@ class VendorDashboardController extends Controller
             ? \App\Models\Order::where('vendor_id', $vendor->id)->latest()->limit(5)->get()
             : collect();
 
-        return view('vendor.dashboard', compact('vendor', 'stats', 'recentOrders'));
+        return view('vendor.dashboard', compact('vendor', 'stats', 'recentOrders', 'documents'));
     }
 }

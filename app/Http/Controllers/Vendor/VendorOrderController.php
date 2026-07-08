@@ -60,6 +60,23 @@ class VendorOrderController extends Controller
         return back();
     }
 
+    public function cancel(Request $request, Order $order): RedirectResponse
+    {
+        $this->authorizeVendor($order);
+
+        $data = $request->validate([
+            'cancellation_reason' => ['required', 'string', 'min:5', 'max:500'],
+        ]);
+
+        if ($this->orders->cancelByVendor($order, $request->user(), $data['cancellation_reason'])) {
+            $this->flashSuccess('Order cancelled and the buyer refunded. They have been notified.');
+        } else {
+            $this->flashError('This order can no longer be cancelled.');
+        }
+
+        return back();
+    }
+
     public function uploadDeliverable(Request $request, Order $order): RedirectResponse
     {
         $this->authorizeVendor($order);

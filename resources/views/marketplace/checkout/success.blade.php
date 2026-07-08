@@ -31,9 +31,15 @@
 
         @php $payable = $payment->payable; @endphp
         @if ($payable instanceof \App\Models\Order)
-            <a href="{{ route('orders.show', $payable) }}" class="btn btn-primary mb-2 w-100">
-                <i class="bi bi-download me-1"></i> Go to My Order (Download)
-            </a>
+            @if ($payable->requires_shipping)
+                <a href="{{ route('orders.show', $payable) }}" class="btn btn-primary mb-2 w-100">
+                    <i class="bi bi-box-seam me-1"></i> View My Order &amp; Track Delivery
+                </a>
+            @else
+                <a href="{{ route('orders.show', $payable) }}" class="btn btn-primary mb-2 w-100">
+                    <i class="bi bi-download me-1"></i> Go to My Order (Download)
+                </a>
+            @endif
         @elseif ($payable instanceof \App\Models\ServiceOrder)
             <a href="{{ route('service-orders.show', $payable) }}" class="btn btn-primary mb-2 w-100">
                 <i class="bi bi-briefcase me-1"></i> View Service Order

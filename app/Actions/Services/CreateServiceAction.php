@@ -15,6 +15,8 @@ class CreateServiceAction
 {
     public function execute(Vendor $vendor, array $data): FreelanceService
     {
+        $this->assertWithinListingLimit($vendor);
+
         return DB::transaction(function () use ($vendor, $data) {
             $thumbnail = null;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {
@@ -38,6 +40,17 @@ class CreateServiceAction
 
             return $service->load(['packages', 'faqs']);
         });
+    }
+
+    /** Trust-tier cap on how many active listings a vendor may have. */
+    private function assertWithinListingLimit(Vendor $vendor): void
+    {
+        $tier = $vendor->trustTier();
+        $max  = $tier->maxActiveListings();
+
+        abort_if($max !== null && $vendor->activeListingCount() >= $max, 422,
+            "You've reached the {$tier->label()} limit of {$max} active listings. This cap grows as your store earns trust."
+        );
     }
 
     private function syncPackages(FreelanceService $service, array $packages): void

@@ -7,6 +7,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Actions\Products\RestockOrderAction;
 use App\Repositories\Orders\OrderRepository;
 use App\Services\Escrow\EscrowService;
 use App\Services\Notifications\NotificationService;
@@ -21,6 +22,7 @@ class OrderService
         private OrderRepository     $repo,
         private EscrowService       $escrow,
         private NotificationService $notifications,
+        private RestockOrderAction  $restock,
     ) {}
 
     public function forBuyer(User $user, int $perPage = 15): LengthAwarePaginator
@@ -125,6 +127,47 @@ class OrderService
             $order,
             'Order delivered',
             'Your order ' . $order->reference . ' has been marked as delivered. Confirm receipt to release payment.',
+        );
+
+        return true;
+    }
+
+    /**
+     * Seller cancels a paid order they cannot fulfil (undeliverable address,
+     * out of stock, technical issue, etc.). Refunds the buyer by returning the
+     * held escrow to their wallet, restocks physical inventory, marks the order
+     * Cancelled with the reason, and notifies the buyer. No-op if not cancellable.
+     */
+    public function cancelByVendor(Order $order, User $actor, string $reason): bool
+    {
+        if (! $order->canVendorCancel()) {
+            return false;
+        }
+
+        DB::transaction(function () use ($order, $actor, $reason) {
+            // Refund the buyer: release the held escrow back to their wallet.
+            $escrow = $this->escrow->forPayable($order);
+            if ($escrow && $escrow->canRefund()) {
+                $this->escrow->refund($escrow, $actor, 'Order cancelled by seller: ' . $reason);
+            }
+
+            // Return any physical stock to inventory.
+            if ($order->requires_shipping) {
+                $this->restock->execute($order);
+            }
+
+            $order->update([
+                'status'              => OrderStatus::Cancelled,
+                'cancelled_at'        => now(),
+                'cancellation_reason' => $reason,
+                'cancelled_by'        => $actor->id,
+            ]);
+        });
+
+        $this->notifyBuyer(
+            $order,
+            'Order cancelled by seller',
+            'Your order ' . $order->reference . ' was cancelled by the seller and any payment has been refunded to your Volamani wallet. Reason: ' . $reason,
         );
 
         return true;

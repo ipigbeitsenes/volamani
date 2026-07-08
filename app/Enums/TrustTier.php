@@ -48,4 +48,44 @@ enum TrustTier: string
             self::TopRated => 'bi-award',
         };
     }
+
+    /**
+     * Resolved guardrails for this tier: withdrawal cap (kobo, null = unlimited),
+     * escrow release window (business days) and active-listing cap (null =
+     * unlimited). Reads config/protection.php with per-key admin overrides from
+     * the `protection` settings group.
+     */
+    public function limits(): array
+    {
+        $defaults = config('protection.tiers.' . $this->value, [
+            'withdrawal_cap_daily' => null,
+            'escrow_release_days'  => (int) config('business_days.release_days', 3),
+            'max_active_listings'  => null,
+        ]);
+
+        $override = fn (string $key, $fallback) => ($v = settings("tier_{$this->value}_{$key}")) === null || $v === ''
+            ? $fallback
+            : $v;
+
+        return [
+            'withdrawal_cap_daily' => ($cap = $override('withdrawal_cap_daily', $defaults['withdrawal_cap_daily'])) === null ? null : (int) $cap,
+            'escrow_release_days'  => (int) $override('escrow_release_days', $defaults['escrow_release_days']),
+            'max_active_listings'  => ($max = $override('max_active_listings', $defaults['max_active_listings'])) === null ? null : (int) $max,
+        ];
+    }
+
+    public function withdrawalCapDaily(): ?int
+    {
+        return $this->limits()['withdrawal_cap_daily'];
+    }
+
+    public function escrowReleaseDays(): int
+    {
+        return $this->limits()['escrow_release_days'];
+    }
+
+    public function maxActiveListings(): ?int
+    {
+        return $this->limits()['max_active_listings'];
+    }
 }

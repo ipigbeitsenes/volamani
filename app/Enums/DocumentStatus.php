@@ -11,6 +11,7 @@ enum DocumentStatus: string
     case Paid      = 'paid';        // invoice settled
     case Overdue   = 'overdue';     // invoice past due, unpaid
     case Accepted  = 'accepted';    // quotation accepted by client
+    case Signed    = 'signed';      // contract of sale e-signed by client
     case Declined  = 'declined';    // quotation declined
     case Expired   = 'expired';     // quotation past valid_until
     case Converted = 'converted';   // quotation turned into an invoice
@@ -31,6 +32,7 @@ enum DocumentStatus: string
             self::Paid      => 'success',
             self::Overdue   => 'danger',
             self::Accepted  => 'success',
+            self::Signed    => 'success',
             self::Declined  => 'danger',
             self::Expired   => 'secondary',
             self::Converted => 'primary',

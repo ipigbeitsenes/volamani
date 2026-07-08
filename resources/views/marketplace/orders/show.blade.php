@@ -18,6 +18,14 @@
         </div>
     </div>
 
+    @if($order->status === \App\Enums\OrderStatus::Cancelled)
+        <div class="alert alert-secondary">
+            <div class="fw-semibold"><i class="bi bi-x-circle me-1"></i>This order was cancelled by the seller.</div>
+            @if($order->cancellation_reason)<div class="small mt-1">Reason: {{ $order->cancellation_reason }}</div>@endif
+            <div class="small text-muted mt-1">Any payment has been refunded to your <a href="{{ route('wallet.index') }}">Volamani wallet</a>.</div>
+        </div>
+    @endif
+
     @if(! $order->isPaid())
         <div class="alert alert-warning d-flex justify-content-between align-items-center">
             <span><i class="bi bi-exclamation-circle me-1"></i>This order is awaiting payment.</span>
@@ -74,7 +82,7 @@
                         <div class="fw-semibold text-nowrap">{{ money($item->subtotal) }}</div>
                     </div>
 
-                    @if($order->isPaid() && $item->product && $item->product->files->isNotEmpty())
+                    @if($order->isPaid() && $item->product && $item->product->isDigital() && $item->product->files->isNotEmpty())
                         <div class="mt-2 d-flex flex-wrap gap-2">
                             @foreach($item->product->files as $file)
                                 <button type="button" class="btn btn-sm btn-outline-primary vlm-download"

@@ -55,8 +55,16 @@
         </div>
     @endif
 
+    @if($order->status === \App\Enums\OrderStatus::Cancelled)
+        <div class="alert alert-secondary">
+            <div class="fw-semibold"><i class="bi bi-x-circle me-1"></i>Order cancelled{{ $order->cancelled_at ? ' on ' . $order->cancelled_at->format('d M Y') : '' }}</div>
+            @if($order->cancellation_reason)<div class="small mt-1">Reason: {{ $order->cancellation_reason }}</div>@endif
+            <div class="small text-muted mt-1">The buyer was refunded to their wallet.</div>
+        </div>
+    @endif
+
     @if($order->isPaid() && ! in_array($order->status, [\App\Enums\OrderStatus::Completed, \App\Enums\OrderStatus::Cancelled, \App\Enums\OrderStatus::Refunded], true))
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-white fw-semibold">Fulfilment</div>
             <div class="card-body">
                 @if($order->requires_shipping)
@@ -107,6 +115,36 @@
                         </form>
                     </div>
                 @endif
+            </div>
+        </div>
+    @endif
+
+    {{-- Seller cancellation: refunds the buyer when delivery isn't possible --}}
+    @if($order->canVendorCancel())
+        <div class="card border-0 shadow-sm mt-3 border-danger-subtle">
+            <div class="card-header bg-white fw-semibold text-danger"><i class="bi bi-x-octagon me-1"></i>Can't fulfil this order?</div>
+            <div class="card-body">
+                <p class="small text-muted mb-2">
+                    If you're unable to deliver — wrong or undeliverable address, out of stock, or a technical issue —
+                    you can cancel this order. <strong>The buyer is fully refunded to their wallet</strong> and the
+                    item is restocked. This can't be undone.
+                </p>
+                <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#cancelForm">
+                    <i class="bi bi-x-circle me-1"></i>Cancel &amp; refund order
+                </button>
+                <div class="collapse mt-3" id="cancelForm">
+                    <form method="POST" action="{{ route('vendor.orders.cancel', $order) }}"
+                          onsubmit="return confirm('Cancel this order and refund the buyer? This cannot be undone.');">
+                        @csrf
+                        <label class="form-label small fw-semibold">Reason for cancellation <span class="text-danger">*</span></label>
+                        <textarea name="cancellation_reason" rows="3" minlength="5" maxlength="500" required
+                                  class="form-control form-control-sm @error('cancellation_reason') is-invalid @enderror"
+                                  placeholder="e.g. We don't deliver to this location, or the item is no longer available.">{{ old('cancellation_reason') }}</textarea>
+                        @error('cancellation_reason')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <div class="form-text">Shared with the buyer in their cancellation notice.</div>
+                        <button class="btn btn-danger btn-sm mt-2"><i class="bi bi-check-lg me-1"></i>Confirm cancellation &amp; refund</button>
+                    </form>
+                </div>
             </div>
         </div>
     @endif

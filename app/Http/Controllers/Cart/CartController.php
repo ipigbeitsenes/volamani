@@ -214,6 +214,7 @@ class CartController extends Controller
             'own_item'         => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
             'address_required' => back()->withInput()->with('error', 'Please enter a delivery address for the physical items in your cart.'),
             'unavailable'      => back()->with('error', '"' . ($result['item'] ?? 'An item') . '" is out of stock. Adjust the quantity or remove it.'),
+            'no_delivery'      => back()->withInput()->with('error', 'The seller of "' . ($result['item'] ?? 'an item') . '" does not deliver to your address. Use a different address or remove the item.'),
             'insufficient'     => back()->with('error',
                 'Insufficient wallet balance. You need ' . money($result['shortfall']) . ' more — fund your wallet or pay per item with card.'),
             'paid'             => redirect()->route('orders.index')->with('success',
@@ -232,6 +233,7 @@ class CartController extends Controller
             'own_item'         => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
             'address_required' => back()->withInput()->with('error', 'Please enter a delivery address for the physical items in your cart.'),
             'unavailable'      => back()->with('error', '"' . ($result['item'] ?? 'An item') . '" is out of stock. Adjust the quantity or remove it.'),
+            'no_delivery'      => back()->withInput()->with('error', 'The seller of "' . ($result['item'] ?? 'an item') . '" does not deliver to your address. Use a different address or remove the item.'),
             'multi'            => back()->with('error',
                 'Card/bank checkout covers one seller at a time. Pay with your wallet to check out everything at once, or buy items individually.'),
             'redirect'         => $gateway === PaymentGateway::BankTransfer->value

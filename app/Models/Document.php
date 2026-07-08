@@ -8,19 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Document extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
-        'type', 'number', 'vendor_id', 'client_id',
+        'type', 'number', 'public_token', 'vendor_id', 'issuer', 'client_id',
         'client_name', 'client_email', 'client_phone', 'client_address',
         'title', 'status', 'currency',
         'subtotal', 'discount_amount', 'tax_rate', 'tax_amount', 'total', 'amount_paid',
         'notes', 'terms', 'issue_date', 'due_date', 'valid_until',
         'converted_to_id', 'payment_id', 'created_by',
         'sent_at', 'viewed_at', 'paid_at', 'accepted_at', 'declined_at',
+        'signed_name', 'signed_ip',
     ];
 
     protected function casts(): array
@@ -43,6 +45,15 @@ class Document extends Model
             'accepted_at'     => 'datetime',
             'declined_at'     => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $document) {
+            if (empty($document->public_token)) {
+                $document->public_token = Str::random(40);
+            }
+        });
     }
 
     // ─── Relationships ──────────────────────────────────────────────────────────
@@ -79,6 +90,12 @@ class Document extends Model
 
     // ─── Helpers ────────────────────────────────────────────────────────────────
 
+    /** Public, no-login share link the vendor sends to their client. */
+    public function publicUrl(): string
+    {
+        return route('public.documents.show', $this->public_token);
+    }
+
     public function isInvoice(): bool
     {
         return $this->type === DocumentType::Invoice;
@@ -87,6 +104,55 @@ class Document extends Model
     public function isQuotation(): bool
     {
         return $this->type === DocumentType::Quotation;
+    }
+
+    public function isContract(): bool
+    {
+        return $this->type === DocumentType::Contract;
+    }
+
+    /** Issued by Volamani itself (no vendor) rather than by a seller. */
+    public function isPlatformIssued(): bool
+    {
+        return $this->issuer === 'platform' || $this->vendor_id === null;
+    }
+
+    public function isSigned(): bool
+    {
+        return $this->status === DocumentStatus::Signed;
+    }
+
+    /** Display name of whoever issued this document (platform or vendor). */
+    public function issuerName(): string
+    {
+        return $this->isPlatformIssued()
+            ? config('app.name', 'Volamani')
+            : ($this->vendor?->business_name ?? config('app.name', 'Volamani'));
+    }
+
+    /** Issuer logo URL or null (platform falls back to no logo). */
+    public function issuerLogo(): ?string
+    {
+        if ($this->isPlatformIssued()) {
+            return null;
+        }
+
+        return $this->vendor?->logo ? media_url($this->vendor->logo) : null;
+    }
+
+    /** Short issuer contact/location line for document headers. */
+    public function issuerMeta(): ?string
+    {
+        if ($this->isPlatformIssued()) {
+            return config('app.url');
+        }
+
+        $v = $this->vendor;
+        if (! $v) {
+            return null;
+        }
+
+        return collect([$v->city, $v->state])->filter()->join(', ') ?: ($v->whatsapp ?: null);
     }
 
     public function balanceDue(): int

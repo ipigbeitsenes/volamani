@@ -32,9 +32,8 @@
 
         <div class="head">
             <div>
-                <div class="vendor-name">{{ $document->vendor->business_name }}</div>
-                @if($document->vendor->city)<div class="muted">{{ $document->vendor->city }}{{ $document->vendor->state ? ', ' . $document->vendor->state : '' }}</div>@endif
-                @if($document->vendor->whatsapp)<div class="muted">{{ $document->vendor->whatsapp }}</div>@endif
+                <div class="vendor-name">{{ $document->issuerName() }}</div>
+                @if($document->issuerMeta())<div class="muted">{{ $document->issuerMeta() }}</div>@endif
             </div>
             <div class="right">
                 <h1 class="doc-title">{{ $document->type->label() }}</h1>
@@ -93,6 +92,24 @@
             <div class="notes">
                 @if($document->notes)<p><strong>Notes:</strong> {{ $document->notes }}</p>@endif
                 @if($document->terms)<p><strong>Terms &amp; Conditions:</strong> {{ $document->terms }}</p>@endif
+            </div>
+        @endif
+
+        @if($document->isContract())
+            <div class="notes" style="margin-top:40px;display:flex;justify-content:space-between;gap:40px;">
+                <div style="flex:1;">
+                    <div style="border-top:1px solid #1e293b;padding-top:6px;">{{ $document->issuerName() }} <span class="muted">(Seller)</span></div>
+                </div>
+                <div style="flex:1;">
+                    @if($document->isSigned())
+                        <div style="border-top:1px solid #1e293b;padding-top:6px;">
+                            {{ $document->signed_name }} <span class="muted">(Buyer)</span><br>
+                            <span class="muted">Signed {{ $document->accepted_at?->format('d M Y, H:i') }}@if($document->signed_ip) · IP {{ $document->signed_ip }}@endif</span>
+                        </div>
+                    @else
+                        <div style="border-top:1px solid #1e293b;padding-top:6px;">{{ $document->client_name }} <span class="muted">(Buyer)</span></div>
+                    @endif
+                </div>
             </div>
         @endif
     </div>

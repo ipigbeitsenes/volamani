@@ -149,7 +149,7 @@
 
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3">
-                    <h6 class="fw-bold mb-0">Shipping <small class="text-muted fw-normal">(physical products)</small></h6>
+                    <h6 id="shipping" class="fw-bold mb-0" style="scroll-margin-top:80px;">Shipping <small class="text-muted fw-normal">(physical products)</small></h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -182,6 +182,38 @@
                             <input type="text" name="ships_to" class="form-control"
                                    value="{{ old('ships_to', $vendor->ships_to) }}"
                                    placeholder="e.g. Nationwide (Nigeria), 2–5 business days">
+                        </div>
+
+                        {{-- Delivery exclusions --}}
+                        @php
+                            $vlmStates = ['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'];
+                            $vlmBlockedStates = old('no_delivery_states', $vendor->no_delivery_states ?? []);
+                            $vlmBlockedCities = old('no_delivery_cities', implode(', ', $vendor->no_delivery_cities ?? []));
+                        @endphp
+                        <div class="col-12">
+                            <label class="form-label fw-medium small">States you <span class="text-danger">don't</span> deliver to</label>
+                            <div class="border rounded p-2" style="max-height:180px;overflow-y:auto;">
+                                <div class="row g-1">
+                                    @foreach($vlmStates as $st)
+                                        <div class="col-6 col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="no_delivery_states[]"
+                                                       value="{{ $st }}" id="nds_{{ Str::slug($st) }}"
+                                                       {{ in_array($st, $vlmBlockedStates, true) ? 'checked' : '' }}>
+                                                <label class="form-check-label small" for="nds_{{ Str::slug($st) }}">{{ $st }}</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-text">Buyers with a shipping address in a checked state will be blocked from ordering your physical items.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium small">Cities you don't deliver to <span class="text-muted">(optional)</span></label>
+                            <input type="text" name="no_delivery_cities" class="form-control"
+                                   value="{{ $vlmBlockedCities }}"
+                                   placeholder="Comma-separated, e.g. Maiduguri, Sapele">
+                            <div class="form-text">Use for specific cities within states you otherwise deliver to.</div>
                         </div>
                     </div>
                 </div>

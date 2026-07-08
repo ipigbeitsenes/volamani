@@ -73,5 +73,69 @@
             </div>
         </div>
     </div>
+
+    {{-- Trust & strikes --}}
+    @php($tier = $vendor->trustTier())
+    @php($vendorStrikes = $vendor->strikes()->with(['issuedBy', 'clearedBy'])->latest()->get())
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+            <span>Trust &amp; strikes</span>
+            <span class="badge bg-{{ $tier->badge() }}"><i class="bi {{ $tier->icon() }} me-1"></i>{{ $tier->label() }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row small mb-3">
+                <div class="col-sm-4"><span class="text-muted">Trust score:</span> {{ $vendor->trust_score }}/100</div>
+                <div class="col-sm-4"><span class="text-muted">Active strikes:</span> <span class="fw-semibold {{ $vendor->strikes > 0 ? 'text-danger' : '' }}">{{ $vendor->strikes }}</span></div>
+                <div class="col-sm-4"><span class="text-muted">Daily withdrawal cap:</span> {{ $tier->withdrawalCapDaily() === null ? 'Unlimited' : money($tier->withdrawalCapDaily()) }}</div>
+            </div>
+
+            @if($vendor->suspended_for_strikes)
+                <div class="alert alert-danger py-2 small mb-3"><i class="bi bi-exclamation-octagon me-1"></i>This store was auto-suspended for reaching the strike threshold. Approve the store above to reinstate.</div>
+            @endif
+
+            @if($vendorStrikes->isNotEmpty())
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light"><tr><th class="small">Reason</th><th class="small">Note</th><th class="small">When</th><th class="small text-end">Status</th></tr></thead>
+                        <tbody>
+                        @foreach($vendorStrikes as $strike)
+                            <tr class="{{ $strike->isActive() ? '' : 'text-muted' }}">
+                                <td class="small">{{ $strike->reason->label() }}</td>
+                                <td class="small">{{ $strike->note ?? '—' }}</td>
+                                <td class="small">{{ $strike->created_at->diffForHumans() }}</td>
+                                <td class="text-end">
+                                    @if($strike->isActive())
+                                        <form method="POST" action="{{ route('admin.vendors.strikes.clear', $strike) }}" class="d-inline">
+                                            @csrf<button class="btn btn-sm btn-outline-secondary py-0">Clear</button>
+                                        </form>
+                                    @else
+                                        <span class="badge bg-secondary">Cleared</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('admin.vendors.strikes.store', $vendor) }}" class="row g-2 align-items-end">
+                @csrf
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Add a strike</label>
+                    <select name="reason" class="form-select form-select-sm" required>
+                        @foreach(\App\Enums\StrikeReason::cases() as $r)
+                            <option value="{{ $r->value }}">{{ $r->label() }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label small text-muted mb-1">Note (optional)</label>
+                    <input name="note" class="form-control form-control-sm" maxlength="500" placeholder="Context for this strike">
+                </div>
+                <div class="col-md-3"><button class="btn btn-sm btn-outline-danger w-100">Record strike</button></div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection

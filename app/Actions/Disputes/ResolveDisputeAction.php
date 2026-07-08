@@ -2,8 +2,10 @@
 
 namespace App\Actions\Disputes;
 
+use App\Actions\Vendors\AddStrikeAction;
 use App\Enums\DisputeResolution;
 use App\Enums\DisputeStatus;
+use App\Enums\StrikeReason;
 use App\Models\Dispute;
 use App\Models\DisputeMessage;
 use App\Models\User;
@@ -12,7 +14,10 @@ use Illuminate\Support\Facades\DB;
 
 class ResolveDisputeAction
 {
-    public function __construct(private EscrowService $escrowService) {}
+    public function __construct(
+        private EscrowService   $escrowService,
+        private AddStrikeAction $addStrike,
+    ) {}
 
     /**
      * Resolve a dispute (admin only) and settle the underlying escrow accordingly.
@@ -56,6 +61,17 @@ class ResolveDisputeAction
                 'is_staff'   => true,
                 'is_system'  => true,
             ]);
+
+            // A full refund to the buyer means the seller lost — record a strike.
+            if ($resolution === DisputeResolution::RefundToBuyer && $dispute->vendor) {
+                $this->addStrike->execute(
+                    $dispute->vendor,
+                    StrikeReason::LostDispute,
+                    "Dispute {$dispute->reference} resolved in the buyer's favour",
+                    $dispute->id,
+                    $admin,
+                );
+            }
 
             return $dispute->fresh();
         });

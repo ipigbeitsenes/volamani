@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Wallet extends Model
 {
     protected $fillable = [
-        'user_id', 'balance', 'escrow_balance', 'pending_withdrawal',
+        'user_id', 'balance', 'escrow_balance', 'reserve_balance', 'pending_withdrawal',
         'currency', 'is_frozen', 'last_reconciled_at',
     ];
 
@@ -63,6 +63,11 @@ class Wallet extends Model
         return money($this->escrow_balance);
     }
 
+    public function getFormattedReserveAttribute(): string
+    {
+        return money($this->reserve_balance ?? 0);
+    }
+
     public function getFormattedAvailableAttribute(): string
     {
         return money($this->availableBalance());
@@ -75,7 +80,7 @@ class Wallet extends Model
     public function reconcile(): int
     {
         $sum = WalletLedger::where('wallet_id', $this->id)
-            ->selectRaw("SUM(CASE WHEN type IN ('credit','escrow_release','refund','bonus','affiliate_earning','wallet_funding') THEN amount ELSE 0 END) - SUM(CASE WHEN type IN ('debit','escrow_hold','commission','withdrawal') THEN amount ELSE 0 END) as net")
+            ->selectRaw("SUM(CASE WHEN type IN ('credit','escrow_release','refund','bonus','affiliate_earning','wallet_funding','reserve_release') THEN amount ELSE 0 END) - SUM(CASE WHEN type IN ('debit','escrow_hold','commission','withdrawal','chargeback') THEN amount ELSE 0 END) as net")
             ->value('net') ?? 0;
 
         $this->update(['balance' => max(0, (int) $sum), 'last_reconciled_at' => now()]);

@@ -8,6 +8,7 @@ use App\Actions\Documents\CreateDocumentAction;
 use App\Actions\Documents\DecideQuotationAction;
 use App\Actions\Documents\RecordPaymentAction;
 use App\Actions\Documents\SendDocumentAction;
+use App\Actions\Documents\SignContractAction;
 use App\Actions\Documents\UpdateDocumentAction;
 use App\Enums\DocumentType;
 use App\Enums\TransactionType;
@@ -28,6 +29,7 @@ class DocumentService
         private ConvertQuotationAction  $convertAction,
         private DecideQuotationAction   $decideAction,
         private CancelDocumentAction    $cancelAction,
+        private SignContractAction      $signAction,
         private WalletService           $walletService,
         private DocumentRepository      $repo,
     ) {}
@@ -35,6 +37,12 @@ class DocumentService
     public function create(Vendor $vendor, DocumentType $type, array $data, User $creator): Document
     {
         return $this->createAction->execute($vendor, $type, $data, $creator);
+    }
+
+    /** Create a document issued by Volamani itself (no vendor). */
+    public function createForPlatform(DocumentType $type, array $data, User $creator): Document
+    {
+        return $this->createAction->execute(null, $type, $data, $creator, 'platform');
     }
 
     public function update(Document $document, array $data): Document
@@ -72,6 +80,12 @@ class DocumentService
         return $this->cancelAction->execute($document);
     }
 
+    /** Record a client's e-signature on a contract of sale. */
+    public function sign(Document $contract, string $signedName, ?string $ip = null): Document
+    {
+        return $this->signAction->execute($contract, $signedName, $ip);
+    }
+
     public function delete(Document $document): void
     {
         $document->delete();
@@ -96,7 +110,13 @@ class DocumentService
 
         $document = $this->recordPayment($document, $payment->amount, $payment);
 
-        if ($vendorUser = $document->vendor->user) {
+        // Platform-issued invoices are Volamani revenue — settle and stop; there
+        // is no vendor to forward funds to. Vendor invoices credit the vendor.
+        if ($document->isPlatformIssued()) {
+            return $document;
+        }
+
+        if ($vendorUser = $document->vendor?->user) {
             $wallet = $this->walletService->getOrCreate($vendorUser);
             $this->walletService->credit(
                 $wallet,
@@ -125,5 +145,15 @@ class DocumentService
     public function vendorStats(Vendor $vendor): array
     {
         return $this->repo->vendorStats($vendor);
+    }
+
+    public function forPlatform(?DocumentType $type = null, int $perPage = 15, array $filters = [])
+    {
+        return $this->repo->forPlatform($type, $perPage, $filters);
+    }
+
+    public function platformStats(): array
+    {
+        return $this->repo->platformStats();
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#1a56db">
+    @include('layouts.partials.favicon')
     <title>@yield('title', 'Volamani') — Africa's Digital Business Ecosystem</title>
     <meta name="description" content="@yield('meta_description', 'Buy and sell digital products, freelance services, and grow your African business on Volamani.')">
 
@@ -230,6 +231,8 @@
     </main>
 
     @include('layouts.partials.footer')
+
+    @include('layouts.partials.chat-widget')
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

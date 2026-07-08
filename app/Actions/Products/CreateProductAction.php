@@ -18,6 +18,8 @@ class CreateProductAction
 
     public function execute(Vendor $vendor, array $data): Product
     {
+        $this->assertWithinListingLimit($vendor);
+
         return DB::transaction(function () use ($vendor, $data) {
             $isPhysical = ($data['kind'] ?? 'digital') === ProductKind::Physical->value;
 
@@ -90,5 +92,16 @@ class CreateProductAction
 
             return $product->load(['category', 'tags', 'gallery', 'files']);
         });
+    }
+
+    /** Trust-tier cap on how many active listings a vendor may have. */
+    private function assertWithinListingLimit(Vendor $vendor): void
+    {
+        $tier = $vendor->trustTier();
+        $max  = $tier->maxActiveListings();
+
+        abort_if($max !== null && $vendor->activeListingCount() >= $max, 422,
+            "You've reached the {$tier->label()} limit of {$max} active listings. This cap grows as your store earns trust."
+        );
     }
 }

@@ -8,6 +8,7 @@ use App\Enums\TransactionType;
 use App\Models\Escrow;
 use App\Models\EscrowTransaction;
 use App\Models\User;
+use App\Models\WalletReserve;
 use App\Services\Wallet\WalletService;
 use Illuminate\Support\Facades\DB;
 
@@ -33,16 +34,37 @@ class ReleaseEscrowAction
 
             $vendorWallet = $locked->wallet ?? $this->walletService->getOrCreate($locked->vendor->user);
 
-            // Move from pending escrow balance into spendable balance.
+            // Split off a rolling chargeback reserve (opt-in, config/settings driven).
+            $reserve   = $this->reserveFor($amount);
+            $spendable = $amount - $reserve;
+
+            // Move the whole released amount out of pending escrow balance...
             $this->walletService->decrementEscrow($vendorWallet, $amount);
-            $this->walletService->credit(
-                $vendorWallet,
-                $amount,
-                TransactionType::EscrowRelease,
-                "Escrow release for {$locked->reference}",
-                $locked,
-                ['escrow_reference' => $locked->reference]
-            );
+
+            // ...credit the vendor's spendable balance with the net...
+            if ($spendable > 0) {
+                $this->walletService->credit(
+                    $vendorWallet,
+                    $spendable,
+                    TransactionType::EscrowRelease,
+                    "Escrow release for {$locked->reference}" . ($reserve > 0 ? ' (net of reserve)' : ''),
+                    $locked,
+                    ['escrow_reference' => $locked->reference, 'reserve_held' => $reserve]
+                );
+            }
+
+            // ...and park the reserve slice in the non-spendable reserve balance.
+            if ($reserve > 0) {
+                $this->walletService->incrementReserve($vendorWallet, $reserve);
+                WalletReserve::create([
+                    'wallet_id'  => $vendorWallet->id,
+                    'vendor_id'  => $locked->vendor_id,
+                    'escrow_id'  => $locked->id,
+                    'amount'     => $reserve,
+                    'status'     => 'held',
+                    'release_at' => now()->addDays($this->reserveDays()),
+                ]);
+            }
 
             $newReleased = $locked->released_amount + $amount;
             $fullyReleased = $newReleased >= $locked->vendor_earnings - $locked->refunded_amount;
@@ -65,5 +87,28 @@ class ReleaseEscrowAction
 
             return $locked->fresh();
         });
+    }
+
+    /** Kobo to hold back as reserve for a given release amount. */
+    private function reserveFor(int $amount): int
+    {
+        $pct = $this->reservePercent();
+
+        return $pct > 0 ? (int) round($amount * $pct / 100) : 0;
+    }
+
+    private function reservePercent(): float
+    {
+        $v = settings('chargeback_reserve_percent');
+        $pct = ($v === null || $v === '') ? (float) config('protection.reserve_percent', 0) : (float) $v;
+
+        return max(0.0, min(100.0, $pct));
+    }
+
+    private function reserveDays(): int
+    {
+        $v = settings('chargeback_reserve_days');
+
+        return (int) (($v === null || $v === '') ? config('protection.reserve_days', 30) : $v);
     }
 }

@@ -41,7 +41,7 @@ class CreateProductRequest extends FormRequest
             'files'                  => ['nullable', 'array'],
             'files.*'                => ['file', 'max:102400'],
             'file_labels'            => ['nullable', 'array'],
-            'file_labels.*'          => ['string', 'max:255'],
+            'file_labels.*'          => ['nullable', 'string', 'max:255'],
 
             // ── Physical ──────────────────────────────────────────────────────
             'physical_category_id'   => ['nullable', 'required_if:kind,physical', 'exists:physical_categories,id'],

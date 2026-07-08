@@ -39,7 +39,7 @@ class DocumentRepository
             ->whereIn('status', [
                 DocumentStatus::Sent, DocumentStatus::Viewed, DocumentStatus::Partial,
                 DocumentStatus::Paid, DocumentStatus::Overdue, DocumentStatus::Accepted,
-                DocumentStatus::Declined, DocumentStatus::Converted,
+                DocumentStatus::Signed, DocumentStatus::Declined, DocumentStatus::Converted,
             ])
             ->with('vendor')
             ->latest();
@@ -49,6 +49,44 @@ class DocumentRepository
         }
 
         return $query->paginate($perPage);
+    }
+
+    /** Documents issued by Volamani itself (platform billing). */
+    public function forPlatform(?DocumentType $type = null, int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        $query = Document::whereNull('vendor_id')
+            ->withCount('items')
+            ->latest();
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (! empty($filters['search'])) {
+            $term = $filters['search'];
+            $query->where(fn ($q) => $q->where('number', 'like', "%{$term}%")
+                ->orWhere('client_name', 'like', "%{$term}%")
+                ->orWhere('title', 'like', "%{$term}%"));
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    public function platformStats(): array
+    {
+        $invoices = Document::whereNull('vendor_id')->where('type', DocumentType::Invoice);
+
+        return [
+            'outstanding' => (int) (clone $invoices)
+                ->whereIn('status', [DocumentStatus::Sent, DocumentStatus::Viewed, DocumentStatus::Partial, DocumentStatus::Overdue])
+                ->sum(\Illuminate\Support\Facades\DB::raw('total - amount_paid')),
+            'paid_total'  => (int) (clone $invoices)->where('status', DocumentStatus::Paid)->sum('total'),
+            'draft_count' => (int) (clone $invoices)->where('status', DocumentStatus::Draft)->count(),
+        ];
     }
 
     public function vendorStats(Vendor $vendor): array

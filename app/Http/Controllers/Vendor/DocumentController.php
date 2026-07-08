@@ -168,18 +168,29 @@ class DocumentController extends Controller
 
     private function type(): DocumentType
     {
-        return request()->routeIs('vendor.estimates.*')
-            ? DocumentType::Quotation
-            : DocumentType::Invoice;
+        return match (true) {
+            request()->routeIs('vendor.estimates.*') => DocumentType::Quotation,
+            request()->routeIs('vendor.contracts.*') => DocumentType::Contract,
+            default                                  => DocumentType::Invoice,
+        };
     }
 
     private function routeBase(): string
     {
-        return $this->type() === DocumentType::Quotation ? 'vendor.estimates' : 'vendor.invoices';
+        return $this->routeBaseForType($this->type());
     }
 
     private function routeBaseFor(Document $document): string
     {
-        return $document->isQuotation() ? 'vendor.estimates' : 'vendor.invoices';
+        return $this->routeBaseForType($document->type);
+    }
+
+    private function routeBaseForType(DocumentType $type): string
+    {
+        return match ($type) {
+            DocumentType::Quotation => 'vendor.estimates',
+            DocumentType::Contract  => 'vendor.contracts',
+            default                 => 'vendor.invoices',
+        };
     }
 }

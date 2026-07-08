@@ -11,6 +11,7 @@
 @php
     $meta = [
         'general'       => ['Site &amp; General', 'bi-globe', 'Platform name, contact details, social links and global toggles.'],
+        'branding'      => ['Branding', 'bi-palette', 'Your site logo and favicon, shown across the platform.'],
         'storage'       => ['File Storage', 'bi-hdd-stack', 'Where uploaded files (images, documents, product files) are stored.'],
         'finance'       => ['Finance &amp; Fees', 'bi-cash-coin', 'Commissions, withdrawal limits and platform fees.'],
         'marketplace'   => ['Marketplace', 'bi-shop', 'Listing rules and download settings.'],
@@ -19,6 +20,7 @@
         'subscription'  => ['Subscriptions', 'bi-arrow-repeat', 'Vendor plan billing behaviour.'],
         'matching'      => ['Business Matching', 'bi-diagram-3', 'Lead matching thresholds.'],
         'notifications' => ['Notifications', 'bi-bell', 'Global notification controls.'],
+        'protection'    => ['Buyer Protection', 'bi-shield-check', 'Chargeback reserve, dispute SLAs, strike threshold and the public protection-policy page copy.'],
     ];
     // Preferred order, then any other groups that exist.
     $order = collect(array_keys($meta))->filter(fn ($g) => $groups->has($g))
@@ -33,7 +35,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('admin.settings.update') }}">
+<form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
     @csrf @method('PUT')
     <div class="row g-4">
         {{-- Tabs --}}
@@ -70,6 +72,47 @@
                                 @endif
 
                                 @foreach($settings = $groups->get($group) as $setting)
+                                    @if(in_array($setting->key, ['site_logo', 'site_favicon'], true))
+                                        @php
+                                            $isLogo  = $setting->key === 'site_logo';
+                                            $current = \App\Models\Setting::get($setting->key);
+                                            $field   = $isLogo ? 'logo_file' : 'favicon_file';
+                                        @endphp
+                                        <div class="mb-4">
+                                            <label class="form-label fw-semibold mb-1">{{ $setting->label ?? $setting->key }}</label>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                <div class="border rounded-3 d-flex align-items-center justify-content-center bg-light flex-shrink-0"
+                                                     style="width:{{ $isLogo ? '140px' : '64px' }};height:64px;overflow:hidden;">
+                                                    @if($current)
+                                                        <img src="{{ media_url($current) }}" alt="current {{ $setting->key }}" style="max-width:100%;max-height:100%;object-fit:contain;">
+                                                    @else
+                                                        <i class="bi bi-image text-muted fs-4"></i>
+                                                    @endif
+                                                </div>
+                                                <div class="flex-grow-1" style="min-width:220px;">
+                                                    <input type="file" class="form-control @error($field) is-invalid @enderror"
+                                                           name="{{ $field }}" accept="image/*{{ $isLogo ? '' : ',.ico' }}">
+                                                    @error($field)<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                    <div class="form-text">
+                                                        {{ $isLogo
+                                                            ? 'Recommended: transparent PNG/SVG, around 200×48px. Max 2 MB.'
+                                                            : 'Recommended: square PNG or .ico, 32×32 or 64×64. Max 1 MB.' }}
+                                                    </div>
+                                                    @if($current)
+                                                        <div class="form-check mt-1">
+                                                            <input class="form-check-input" type="checkbox" value="1"
+                                                                   name="remove_{{ $isLogo ? 'logo' : 'favicon' }}" id="rm_{{ $setting->key }}">
+                                                            <label class="form-check-label small text-danger" for="rm_{{ $setting->key }}">
+                                                                Remove current {{ $isLogo ? 'logo' : 'favicon' }}
+                                                            </label>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @continue
+                                    @endif
+
                                     <div class="mb-3">
                                         <label class="form-label fw-semibold mb-1">{{ $setting->label ?? $setting->key }}</label>
 
@@ -89,6 +132,8 @@
                                             <input type="password" class="form-control" name="settings[{{ $setting->key }}]" value="{{ $setting->value }}" autocomplete="off">
                                         @elseif($setting->type === 'json')
                                             <textarea class="form-control font-monospace" rows="3" name="settings[{{ $setting->key }}]">{{ $setting->value }}</textarea>
+                                        @elseif($setting->type === 'text')
+                                            <textarea class="form-control" rows="4" name="settings[{{ $setting->key }}]">{{ $setting->value }}</textarea>
                                         @else
                                             <input type="text" class="form-control" name="settings[{{ $setting->key }}]" value="{{ $setting->value }}">
                                         @endif

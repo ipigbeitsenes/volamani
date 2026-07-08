@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('layouts.partials.favicon')
     <title>@yield('title', 'Admin') — Volamani Admin</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -135,6 +136,20 @@
             <a href="{{ route('admin.returns.index') }}" class="nav-link {{ active_prefix('admin/returns') }}">
                 <i class="bi bi-arrow-return-left"></i> Returns
             </a>
+            @php($vlCbOpen = app(\App\Repositories\Chargebacks\ChargebackRepository::class)->openCount())
+            <a href="{{ route('admin.chargebacks.index') }}" class="nav-link {{ active_prefix('admin/chargebacks') }}">
+                <i class="bi bi-shield-exclamation"></i> Chargebacks
+                @if($vlCbOpen > 0)
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ $vlCbOpen }}</span>
+                @endif
+            </a>
+            @php($vlChatUnread = app(\App\Repositories\Chat\ChatRepository::class)->unansweredCount())
+            <a href="{{ route('admin.live-chat.index') }}" class="nav-link {{ active_prefix('admin/live-chat') }}">
+                <i class="bi bi-chat-dots"></i> Live Chat
+                @if($vlChatUnread > 0)
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ $vlChatUnread }}</span>
+                @endif
+            </a>
 
             <span class="nav-section">Finance</span>
             <a href="{{ route('admin.payments.index') }}" class="nav-link {{ active_prefix('admin/payments') }}">
@@ -157,6 +172,9 @@
             <span class="nav-section">Platform</span>
             <a href="{{ route('admin.subscriptions.index') }}" class="nav-link {{ active_prefix('admin/subscriptions') }}">
                 <i class="bi bi-star"></i> Subscriptions
+            </a>
+            <a href="{{ route('admin.documents.index') }}" class="nav-link {{ active_prefix('admin/documents') }}">
+                <i class="bi bi-file-earmark-text"></i> Invoices &amp; Contracts
             </a>
             @can('settings.manage')
             <a href="{{ route('admin.settings.index') }}" class="nav-link {{ active_prefix('admin/settings') }}">

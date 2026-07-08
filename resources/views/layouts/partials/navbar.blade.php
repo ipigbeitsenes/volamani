@@ -1,11 +1,16 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm">
     <div class="container">
+        @php $vlLogo = settings('site_logo'); $vlSiteName = settings('site_name', 'Volamani'); @endphp
         <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('home') }}" style="font-size: 1.4rem;">
-            <span class="d-inline-flex align-items-center justify-content-center text-white rounded-3"
-                  style="width:34px;height:34px;background:var(--vl-gradient);box-shadow:0 6px 14px -6px rgba(26,86,219,.6);">
-                <i class="bi bi-send-fill" style="font-size:.95rem;transform:rotate(45deg)"></i>
-            </span>
-            <span>Volamani</span>
+            @if($vlLogo)
+                <img src="{{ media_url($vlLogo) }}" alt="{{ $vlSiteName }}" style="height:38px;width:auto;max-width:180px;object-fit:contain;">
+            @else
+                <span class="d-inline-flex align-items-center justify-content-center text-white rounded-3"
+                      style="width:34px;height:34px;background:var(--vl-gradient);box-shadow:0 6px 14px -6px rgba(26,86,219,.6);">
+                    <i class="bi bi-send-fill" style="font-size:.95rem;transform:rotate(45deg)"></i>
+                </span>
+                <span>{{ $vlSiteName }}</span>
+            @endif
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">

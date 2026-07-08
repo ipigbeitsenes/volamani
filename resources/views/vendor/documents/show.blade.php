@@ -1,4 +1,4 @@
-@extends('layouts.vendor')
+@extends($docLayout ?? 'layouts.vendor')
 
 @section('title', $document->number)
 
@@ -32,6 +32,48 @@
             @endif
         </div>
     </div>
+
+    {{-- Shareable client link --}}
+    @php $shareUrl = $document->publicUrl(); @endphp
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="bi bi-link-45deg text-primary fs-5"></i>
+                <h6 class="fw-bold mb-0">Share with client</h6>
+                @if($document->sent_at)
+                    <span class="badge bg-light text-success border ms-auto"><i class="bi bi-check2 me-1"></i>Sent {{ $document->sent_at->diffForHumans() }}</span>
+                @endif
+            </div>
+            <p class="text-muted small mb-2">Anyone with this link can view{{ $document->isInvoice() ? ' and pay' : ($document->isContract() ? ' and sign' : ' and accept') }} this {{ strtolower($type->label()) }} — no account needed.</p>
+            <div class="input-group input-group-sm mb-2">
+                <input type="text" id="shareLink" class="form-control" value="{{ $shareUrl }}" readonly onclick="this.select()">
+                <button class="btn btn-primary" type="button" onclick="vlCopyShare(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+                <a class="btn btn-outline-secondary" href="{{ $shareUrl }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-sm btn-outline-success" target="_blank"
+                   href="https://wa.me/{{ preg_replace('/\D/', '', $document->client_phone ?? '') }}?text={{ rawurlencode($type->label() . ' ' . $document->number . ' from ' . $document->issuerName() . ': ' . $shareUrl) }}">
+                    <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                </a>
+                @if($document->client_email)
+                    <a class="btn btn-sm btn-outline-secondary" href="mailto:{{ $document->client_email }}?subject={{ rawurlencode($type->label() . ' ' . $document->number) }}&body={{ rawurlencode('View your ' . strtolower($type->label()) . ': ' . $shareUrl) }}">
+                        <i class="bi bi-envelope me-1"></i>Email
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    @if($document->isContract() && $document->isSigned())
+        <div class="alert alert-success d-flex align-items-center gap-2 border-0 shadow-sm">
+            <i class="bi bi-patch-check-fill fs-5"></i>
+            <div class="small">
+                Signed by <strong>{{ $document->signed_name }}</strong>
+                on {{ $document->accepted_at?->format('d M Y, H:i') }}
+                @if($document->signed_ip)<span class="text-muted">· IP {{ $document->signed_ip }}</span>@endif
+            </div>
+        </div>
+    @endif
 
     <div class="row g-3">
         <div class="col-lg-8">
@@ -137,3 +179,23 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function vlCopyShare(btn) {
+    var input = document.getElementById('shareLink');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    var done = function () {
+        var html = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
+        setTimeout(function () { btn.innerHTML = html; }, 1800);
+    };
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(input.value).then(done, function () { document.execCommand('copy'); done(); });
+    } else {
+        document.execCommand('copy'); done();
+    }
+}
+</script>
+@endpush

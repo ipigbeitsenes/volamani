@@ -1,4 +1,4 @@
-@extends('layouts.vendor')
+@extends($docLayout ?? 'layouts.vendor')
 
 @section('title', $type->label() . 's')
 
@@ -7,12 +7,23 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h4 class="fw-bold mb-1">{{ $type->label() }}s</h4>
-            <p class="text-muted mb-0">Create and manage {{ strtolower($type->label()) }}s for your clients.</p>
+            <p class="text-muted mb-0">
+                {{ ($platformTabs ?? false)
+                    ? 'Volamani-issued ' . strtolower($type->label()) . 's sent to platform users.'
+                    : 'Create and manage ' . strtolower($type->label()) . 's for your clients.' }}
+            </p>
         </div>
-        <a href="{{ route($routeBase . '.create') }}" class="btn btn-primary">
+        <a href="{{ route($routeBase . '.create', ['type' => $type->value]) }}" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i>New {{ $type->label() }}
         </a>
     </div>
+
+    @if($platformTabs ?? false)
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item"><a class="nav-link {{ $type === \App\Enums\DocumentType::Invoice ? 'active' : '' }}" href="{{ route($routeBase . '.index', ['type' => 'invoice']) }}">Invoices</a></li>
+            <li class="nav-item"><a class="nav-link {{ $type === \App\Enums\DocumentType::Contract ? 'active' : '' }}" href="{{ route($routeBase . '.index', ['type' => 'contract']) }}">Contracts of Sale</a></li>
+        </ul>
+    @endif
 
     @if($stats)
         <div class="row g-3 mb-4">

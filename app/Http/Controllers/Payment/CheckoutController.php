@@ -161,19 +161,29 @@ class CheckoutController extends Controller
         $product = Product::findOrFail($productId);
         abort_unless($product->isActive(), 422);
 
-        // Create or retrieve existing pending order
-        $order = Order::firstOrCreate(
-            ['buyer_id' => $user->id, 'status' => 'pending', 'payment_status' => 'pending'],
-            [
-                'vendor_id'       => $product->vendor_id,
-                'total_amount'    => $product->price,
-                'platform_fee'    => (int) round($product->price * (config('payment.platform_fee_percent') / 100)),
-                'vendor_earnings' => $product->price - (int) round($product->price * (config('payment.platform_fee_percent') / 100)),
-                'currency'        => 'NGN',
-            ]
-        );
+        $fee = (int) round($product->price * (config('payment.platform_fee_percent') / 100));
 
-        if (! $order->items()->exists()) {
+        // Reuse an existing pending order for THIS product only (so revisiting the
+        // checkout page doesn't spawn duplicates). A pending order for a different
+        // product must NOT be reused, or we'd charge for one product while the
+        // order/escrow record points at another.
+        $order = Order::where('buyer_id', $user->id)
+            ->where('payment_status', 'pending')
+            ->whereHas('items', fn ($q) => $q->where('product_id', $productId))
+            ->first();
+
+        if (! $order) {
+            $order = Order::create([
+                'buyer_id'        => $user->id,
+                'vendor_id'       => $product->vendor_id,
+                'status'          => 'pending',
+                'payment_status'  => 'pending',
+                'total_amount'    => $product->price,
+                'platform_fee'    => $fee,
+                'vendor_earnings' => $product->price - $fee,
+                'currency'        => 'NGN',
+            ]);
+
             $order->items()->create([
                 'product_id' => $productId,
                 'name'       => $product->name,

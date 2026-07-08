@@ -56,13 +56,14 @@ class OpenDisputeAction
 
         return DB::transaction(function () use ($escrow, $raisedBy, $reason, $description, $attachment) {
             $dispute = Dispute::create([
-                'escrow_id'   => $escrow->id,
-                'buyer_id'    => $escrow->buyer_id,
-                'vendor_id'   => $escrow->vendor_id,
-                'raised_by'   => $raisedBy->id,
-                'reason'      => $reason,
-                'description' => $description,
-                'status'      => DisputeStatus::Open,
+                'escrow_id'       => $escrow->id,
+                'buyer_id'        => $escrow->buyer_id,
+                'vendor_id'       => $escrow->vendor_id,
+                'raised_by'       => $raisedBy->id,
+                'reason'          => $reason,
+                'description'     => $description,
+                'status'          => DisputeStatus::Open,
+                'response_due_at' => now()->addHours($this->responseHours()),
             ]);
 
             // Freeze the escrow so nothing auto-releases while under review.
@@ -98,5 +99,12 @@ class OpenDisputeAction
     {
         return $escrow->buyer_id === $user->id
             || ($escrow->vendor && $escrow->vendor->user_id === $user->id);
+    }
+
+    private function responseHours(): int
+    {
+        $v = settings('dispute_response_hours');
+
+        return (int) (($v === null || $v === '') ? config('protection.dispute_response_hours', 48) : $v);
     }
 }
