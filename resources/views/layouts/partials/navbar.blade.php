@@ -1,3 +1,22 @@
+@once
+<style>
+    /* Mobile: let the collapsed menu scroll on its own instead of dragging the
+       page body with it (overscroll-behavior stops the scroll from chaining). */
+    @media (max-width: 991.98px) {
+        #navMain {
+            max-height: calc(100dvh - 66px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+        #navMain .dropdown-menu {
+            max-height: 55vh;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+    }
+</style>
+@endonce
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm">
     <div class="container">
         @php $vlLogo = settings('site_logo'); $vlSiteName = settings('site_name', 'Volamani'); @endphp
