@@ -3,7 +3,9 @@
 @php
     $seoName  = $product->seo_title ?: $product->name;
     $seoDesc  = \Illuminate\Support\Str::limit(strip_tags($product->seo_description ?: ($product->short_description ?: $product->description)), 155);
-    $seoImg   = $product->thumbnail_url;
+    // Only the product's own uploaded (raster) image — skip the SVG placeholder
+    // so the share preview falls back to the branded cover instead of a blank.
+    $seoImg   = $product->thumbnail ? $product->thumbnail_url : null;
     if ($seoImg && ! \Illuminate\Support\Str::startsWith($seoImg, ['http://', 'https://', '//', 'data:'])) {
         $seoImg = url($seoImg);
     }

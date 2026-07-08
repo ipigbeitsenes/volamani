@@ -1,6 +1,48 @@
 @extends('layouts.app')
 
-@section('title', $service->seo_title ?? $service->title . ' — Volamani')
+@php
+    $seoName = $service->seo_title ?: $service->title;
+    $seoDesc = \Illuminate\Support\Str::limit(strip_tags($service->seo_description ?: ($service->short_description ?: $service->description)), 155);
+    // Only the service's own uploaded (raster) image — skip the SVG placeholder.
+    $seoImg  = $service->thumbnail ? $service->thumbnail_url : null;
+    if ($seoImg && ! \Illuminate\Support\Str::startsWith($seoImg, ['http://', 'https://', '//', 'data:'])) {
+        $seoImg = url($seoImg);
+    }
+    $seoReviewCount = (int) ($service->reviews_count ?? 0);
+@endphp
+
+@section('title', $seoName)
+@section('meta_description', $seoDesc)
+@section('og_type', 'product')
+@section('og_image', $seoImg)
+
+@push('schema')
+<script type="application/ld+json">
+{!! json_encode(array_filter([
+    '@context' => 'https://schema.org',
+    '@type'    => 'Product',
+    'name'     => $service->title,
+    'description' => $seoDesc,
+    'image'    => $seoImg,
+    'sku'      => 'service-' . $service->id,
+    'category' => $service->category?->name,
+    'brand'    => $service->vendor ? ['@type' => 'Brand', 'name' => $service->vendor->business_name] : null,
+    'offers'   => [
+        '@type'         => 'Offer',
+        'url'           => route('marketplace.services.show', $service->slug),
+        'priceCurrency' => 'NGN',
+        'price'         => number_format($service->lowestPrice() / 100, 2, '.', ''),
+        'availability'  => 'https://schema.org/InStock',
+        'seller'        => $service->vendor ? ['@type' => 'Organization', 'name' => $service->vendor->business_name] : null,
+    ],
+    'aggregateRating' => ($service->average_rating > 0 && $seoReviewCount > 0) ? [
+        '@type'       => 'AggregateRating',
+        'ratingValue' => number_format($service->average_rating, 1),
+        'reviewCount' => $seoReviewCount,
+    ] : null,
+], fn ($v) => $v !== null), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @section('content')
 <div class="container py-4">

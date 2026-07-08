@@ -30,15 +30,26 @@
     $seoRobots    = trim($__env->yieldContent('robots', 'index, follow')) . ', max-image-preview:large';
     $seoType      = trim($__env->yieldContent('og_type', 'website'));
 
-    // Resolve OG image → must be an ABSOLUTE url for crawlers.
+    // Resolve OG image → must be an ABSOLUTE, RASTER url. Social crawlers
+    // (Facebook, WhatsApp, LinkedIn, X) silently ignore SVG, so we never expose
+    // one: page-supplied SVGs (e.g. the product placeholder) fall back to the
+    // site logo, then to the branded PNG cover.
+    $seoCover = asset('images/og-cover.png');
+    $isSvg = fn ($u) => $u && \Illuminate\Support\Str::endsWith(strtolower(strtok($u, '?')), '.svg');
+
     $seoImage = trim($__env->yieldContent('og_image'));
-    if ($seoImage === '') {
+    if ($seoImage === '' || $isSvg($seoImage)) {
         $seoLogoPath = settings('site_logo');
-        $seoImage = $seoLogoPath ? media_url($seoLogoPath) : asset('images/og-cover.svg');
+        $seoImage = ($seoLogoPath && ! $isSvg($seoLogoPath)) ? media_url($seoLogoPath) : $seoCover;
     }
     if ($seoImage && ! \Illuminate\Support\Str::startsWith($seoImage, ['http://', 'https://', '//', 'data:'])) {
         $seoImage = url($seoImage);
     }
+    $seoImageIsCover = \Illuminate\Support\Str::endsWith($seoImage, 'og-cover.png');
+    $seoImgExt = strtolower(strtok(pathinfo($seoImage, PATHINFO_BASENAME) ?: '', '?'));
+    $seoImageType = \Illuminate\Support\Str::endsWith($seoImgExt, '.png') ? 'image/png'
+        : (\Illuminate\Support\Str::endsWith($seoImgExt, ['.jpg', '.jpeg']) ? 'image/jpeg'
+        : (\Illuminate\Support\Str::endsWith($seoImgExt, '.webp') ? 'image/webp' : null));
 
     // sameAs social profiles (only include the ones that are configured).
     $seoSocials = array_values(array_filter([
@@ -65,6 +76,12 @@
 <meta property="og:locale" content="en_NG">
 @if($seoImage)
 <meta property="og:image" content="{{ $seoImage }}">
+<meta property="og:image:secure_url" content="{{ $seoImage }}">
+@if($seoImageType)<meta property="og:image:type" content="{{ $seoImageType }}">@endif
+@if($seoImageIsCover)
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+@endif
 <meta property="og:image:alt" content="{{ $seoSite }} — {{ $seoTagline }}">
 @endif
 
