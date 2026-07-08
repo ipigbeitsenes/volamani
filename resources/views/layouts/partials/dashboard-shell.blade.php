@@ -81,6 +81,12 @@
     .topbar .breadcrumb { --bs-breadcrumb-divider: '\203A'; margin: 0; }
     .page-content { padding: 1.5rem; width: 100%; max-width: var(--vl-content-max); margin-inline: auto; }
     @media (max-width: 575.98px) { .page-content { padding: 1rem; } }
+    /* Pages built for the public layout wrap themselves in .container; inside the
+       dashboard shell that would double the gutters, so neutralise it. */
+    .page-content > .container,
+    .page-content > .container-fluid,
+    .page-content > .container-lg,
+    .page-content > .container-xl { max-width: 100%; padding-left: 0; padding-right: 0; }
 
     /* ── Page header ────────────────────────────────────────────────────── */
     .vl-page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }

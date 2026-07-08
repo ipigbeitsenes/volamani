@@ -102,6 +102,11 @@
                         $vlmUnread = auth()->user()->unreadNotifications()->count();
                         $vlmRecent = auth()->user()->notifications()->limit(6)->get();
                     @endphp
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1">
+                            <i class="bi bi-speedometer2"></i><span class="d-lg-inline">Dashboard</span>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link position-relative" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-label="Notifications">
                             <i class="bi bi-bell fs-5"></i>
