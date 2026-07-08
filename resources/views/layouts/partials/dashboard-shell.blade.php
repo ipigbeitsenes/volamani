@@ -117,4 +117,14 @@
     .vl-empty { text-align: center; color: var(--vl-muted); padding: 3rem 1rem; }
     .vl-empty i { font-size: 2.2rem; opacity: .35; display: block; margin-bottom: .5rem; }
     ::selection { background: color-mix(in srgb, var(--vl-accent) 20%, transparent); }
+
+    /* Mobile menu toggle — clear, tappable affordance in the topbar. */
+    #sidebarToggle {
+        width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 10px; border: 1px solid var(--vl-border); background: #fff;
+        color: var(--vl-ink); font-size: 1.2rem; padding: 0; flex-shrink: 0;
+    }
+    #sidebarToggle:hover, #sidebarToggle[aria-expanded="true"] {
+        background: color-mix(in srgb, var(--vl-accent) 12%, #fff); color: var(--vl-accent); border-color: transparent;
+    }
 </style>

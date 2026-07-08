@@ -56,14 +56,25 @@
     var body = document.body,
         toggle = document.getElementById('sidebarToggle'),
         backdrop = document.getElementById('sidebarBackdrop'),
-        sidebar = document.getElementById('sidebar');
+        sidebar = document.getElementById('sidebar'),
+        icon = toggle ? toggle.querySelector('i') : null;
 
-    function close() { body.classList.remove('sidebar-open'); }
+    function sync() {
+        var open = body.classList.contains('sidebar-open');
+        if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (icon) icon.className = open ? 'bi bi-x-lg' : 'bi bi-list';
+    }
+    function close() { body.classList.remove('sidebar-open'); sync(); }
 
-    if (toggle) toggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        body.classList.toggle('sidebar-open');
-    });
+    if (toggle) {
+        toggle.setAttribute('aria-controls', 'sidebar');
+        toggle.setAttribute('aria-label', 'Toggle menu');
+        toggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            body.classList.toggle('sidebar-open');
+            sync();
+        });
+    }
     if (backdrop) backdrop.addEventListener('click', close);
     // Tapping a link on mobile navigates away — close the drawer.
     if (sidebar) sidebar.addEventListener('click', function (e) {
@@ -71,5 +82,6 @@
     });
     window.addEventListener('resize', function () { if (window.innerWidth >= 992) close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    sync();
 })();
 </script>
