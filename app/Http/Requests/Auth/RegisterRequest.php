@@ -21,6 +21,14 @@ class RegisterRequest extends FormRequest
             'phone'     => ['nullable', 'string', 'max:20'],
             'user_type' => ['nullable', 'string', 'in:' . implode(',', array_column(UserType::cases(), 'value'))],
             'password'  => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+            'terms'     => ['accepted'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'terms.accepted' => 'You must agree to the Terms & Conditions to create an account.',
         ];
     }
 }

@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.resend');
 
+    // Terms & Conditions acceptance gate (enforced by EnsureTermsAccepted).
+    Route::get('/terms/agree', [\App\Http\Controllers\TermsController::class, 'show'])->name('terms.show');
+    Route::post('/terms/agree', [\App\Http\Controllers\TermsController::class, 'accept'])->name('terms.accept');
+
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('profile')->name('profile.')->group(function () {

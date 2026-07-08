@@ -149,7 +149,7 @@
             </div>
 
             {{-- Referral card --}}
-            <div class="card border-0 shadow-sm border-start border-primary border-3">
+            <div class="card border-0 shadow-sm border-start border-primary border-3 mb-3">
                 <div class="card-body">
                     <h6 class="fw-bold"><i class="bi bi-share text-primary me-2"></i>Refer & Earn</h6>
                     <p class="text-muted small mb-2">Share your referral link and earn commission on every referred sale.</p>
@@ -163,6 +163,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Buyer guidelines & policies --}}
+            @include('partials.guidelines-card', ['audience' => 'buyer'])
         </div>
     </div>
 

@@ -65,15 +65,21 @@
                    placeholder="Repeat password" required>
         </div>
 
+        <div class="form-check mb-3">
+            <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox"
+                   name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }} required>
+            <label class="form-check-label small text-muted" for="terms">
+                I agree to the
+                <a href="{{ route('pages.legal', 'terms') }}" target="_blank" class="text-primary text-decoration-none">Terms of Service</a>,
+                <a href="{{ route('pages.legal', 'privacy') }}" target="_blank" class="text-primary text-decoration-none">Privacy Policy</a>
+                and <a href="{{ route('buyer-protection') }}" target="_blank" class="text-primary text-decoration-none">Buyer Protection</a> policy.
+            </label>
+            @error('terms')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+        </div>
+
         <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
             Create Account
         </button>
-
-        <p class="text-center small text-muted mt-3 mb-0">
-            By creating an account you agree to our
-            <a href="#" class="text-primary text-decoration-none">Terms of Service</a> and
-            <a href="#" class="text-primary text-decoration-none">Privacy Policy</a>.
-        </p>
     </form>
 
     <hr class="my-4">

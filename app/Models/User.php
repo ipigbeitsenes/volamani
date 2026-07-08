@@ -46,6 +46,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'buyer_flagged_at',
         'purchases_suspended',
         'purchases_suspended_at',
+        'terms_accepted_at',
+        'terms_version',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -67,7 +69,34 @@ class User extends Authenticatable implements MustVerifyEmail
             'buyer_flagged_at'         => 'datetime',
             'purchases_suspended'      => 'boolean',
             'purchases_suspended_at'   => 'datetime',
+            'terms_accepted_at'        => 'datetime',
         ];
+    }
+
+    // ─── Terms & Conditions acceptance ──────────────────────────────────────
+
+    /** The Terms version currently in force (admin-overridable via settings). */
+    public function currentTermsVersion(): string
+    {
+        $v = settings('terms_version');
+
+        return (string) (($v === null || $v === '') ? config('legal.terms_version', '1') : $v);
+    }
+
+    /** Whether this user has accepted the Terms version currently in force. */
+    public function hasAcceptedCurrentTerms(): bool
+    {
+        return $this->terms_accepted_at !== null
+            && $this->terms_version === $this->currentTermsVersion();
+    }
+
+    /** Record acceptance of the current Terms version. */
+    public function acceptTerms(): void
+    {
+        $this->forceFill([
+            'terms_accepted_at' => now(),
+            'terms_version'     => $this->currentTermsVersion(),
+        ])->save();
     }
 
     // ─── Buyer abuse standing ───────────────────────────────────────────────

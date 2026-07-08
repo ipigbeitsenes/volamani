@@ -68,6 +68,11 @@
     </div>
 </div>
 
+{{-- Seller guidelines & policies --}}
+<div class="mb-4">
+    @include('partials.guidelines-card', ['audience' => 'seller'])
+</div>
+
 {{-- Stats --}}
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">

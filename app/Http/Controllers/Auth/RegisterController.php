@@ -28,6 +28,9 @@ class RegisterController extends Controller
             $request->query('ref') ?? $request->cookie('vlm_ref')
         );
 
+        // The user ticked the Terms checkbox on the form (validated 'accepted').
+        $user->acceptTerms();
+
         Auth::login($user);
 
         $this->flashSuccess('Welcome to Volamani! Please verify your email to get started.');
