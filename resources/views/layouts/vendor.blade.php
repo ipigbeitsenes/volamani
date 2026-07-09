@@ -102,23 +102,30 @@
             <a href="{{ route('vendor.products.index') }}" class="nav-link {{ active_prefix('vendor/products') }}">
                 <i class="bi bi-box-seam"></i> Products
             </a>
+            @feature('services')
             <a href="{{ route('vendor.services.index') }}" class="nav-link {{ active_prefix('vendor/services') }}">
                 <i class="bi bi-briefcase"></i> Services
             </a>
+            @endfeature
 
             <span class="nav-section">Business</span>
             <a href="{{ route('vendor.orders.index') }}" class="nav-link {{ active_prefix('vendor/orders') }}">
                 <i class="bi bi-bag-check"></i> Orders
             </a>
+            @feature('returns')
             <a href="{{ route('vendor.returns.index') }}" class="nav-link {{ active_prefix('vendor/returns') }}">
                 <i class="bi bi-arrow-return-left"></i> Returns
             </a>
+            @endfeature
             <a href="{{ route('vendor.chargebacks.index') }}" class="nav-link {{ active_prefix('vendor/chargebacks') }}">
                 <i class="bi bi-shield-exclamation"></i> Chargebacks
             </a>
+            @feature('requests')
             <a href="{{ route('vendor.quotations.index') }}" class="nav-link {{ active_prefix('vendor/quotations') }}">
                 <i class="bi bi-file-earmark-text"></i> Quotations
             </a>
+            @endfeature
+            @feature('invoices')
             <a href="{{ route('vendor.clients.index') }}" class="nav-link {{ active_prefix('vendor/clients') }}">
                 <i class="bi bi-people"></i> Clients
             </a>
@@ -131,10 +138,14 @@
             <a href="{{ route('vendor.estimates.index') }}" class="nav-link {{ active_prefix('vendor/estimates') }}">
                 <i class="bi bi-calculator"></i> Pricing Estimates
             </a>
+            @endfeature
+            @feature('matching')
             <a href="{{ route('vendor.matching.index') }}" class="nav-link {{ active_prefix('vendor/matching') }}">
                 <i class="bi bi-diagram-3"></i> Leads &amp; Matching
             </a>
+            @endfeature
 
+            @feature('consultations')
             <span class="nav-section">Consultations</span>
             <a href="{{ route('vendor.consultations.index') }}" class="nav-link {{ active_prefix('vendor/consultations') }}">
                 <i class="bi bi-calendar2-check"></i> Sessions
@@ -142,17 +153,24 @@
             <a href="{{ route('vendor.consultations.packages') }}" class="nav-link {{ active_route('vendor.consultations.packages') }}">
                 <i class="bi bi-collection"></i> Packages
             </a>
+            @endfeature
 
             <span class="nav-section">Finance</span>
+            @feature('wallet')
             <a href="{{ route('vendor.wallet.index') }}" class="nav-link {{ active_prefix('vendor/wallet') }}">
                 <i class="bi bi-wallet2"></i> Wallet
             </a>
+            @endfeature
+            @feature('affiliates')
             <a href="{{ route('vendor.affiliates.index') }}" class="nav-link {{ active_prefix('vendor/affiliates') }}">
                 <i class="bi bi-share"></i> Affiliates
             </a>
+            @endfeature
+            @feature('subscriptions')
             <a href="{{ route('vendor.subscription.index') }}" class="nav-link {{ active_prefix('vendor/subscription') }}">
                 <i class="bi bi-star"></i> Subscription
             </a>
+            @endfeature
 
             <span class="nav-section">Account</span>
             <a href="{{ route('vendor.storefront') }}" class="nav-link {{ active_route('vendor.storefront') }}">

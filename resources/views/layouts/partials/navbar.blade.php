@@ -43,37 +43,47 @@
                         Products
                     </a>
                 </li>
+                @feature('services')
                 <li class="nav-item">
                     <a class="nav-link {{ active_route('marketplace.services.index') }}" href="{{ route('marketplace.services.index') }}">
                         Services
                     </a>
                 </li>
+                @endfeature
+                @feature('consultations')
                 <li class="nav-item">
                     <a class="nav-link {{ active_route('marketplace.consultants.index') }}" href="{{ route('marketplace.consultants.index') }}">
                         Consultants
                     </a>
                 </li>
+                @endfeature
                 <li class="nav-item">
                     <a class="nav-link {{ active_route('vendors.index') }}" href="{{ route('vendors.index') }}">
                         Stores
                     </a>
                 </li>
+                @feature('requests')
                 <li class="nav-item">
                     <a class="nav-link {{ active_route('marketplace.requests.index') }}" href="{{ route('marketplace.requests.index') }}">
                         Post a Request
                     </a>
                 </li>
+                @endfeature
+                @feature('pricing_calculator')
                 <li class="nav-item">
                     <a class="nav-link {{ active_prefix('marketplace/pricing-calculator') }}" href="{{ route('pricing-calculator.index') }}">
                         Pricing
                     </a>
                 </li>
+                @endfeature
                 @auth
+                    @feature('matching')
                     <li class="nav-item">
                         <a class="nav-link {{ active_prefix('marketplace/matching') }}" href="{{ route('matching.index') }}">
                             Match Me
                         </a>
                     </li>
+                    @endfeature
                 @endauth
             </ul>
 
@@ -167,15 +177,15 @@
 
                             <li><h6 class="dropdown-header text-uppercase small text-muted">Purchases</h6></li>
                             <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag-check me-2"></i>My Orders &amp; Downloads</a></li>
-                            <li><a class="dropdown-item" href="{{ route('service-orders.index') }}"><i class="bi bi-briefcase me-2"></i>Service Orders</a></li>
-                            <li><a class="dropdown-item" href="{{ route('consultations.sessions') }}"><i class="bi bi-calendar2-check me-2"></i>My Consultations</a></li>
-                            <li><a class="dropdown-item" href="{{ route('requests.my') }}"><i class="bi bi-megaphone me-2"></i>My Requests</a></li>
+                            @feature('services')<li><a class="dropdown-item" href="{{ route('service-orders.index') }}"><i class="bi bi-briefcase me-2"></i>Service Orders</a></li>@endfeature
+                            @feature('consultations')<li><a class="dropdown-item" href="{{ route('consultations.sessions') }}"><i class="bi bi-calendar2-check me-2"></i>My Consultations</a></li>@endfeature
+                            @feature('requests')<li><a class="dropdown-item" href="{{ route('requests.my') }}"><i class="bi bi-megaphone me-2"></i>My Requests</a></li>@endfeature
 
                             <li><h6 class="dropdown-header text-uppercase small text-muted">Money &amp; Protection</h6></li>
-                            <li><a class="dropdown-item" href="{{ route('wallet.index') }}"><i class="bi bi-wallet2 me-2"></i>Wallet</a></li>
-                            <li><a class="dropdown-item" href="{{ route('escrows.index') }}"><i class="bi bi-shield-lock me-2"></i>Escrow</a></li>
+                            @feature('wallet')<li><a class="dropdown-item" href="{{ route('wallet.index') }}"><i class="bi bi-wallet2 me-2"></i>Wallet</a></li>@endfeature
+                            @feature('escrow')<li><a class="dropdown-item" href="{{ route('escrows.index') }}"><i class="bi bi-shield-lock me-2"></i>Escrow</a></li>@endfeature
                             <li><a class="dropdown-item" href="{{ route('disputes.index') }}"><i class="bi bi-life-preserver me-2"></i>Support Tickets</a></li>
-                            <li><a class="dropdown-item" href="{{ route('invoices.index') }}"><i class="bi bi-receipt me-2"></i>Invoices</a></li>
+                            @feature('invoices')<li><a class="dropdown-item" href="{{ route('invoices.index') }}"><i class="bi bi-receipt me-2"></i>Invoices</a></li>@endfeature
 
                             <li><h6 class="dropdown-header text-uppercase small text-muted">Account</h6></li>
                             <li><a class="dropdown-item" href="{{ route('follow.index') }}"><i class="bi bi-person-heart me-2"></i>Following</a></li>

@@ -92,6 +92,17 @@ class SettingsSeeder extends Seeder
             ['key' => 'protection_chargeback_note',   'value' => 'If you paid by card and something is seriously wrong, your bank can also raise a chargeback. We honour valid chargebacks and recover the funds from the seller, so you are never left out of pocket.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Chargebacks'],
         ];
 
+        // Feature toggles — one boolean per entry in config/features.php (all ON).
+        foreach (config('features', []) as $key => $meta) {
+            $settings[] = [
+                'key'   => 'feature_' . $key,
+                'value' => '1',
+                'type'  => 'boolean',
+                'group' => 'features',
+                'label' => $meta[0] ?? ucfirst($key),
+            ];
+        }
+
         foreach ($settings as $setting) {
             Setting::firstOrCreate(['key' => $setting['key']], $setting);
         }

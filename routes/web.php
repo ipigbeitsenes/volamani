@@ -32,11 +32,11 @@ Route::prefix('chat')->name('chat.')->group(function () {
 });
 
 // Affiliate share link (public) — tracks the click then forwards to signup
-Route::get('/r/{code}', [\App\Http\Controllers\Affiliate\ReferralLinkController::class, 'track'])->name('referral.track');
+Route::get('/r/{code}', [\App\Http\Controllers\Affiliate\ReferralLinkController::class, 'track'])->middleware('feature:affiliates')->name('referral.track');
 
 // Public invoice / quotation share links — opened by clients with NO account.
 // Authorisation is the unguessable token itself; never require login here.
-Route::prefix('i')->name('public.documents.')->group(function () {
+Route::middleware('feature:invoices')->prefix('i')->name('public.documents.')->group(function () {
     Route::get('/{token}',         [\App\Http\Controllers\Invoices\PublicDocumentController::class, 'show'])->name('show');
     Route::get('/{token}/print',   [\App\Http\Controllers\Invoices\PublicDocumentController::class, 'print'])->name('print');
     Route::post('/{token}/pay',    [\App\Http\Controllers\Invoices\PublicDocumentController::class, 'pay'])->middleware('throttle:15,1')->name('pay');

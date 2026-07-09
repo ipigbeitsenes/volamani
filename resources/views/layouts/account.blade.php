@@ -75,22 +75,22 @@
 
         <span class="nav-section">Purchases</span>
         <a href="{{ route('orders.index') }}" class="nav-link {{ active_prefix('orders') }}"><i class="bi bi-bag-check"></i> Orders &amp; Downloads</a>
-        <a href="{{ route('service-orders.index') }}" class="nav-link {{ active_prefix('service-orders') }}"><i class="bi bi-briefcase"></i> Service Orders</a>
-        <a href="{{ route('consultations.sessions') }}" class="nav-link {{ active_prefix('consultations') }}"><i class="bi bi-calendar2-check"></i> Consultations</a>
-        <a href="{{ route('requests.my') }}" class="nav-link {{ active_prefix('requests') }}"><i class="bi bi-megaphone"></i> My Requests</a>
+        @feature('services')<a href="{{ route('service-orders.index') }}" class="nav-link {{ active_prefix('service-orders') }}"><i class="bi bi-briefcase"></i> Service Orders</a>@endfeature
+        @feature('consultations')<a href="{{ route('consultations.sessions') }}" class="nav-link {{ active_prefix('consultations') }}"><i class="bi bi-calendar2-check"></i> Consultations</a>@endfeature
+        @feature('requests')<a href="{{ route('requests.my') }}" class="nav-link {{ active_prefix('requests') }}"><i class="bi bi-megaphone"></i> My Requests</a>@endfeature
 
         <span class="nav-section">Money &amp; Protection</span>
-        <a href="{{ route('wallet.index') }}" class="nav-link {{ active_prefix('wallet') }}"><i class="bi bi-wallet2"></i> Wallet</a>
-        <a href="{{ route('escrows.index') }}" class="nav-link {{ active_prefix('escrows') }}"><i class="bi bi-shield-lock"></i> Escrow</a>
-        <a href="{{ route('returns.index') }}" class="nav-link {{ active_prefix('returns') }}"><i class="bi bi-arrow-return-left"></i> Returns</a>
+        @feature('wallet')<a href="{{ route('wallet.index') }}" class="nav-link {{ active_prefix('wallet') }}"><i class="bi bi-wallet2"></i> Wallet</a>@endfeature
+        @feature('escrow')<a href="{{ route('escrows.index') }}" class="nav-link {{ active_prefix('escrows') }}"><i class="bi bi-shield-lock"></i> Escrow</a>@endfeature
+        @feature('returns')<a href="{{ route('returns.index') }}" class="nav-link {{ active_prefix('returns') }}"><i class="bi bi-arrow-return-left"></i> Returns</a>@endfeature
         <a href="{{ route('disputes.index') }}" class="nav-link {{ active_prefix('disputes') }}"><i class="bi bi-life-preserver"></i> Support Tickets</a>
-        <a href="{{ route('invoices.index') }}" class="nav-link {{ active_prefix('invoices') }}"><i class="bi bi-receipt"></i> Invoices</a>
+        @feature('invoices')<a href="{{ route('invoices.index') }}" class="nav-link {{ active_prefix('invoices') }}"><i class="bi bi-receipt"></i> Invoices</a>@endfeature
 
         <span class="nav-section">Discover</span>
         <a href="{{ route('marketplace.products.index') }}" class="nav-link"><i class="bi bi-grid"></i> Marketplace</a>
         <a href="{{ route('vendors.index') }}" class="nav-link {{ active_prefix('vendors') }}"><i class="bi bi-shop"></i> Stores</a>
         <a href="{{ route('follow.index') }}" class="nav-link {{ active_prefix('following') }}"><i class="bi bi-person-heart"></i> Following</a>
-        <a href="{{ route('matching.index') }}" class="nav-link {{ active_prefix('matching') }}"><i class="bi bi-diagram-3"></i> Match Me</a>
+        @feature('matching')<a href="{{ route('matching.index') }}" class="nav-link {{ active_prefix('matching') }}"><i class="bi bi-diagram-3"></i> Match Me</a>@endfeature
 
         <span class="nav-section">Settings</span>
         <a href="{{ route('kyc.index') }}" class="nav-link {{ active_prefix('kyc') }}"><i class="bi bi-patch-check"></i> Verification (KYC)</a>
@@ -127,7 +127,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="{{ route('profile.index') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
-                    <li><a class="dropdown-item" href="{{ route('wallet.index') }}"><i class="bi bi-wallet2 me-2"></i>Wallet</a></li>
+                    @feature('wallet')<li><a class="dropdown-item" href="{{ route('wallet.index') }}"><i class="bi bi-wallet2 me-2"></i>Wallet</a></li>@endfeature
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">

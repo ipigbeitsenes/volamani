@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\AuthEventSubscriber;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -34,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
         // Render all paginators with Bootstrap 5 markup (the app is Bootstrap,
         // not Tailwind — the framework default).
         Paginator::useBootstrapFive();
+
+        // @feature('wallet') … @endfeature — hide UI for admin-disabled features.
+        Blade::if('feature', fn (string $key) => feature($key));
 
         if ($this->app->environment('production')) {
             URL::forceScheme('https');

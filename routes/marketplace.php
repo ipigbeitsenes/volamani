@@ -8,16 +8,22 @@ Route::prefix('marketplace')->name('marketplace.')->group(function () {
     Route::get('/products', [\App\Http\Controllers\Products\ProductController::class, 'index'])->name('products.index');
     Route::get('/products/{slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
-    Route::get('/services', [\App\Http\Controllers\Freelance\ServiceController::class, 'index'])->name('services.index');
-    Route::get('/services/{slug}', [\App\Http\Controllers\Freelance\ServiceController::class, 'show'])->name('services.show');
-    Route::post('/services/{slug}/order', [\App\Http\Controllers\Freelance\ServiceController::class, 'placeOrder'])
-        ->middleware(['auth', 'buyer.active'])->name('services.order');
+    Route::middleware('feature:services')->group(function () {
+        Route::get('/services', [\App\Http\Controllers\Freelance\ServiceController::class, 'index'])->name('services.index');
+        Route::get('/services/{slug}', [\App\Http\Controllers\Freelance\ServiceController::class, 'show'])->name('services.show');
+        Route::post('/services/{slug}/order', [\App\Http\Controllers\Freelance\ServiceController::class, 'placeOrder'])
+            ->middleware(['auth', 'buyer.active'])->name('services.order');
+    });
 
-    Route::get('/requests', [\App\Http\Controllers\Requests\ProductRequestController::class, 'index'])->name('requests.index');
-    Route::get('/requests/{id}', [\App\Http\Controllers\Requests\ProductRequestController::class, 'show'])->name('requests.show');
+    Route::middleware('feature:requests')->group(function () {
+        Route::get('/requests', [\App\Http\Controllers\Requests\ProductRequestController::class, 'index'])->name('requests.index');
+        Route::get('/requests/{id}', [\App\Http\Controllers\Requests\ProductRequestController::class, 'show'])->name('requests.show');
+    });
 
-    Route::get('/consultants', [\App\Http\Controllers\Consultations\ConsultationController::class, 'index'])->name('consultants.index');
-    Route::get('/consultants/{slug}', [\App\Http\Controllers\Consultations\ConsultationController::class, 'show'])->name('consultants.show');
+    Route::middleware('feature:consultations')->group(function () {
+        Route::get('/consultants', [\App\Http\Controllers\Consultations\ConsultationController::class, 'index'])->name('consultants.index');
+        Route::get('/consultants/{slug}', [\App\Http\Controllers\Consultations\ConsultationController::class, 'show'])->name('consultants.show');
+    });
 });
 
 // Public vendor directory + storefronts
@@ -30,10 +36,10 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'addProduct'])->name('products.add');
     Route::patch('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{product}', [\App\Http\Controllers\Cart\CartController::class, 'removeProduct'])->name('products.remove');
-    Route::post('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'addPhysical'])->name('physical.add');
+    Route::post('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'addPhysical'])->middleware('feature:physical_products')->name('physical.add');
     Route::patch('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'updatePhysical'])->name('physical.update');
     Route::delete('/physical/{product}', [\App\Http\Controllers\Cart\CartController::class, 'removePhysical'])->name('physical.remove');
-    Route::post('/services/{package}', [\App\Http\Controllers\Cart\CartController::class, 'addService'])->name('services.add');
+    Route::post('/services/{package}', [\App\Http\Controllers\Cart\CartController::class, 'addService'])->middleware('feature:services')->name('services.add');
     Route::delete('/services/{package}', [\App\Http\Controllers\Cart\CartController::class, 'removeService'])->name('services.remove');
     Route::delete('/', [\App\Http\Controllers\Cart\CartController::class, 'clear'])->name('clear');
 
@@ -68,7 +74,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Returns / RMA (buyer)
-    Route::prefix('returns')->name('returns.')->group(function () {
+    Route::middleware('feature:returns')->prefix('returns')->name('returns.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Returns\ReturnController::class, 'index'])->name('index');
         Route::post('/{return}/shipped', [\App\Http\Controllers\Returns\ReturnController::class, 'markShipped'])->name('shipped');
         Route::post('/{return}/cancel', [\App\Http\Controllers\Returns\ReturnController::class, 'cancel'])->name('cancel');
@@ -77,8 +83,8 @@ Route::middleware('auth')->group(function () {
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/product/{product}',          [\App\Http\Controllers\Payment\CheckoutController::class, 'product'])->name('product');
-        Route::get('/physical/{product}',         [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'show'])->name('physical');
-        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active'])->name('physical.process');
+        Route::get('/physical/{product}',         [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'show'])->middleware('feature:physical_products')->name('physical');
+        Route::post('/physical/{product}',        [\App\Http\Controllers\Payment\PhysicalCheckoutController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active', 'feature:physical_products'])->name('physical.process');
         Route::get('/service-order/{serviceOrder}', [\App\Http\Controllers\Payment\CheckoutController::class, 'serviceOrder'])->name('service-order');
         Route::get('/consultation/{session}',     [\App\Http\Controllers\Payment\CheckoutController::class, 'consultation'])->name('consultation');
         Route::post('/process',                   [\App\Http\Controllers\Payment\CheckoutController::class, 'process'])->middleware(['throttle:20,1', 'buyer.active'])->name('process');
@@ -88,7 +94,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Product requests (reverse marketplace)
-    Route::prefix('requests')->name('requests.')->group(function () {
+    Route::middleware('feature:requests')->prefix('requests')->name('requests.')->group(function () {
         Route::get('/my-requests', [\App\Http\Controllers\Requests\ProductRequestController::class, 'myRequests'])->name('my');
         Route::get('/create', [\App\Http\Controllers\Requests\ProductRequestController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Requests\ProductRequestController::class, 'store'])->name('store');
@@ -97,15 +103,15 @@ Route::middleware('auth')->group(function () {
     });
 
     // Wallet
-    Route::prefix('wallet')->name('wallet.')->group(function () {
+    Route::middleware('feature:wallet')->prefix('wallet')->name('wallet.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Wallet\WalletController::class, 'index'])->name('index');
         Route::post('/fund', [\App\Http\Controllers\Wallet\WalletController::class, 'fund'])->middleware('throttle:20,1')->name('fund');
         Route::post('/withdraw', [\App\Http\Controllers\Wallet\WalletController::class, 'withdraw'])->name('withdraw');
         Route::get('/transactions', [\App\Http\Controllers\Wallet\WalletController::class, 'transactions'])->name('transactions');
     });
 
-    // Escrow (buyer view)
-    Route::prefix('escrows')->name('escrows.')->group(function () {
+    // Escrow (buyer view) — engine keeps running; this only gates the buyer pages.
+    Route::middleware('feature:escrow')->prefix('escrows')->name('escrows.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Escrow\EscrowController::class, 'index'])->name('index');
         Route::get('/{escrow}', [\App\Http\Controllers\Escrow\EscrowController::class, 'show'])->name('show');
     });
@@ -126,7 +132,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Business matching
-    Route::prefix('matching')->name('matching.')->group(function () {
+    Route::middleware('feature:matching')->prefix('matching')->name('matching.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Matching\MatchRequestController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\Matching\MatchRequestController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Matching\MatchRequestController::class, 'store'])->name('store');
@@ -157,7 +163,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/reviews/{review}/helpful', [\App\Http\Controllers\Reviews\ReviewController::class, 'helpful'])->name('reviews.helpful');
 
     // Invoices & quotations (client view)
-    Route::prefix('invoices')->name('invoices.')->group(function () {
+    Route::middleware('feature:invoices')->prefix('invoices')->name('invoices.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Invoices\InvoiceController::class, 'index'])->name('index');
         Route::get('/{invoice}', [\App\Http\Controllers\Invoices\InvoiceController::class, 'show'])->name('show');
         Route::get('/{invoice}/download', [\App\Http\Controllers\Invoices\InvoiceController::class, 'download'])->name('download');
@@ -167,7 +173,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Consultations (booking)
-    Route::prefix('consultations')->name('consultations.')->group(function () {
+    Route::middleware('feature:consultations')->prefix('consultations')->name('consultations.')->group(function () {
         Route::get('/book/{consultant:slug}', [\App\Http\Controllers\Consultations\BookingController::class, 'book'])->name('book');
         Route::post('/book/{consultant:slug}', [\App\Http\Controllers\Consultations\BookingController::class, 'store'])->name('book.store');
         Route::get('/my-sessions', [\App\Http\Controllers\Consultations\BookingController::class, 'mySessions'])->name('sessions');
@@ -177,7 +183,7 @@ Route::middleware('auth')->group(function () {
 
     // Pricing calculator
     // Service orders (buyer-facing)
-    Route::prefix('service-orders')->name('service-orders.')->group(function () {
+    Route::middleware('feature:services')->prefix('service-orders')->name('service-orders.')->group(function () {
         Route::get('/', [\App\Http\Controllers\ServiceOrderController::class, 'index'])->name('index');
         Route::get('/{serviceOrder}', [\App\Http\Controllers\ServiceOrderController::class, 'show'])->name('show');
         Route::post('/{serviceOrder}/requirements', [\App\Http\Controllers\ServiceOrderController::class, 'submitRequirements'])->name('requirements');
@@ -193,7 +199,7 @@ Route::middleware('auth')->group(function () {
         ->name('products.download.link');
 
     // Pricing calculator
-    Route::prefix('pricing-calculator')->name('pricing-calculator.')->group(function () {
+    Route::middleware('feature:pricing_calculator')->prefix('pricing-calculator')->name('pricing-calculator.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PricingCalculatorController::class, 'index'])->name('index');
         Route::post('/calculate', [\App\Http\Controllers\PricingCalculatorController::class, 'calculate'])->name('calculate');
         Route::post('/save', [\App\Http\Controllers\PricingCalculatorController::class, 'save'])->name('save');

@@ -61,6 +61,17 @@ if (! function_exists('settings')) {
     }
 }
 
+if (! function_exists('feature')) {
+    /**
+     * Whether a toggleable platform feature is enabled. Defaults to ON when the
+     * flag hasn't been seeded yet. Keys are defined in config/features.php.
+     */
+    function feature(string $key): bool
+    {
+        return (bool) settings('feature_' . $key, true);
+    }
+}
+
 if (! function_exists('media_url')) {
     /**
      * Public URL for a stored media path, resolved through the configured disk

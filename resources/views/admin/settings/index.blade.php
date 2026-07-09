@@ -10,6 +10,7 @@
 @section('content')
 @php
     $meta = [
+        'features'      => ['Features', 'bi-toggles', 'Turn platform features on or off. When off, their menus/pages are hidden and their routes are blocked. Escrow protection keeps running even when its buyer pages are hidden.'],
         'general'       => ['Site &amp; General', 'bi-globe', 'Platform name, contact details, social links and global toggles.'],
         'branding'      => ['Branding', 'bi-palette', 'Your site logo and favicon, shown across the platform.'],
         'storage'       => ['File Storage', 'bi-hdd-stack', 'Where uploaded files (images, documents, product files) are stored.'],

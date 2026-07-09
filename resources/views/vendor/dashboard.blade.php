@@ -75,6 +75,7 @@
 
 {{-- Stats --}}
 <div class="row g-3 mb-4">
+    @feature('wallet')
     <div class="col-6 col-lg-3">
         <div class="vl-stat">
             <span class="vl-stat__ico"><i class="bi bi-wallet2"></i></span>
@@ -83,6 +84,7 @@
             <a href="{{ route('vendor.wallet.index') }}" class="vl-stat__foot text-primary fw-semibold">Manage <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
+    @endfeature
     <div class="col-6 col-lg-3">
         <div class="vl-stat">
             <span class="vl-stat__ico"><i class="bi bi-bag-check"></i></span>

@@ -57,6 +57,7 @@
             $walletBalance = $user->wallet?->balance ?? 0;
             $totalOrders   = $user->orders()->count();
         @endphp
+        @feature('wallet')
         <div class="col-6 col-lg-3">
             <div class="vl-stat">
                 <span class="vl-stat__ico"><i class="bi bi-wallet2"></i></span>
@@ -65,6 +66,7 @@
                 <a href="{{ route('wallet.index') }}" class="vl-stat__foot text-primary fw-semibold">View wallet <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
+        @endfeature
         <div class="col-6 col-lg-3">
             <div class="vl-stat">
                 <span class="vl-stat__ico"><i class="bi bi-bag-check"></i></span>
@@ -137,18 +139,26 @@
                     <a href="{{ route('marketplace.products.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-box-seam text-primary"></i> Browse Products
                     </a>
+                    @feature('services')
                     <a href="{{ route('marketplace.services.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-briefcase text-primary"></i> Hire a Freelancer
                     </a>
+                    @endfeature
+                    @feature('consultations')
                     <a href="{{ route('marketplace.consultants.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-calendar2-check text-primary"></i> Book a Consultant
                     </a>
+                    @endfeature
+                    @feature('requests')
                     <a href="{{ route('requests.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-megaphone text-primary"></i> Post a Request
                     </a>
+                    @endfeature
+                    @feature('wallet')
                     <a href="{{ route('wallet.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-wallet2 text-primary"></i> Fund Wallet
                     </a>
+                    @endfeature
                     <a href="{{ route('vendor.onboarding') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <i class="bi bi-shop text-primary"></i> Become a Vendor
                     </a>
@@ -156,6 +166,7 @@
             </div>
 
             {{-- Referral card --}}
+            @feature('affiliates')
             <div class="card border-0 shadow-sm border-start border-primary border-3 mb-3">
                 <div class="card-body">
                     <h6 class="fw-bold"><i class="bi bi-share text-primary me-2"></i>Refer & Earn</h6>
@@ -170,6 +181,8 @@
                     </div>
                 </div>
             </div>
+
+            @endfeature
 
             {{-- Buyer guidelines & policies --}}
             @include('partials.guidelines-card', ['audience' => 'buyer'])
