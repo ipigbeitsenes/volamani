@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string('type');                                     // DocumentType: invoice | quotation
+            $table->string('type', 20);                                 // DocumentType: invoice | quotation
             $table->string('number');                                   // INV-2026-0001 (unique per vendor)
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
             $table->foreignId('client_id')->nullable()->constrained('users')->nullOnDelete();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('client_phone')->nullable();
             $table->text('client_address')->nullable();
             $table->string('title')->nullable();
-            $table->string('status')->default('draft');                 // DocumentStatus
+            $table->string('status', 20)->default('draft');             // DocumentStatus
             $table->string('currency', 3)->default('NGN');
             $table->unsignedBigInteger('subtotal')->default(0);         // kobo
             $table->unsignedBigInteger('discount_amount')->default(0);
