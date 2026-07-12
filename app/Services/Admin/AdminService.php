@@ -106,6 +106,11 @@ class AdminService
         $roles = array_values(array_intersect($roles, self::ASSIGNABLE_ROLES));
         $user->syncRoles($roles);
 
+        // Granting the vendor role must also give the user a working store,
+        // otherwise EnsureVendorApproved bounces them to onboarding with
+        // "You need to set up a vendor account first."
+        $this->syncVendorRecord($user, in_array('vendor', $roles, true));
+
         $this->notifications->send(
             $user,
             NotificationCategory::Account,
@@ -113,6 +118,35 @@ class AdminService
             'An administrator updated your account roles: '.($roles ? implode(', ', $roles) : 'none').'.',
             route('dashboard'),
         );
+    }
+
+    /** Keep the Vendor store in step with the vendor role granted from the console. */
+    private function syncVendorRecord(User $user, bool $isVendor): void
+    {
+        $vendor = $user->vendor()->first();
+
+        if ($isVendor) {
+            if (! $vendor) {
+                Vendor::create([
+                    'user_id' => $user->id,
+                    'business_name' => trim((string) $user->name).' Store',
+                    'store_type' => 'individual',
+                    'store_focus' => 'digital',
+                    'status' => Status::Active,
+                    'approved_at' => now(),
+                    'verified_at' => now(),
+                ]);
+            } elseif ($vendor->status !== Status::Active) {
+                $vendor->update(['status' => Status::Active, 'approved_at' => now()]);
+            }
+
+            return;
+        }
+
+        // Vendor role removed → take an active storefront offline (data is kept).
+        if ($vendor && $vendor->status === Status::Active) {
+            $vendor->update(['status' => Status::Inactive]);
+        }
     }
 
     /** Manually mark a user's email as verified (bypasses the email link). */
