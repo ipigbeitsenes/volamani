@@ -159,26 +159,31 @@
                     <h6 id="shipping" class="fw-bold mb-0" style="scroll-margin-top:80px;">Shipping <small class="text-muted fw-normal">(physical products)</small></h6>
                 </div>
                 <div class="card-body">
+                    @php
+                        $vcCode = $vendor->currencyCode();
+                        $vcSym  = currency()->symbol($vcCode);
+                        $vcConv = fn ($base) => $base ? number_format(currency()->fromBase((int) $base, $vcCode) / 100, 2, '.', '') : '';
+                    @endphp
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-medium small">Flat Shipping Fee ({{ currency_symbol() }})</label>
+                            <label class="form-label fw-medium small">Flat Shipping Fee ({{ $vcSym }})</label>
                             <div class="input-group">
-                                <span class="input-group-text">{{ currency_symbol() }}</span>
+                                <span class="input-group-text">{{ $vcSym }}</span>
                                 <input type="number" step="0.01" min="0" name="shipping_fee"
                                        class="form-control @error('shipping_fee') is-invalid @enderror"
-                                       value="{{ old('shipping_fee', $vendor->shipping_fee ? from_kobo($vendor->shipping_fee) : '') }}"
+                                       value="{{ old('shipping_fee', $vcConv($vendor->shipping_fee)) }}"
                                        placeholder="0.00">
                                 @error('shipping_fee')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="form-text">Charged once per order. Leave 0 for free shipping.</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-medium small">Free Shipping Over ({{ currency_symbol() }})</label>
+                            <label class="form-label fw-medium small">Free Shipping Over ({{ $vcSym }})</label>
                             <div class="input-group">
-                                <span class="input-group-text">{{ currency_symbol() }}</span>
+                                <span class="input-group-text">{{ $vcSym }}</span>
                                 <input type="number" step="0.01" min="0" name="free_shipping_threshold"
                                        class="form-control @error('free_shipping_threshold') is-invalid @enderror"
-                                       value="{{ old('free_shipping_threshold', $vendor->free_shipping_threshold ? from_kobo($vendor->free_shipping_threshold) : '') }}"
+                                       value="{{ old('free_shipping_threshold', $vcConv($vendor->free_shipping_threshold)) }}"
                                        placeholder="optional">
                                 @error('free_shipping_threshold')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>

@@ -25,10 +25,12 @@ class StorefrontSettingsController extends Controller
         $vendor = $request->user()->vendor;
         $data = $request->safe()->except(['logo', 'banner']);
 
-        // Shipping amounts are entered in naira; persist in kobo.
-        $data['shipping_fee'] = isset($data['shipping_fee']) ? to_kobo($data['shipping_fee']) : 0;
+        // Shipping amounts are entered in the vendor's currency; persist as the
+        // base equivalent (in minor units), like product prices.
+        $currency = $data['currency'] ?? $vendor->currencyCode();
+        $data['shipping_fee'] = isset($data['shipping_fee']) ? currency()->toBase(to_kobo($data['shipping_fee']), $currency) : 0;
         $data['free_shipping_threshold'] = (isset($data['free_shipping_threshold']) && $data['free_shipping_threshold'] !== null && $data['free_shipping_threshold'] !== '')
-            ? to_kobo($data['free_shipping_threshold'])
+            ? currency()->toBase(to_kobo($data['free_shipping_threshold']), $currency)
             : null;
 
         // Delivery-exclusion zones: states/regions and cities both arrive as
