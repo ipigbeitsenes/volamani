@@ -51,7 +51,13 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            // Write public files straight into the web root's /storage folder. On
+            // hosts that won't serve through a symlinked public/storage (e.g.
+            // LiteSpeed on shared cPanel), make public/storage a REAL directory and
+            // files are served directly — no symlink hop. Locally, public/storage
+            // is the usual `artisan storage:link` symlink, which resolves to the
+            // same place, so this works in both environments.
+            'root' => public_path('storage'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
