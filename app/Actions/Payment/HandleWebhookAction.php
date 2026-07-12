@@ -12,24 +12,24 @@ class HandleWebhookAction
 {
     public function __construct(
         private VerifyPaymentAction $verify,
-        private ChargebackService   $chargebacks,
+        private ChargebackService $chargebacks,
     ) {}
 
     public function execute(array $payload, string $gateway): void
     {
-        $event     = $payload['event'] ?? 'unknown';
-        $data      = $payload['data'] ?? [];
+        $event = $payload['event'] ?? 'unknown';
+        $data = $payload['data'] ?? [];
         $reference = $data['reference'] ?? null;
 
         // Log every incoming webhook for auditing
         $log = PaymentLog::create([
-            'event'             => 'webhook_received',
-            'gateway'           => $gateway,
+            'event' => 'webhook_received',
+            'gateway' => $gateway,
             'gateway_reference' => $reference,
-            'payload'           => $payload,
-            'ip_address'        => request()->ip(),
-            'processed'         => false,
-            'created_at'        => now(),
+            'payload' => $payload,
+            'ip_address' => request()->ip(),
+            'processed' => false,
+            'created_at' => now(),
         ]);
 
         // Idempotency: skip if this reference was already processed
@@ -38,23 +38,23 @@ class HandleWebhookAction
             ->where('processed', true)
             ->exists()) {
             Log::info("Webhook duplicate skipped: {$reference}");
+
             return;
         }
 
         if ($event === 'charge.success') {
             $payment = $this->findPayment($reference);
 
-            if (!$payment) {
+            if (! $payment) {
                 Log::warning("Webhook: no payment found for reference {$reference}");
+
                 return;
             }
 
-            try {
-                $this->verify->execute($payment);
-                $log->update(['payment_id' => $payment->id, 'processed' => true]);
-            } catch (\Throwable $e) {
-                Log::error("Webhook processing failed for {$reference}: " . $e->getMessage());
-            }
+            // Let operational failures (gateway timeout, DB deadlock) propagate so
+            // the queued job retries with back-off instead of dropping fulfilment.
+            $this->verify->execute($payment);
+            $log->update(['payment_id' => $payment->id, 'processed' => true]);
 
             return;
         }
@@ -62,58 +62,56 @@ class HandleWebhookAction
         // Paystack reports chargebacks as "disputes".
         if (in_array($event, ['charge.dispute.create', 'charge.dispute.remind'], true)) {
             $this->handleDisputeOpened($data, $log);
+
             return;
         }
 
         if ($event === 'charge.dispute.resolve') {
             $this->handleDisputeResolved($data, $log);
+
             return;
         }
     }
 
     private function handleDisputeOpened(array $data, PaymentLog $log): void
     {
-        $txnRef  = $data['transaction']['reference'] ?? $data['reference'] ?? null;
+        $txnRef = $data['transaction']['reference'] ?? $data['reference'] ?? null;
         $payment = $this->findPayment($txnRef);
 
-        if (!$payment) {
+        if (! $payment) {
             Log::warning("Chargeback webhook: no payment found for reference {$txnRef}");
+
             return;
         }
 
-        try {
-            $amount = (int) ($data['transaction']['amount'] ?? $data['refund_amount'] ?? $payment->amount);
-            $reason = $data['category'] ?? $data['reason'] ?? null;
+        $amount = (int) ($data['transaction']['amount'] ?? $data['refund_amount'] ?? $payment->amount);
+        $reason = $data['category'] ?? $data['reason'] ?? null;
 
-            $this->chargebacks->open($payment, $txnRef, $amount, $reason);
-            $log->update(['payment_id' => $payment->id, 'processed' => true]);
-        } catch (\Throwable $e) {
-            Log::error("Chargeback open failed for {$txnRef}: " . $e->getMessage());
-        }
+        // Propagate on failure — a lost chargeback event means an un-clawed-back
+        // loss, so the queue must retry rather than swallow it.
+        $this->chargebacks->open($payment, $txnRef, $amount, $reason);
+        $log->update(['payment_id' => $payment->id, 'processed' => true]);
     }
 
     private function handleDisputeResolved(array $data, PaymentLog $log): void
     {
-        $txnRef     = $data['transaction']['reference'] ?? $data['reference'] ?? null;
-        $payment    = $this->findPayment($txnRef);
+        $txnRef = $data['transaction']['reference'] ?? $data['reference'] ?? null;
+        $payment = $this->findPayment($txnRef);
         $chargeback = $payment ? Chargeback::where('payment_id', $payment->id)->first() : null;
 
-        if (!$chargeback) {
+        if (! $chargeback) {
             Log::warning("Chargeback resolve webhook: no chargeback found for reference {$txnRef}");
+
             return;
         }
 
-        try {
-            $this->chargebacks->settle($chargeback, $data['status'] ?? null);
-            $log->update(['payment_id' => $payment->id, 'processed' => true]);
-        } catch (\Throwable $e) {
-            Log::error("Chargeback resolve failed for {$txnRef}: " . $e->getMessage());
-        }
+        $this->chargebacks->settle($chargeback, $data['status'] ?? null);
+        $log->update(['payment_id' => $payment->id, 'processed' => true]);
     }
 
     private function findPayment(?string $reference): ?Payment
     {
-        if (!$reference) {
+        if (! $reference) {
             return null;
         }
 

@@ -26,9 +26,9 @@ class LiveChatController extends Controller
 
         return view('admin.live-chat.index', [
             'conversations' => $this->conversations->forAdmin($filters),
-            'filters'       => $filters,
-            'statuses'      => ChatConversationStatus::cases(),
-            'openCount'     => $this->conversations->unansweredCount(),
+            'filters' => $filters,
+            'statuses' => ChatConversationStatus::cases(),
+            'openCount' => $this->conversations->unansweredCount(),
         ]);
     }
 
@@ -39,19 +39,19 @@ class LiveChatController extends Controller
 
         return view('admin.live-chat.show', [
             'conversation' => $conversation,
-            'messages'     => $conversation->messages,
+            'messages' => $conversation->messages,
         ]);
     }
 
     /** Live refresh for the open console thread. */
     public function poll(Request $request, ChatConversation $conversation): JsonResponse
     {
-        $after    = (int) $request->query('after', 0);
+        $after = (int) $request->query('after', 0);
         $messages = $this->chat->messagesSince($conversation, $after);
         $this->chat->markReadByAgent($conversation);
 
         return response()->json([
-            'status'   => $conversation->fresh()->status->value,
+            'status' => $conversation->fresh()->status->value,
             'messages' => $messages->map(fn (ChatMessage $m) => $this->serialize($m))->all(),
         ]);
     }
@@ -97,13 +97,13 @@ class LiveChatController extends Controller
     public function updateSettings(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'chat_enabled'         => ['nullable', 'boolean'],
-            'chat_greeting'        => ['required', 'string', 'max:255'],
-            'chat_welcome'         => ['required', 'string', 'max:500'],
-            'chat_support_email'   => ['required', 'email', 'max:120'],
-            'chat_bot_delay'       => ['required', 'integer', 'min:0', 'max:3600'],
+            'chat_enabled' => ['nullable', 'boolean'],
+            'chat_greeting' => ['required', 'string', 'max:255'],
+            'chat_welcome' => ['required', 'string', 'max:500'],
+            'chat_support_email' => ['required', 'email', 'max:120'],
+            'chat_bot_delay' => ['required', 'integer', 'min:0', 'max:3600'],
             'chat_offline_message' => ['required', 'string', 'max:500'],
-            'chat_team_name'       => ['required', 'string', 'max:80'],
+            'chat_team_name' => ['required', 'string', 'max:80'],
         ]);
 
         $data['chat_enabled'] = $request->boolean('chat_enabled') ? '1' : '0';
@@ -117,7 +117,7 @@ class LiveChatController extends Controller
     private function serialize(ChatMessage $message): array
     {
         return [
-            'id'   => $message->id,
+            'id' => $message->id,
             'type' => $message->sender_type->value,
             'body' => $message->body,
             'name' => $message->sender?->name,

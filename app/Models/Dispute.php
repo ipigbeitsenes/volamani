@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Dispute extends Model
 {
-    use SoftDeletes, Auditable;
+    use Auditable, SoftDeletes;
 
     protected $fillable = [
         'reference', 'escrow_id', 'buyer_id', 'vendor_id', 'raised_by',
@@ -25,14 +25,14 @@ class Dispute extends Model
     protected function casts(): array
     {
         return [
-            'reason'            => DisputeReason::class,
-            'status'            => DisputeStatus::class,
-            'resolution'        => DisputeResolution::class,
+            'reason' => DisputeReason::class,
+            'status' => DisputeStatus::class,
+            'resolution' => DisputeResolution::class,
             'resolution_amount' => 'integer',
-            'resolved_at'       => 'datetime',
-            'escalated_at'      => 'datetime',
-            'response_due_at'   => 'datetime',
-            'sla_breached'      => 'boolean',
+            'resolved_at' => 'datetime',
+            'escalated_at' => 'datetime',
+            'response_due_at' => 'datetime',
+            'sla_breached' => 'boolean',
         ];
     }
 
@@ -129,7 +129,7 @@ class Dispute extends Model
         }
 
         return $this->response_due_at->isPast()
-            ? 'overdue by ' . $this->response_due_at->diffForHumans(null, true)
-            : 'due ' . $this->response_due_at->diffForHumans();
+            ? 'overdue by '.$this->response_due_at->diffForHumans(null, true)
+            : 'due '.$this->response_due_at->diffForHumans();
     }
 }

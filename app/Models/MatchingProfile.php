@@ -19,14 +19,14 @@ class MatchingProfile extends Model
     protected function casts(): array
     {
         return [
-            'categories'        => 'array',
-            'skills'            => 'array',
-            'locations'         => 'array',
-            'min_budget'        => 'integer',
-            'max_budget'        => 'integer',
-            'serves_remote'     => 'boolean',
-            'is_accepting'      => 'boolean',
-            'leads_count'       => 'integer',
+            'categories' => 'array',
+            'skills' => 'array',
+            'locations' => 'array',
+            'min_budget' => 'integer',
+            'max_budget' => 'integer',
+            'serves_remote' => 'boolean',
+            'is_accepting' => 'boolean',
+            'leads_count' => 'integer',
             'connections_count' => 'integer',
         ];
     }

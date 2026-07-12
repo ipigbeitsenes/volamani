@@ -26,26 +26,26 @@ class AddBuyerStrikeAction
     ): BuyerStrike {
         return DB::transaction(function () use ($buyer, $reason, $note, $sourceId, $issuedBy) {
             $strike = BuyerStrike::create([
-                'user_id'   => $buyer->id,
-                'reason'    => $reason,
-                'source'    => $reason->source(),
+                'user_id' => $buyer->id,
+                'reason' => $reason,
+                'source' => $reason->source(),
                 'source_id' => $sourceId,
-                'note'      => $note,
+                'note' => $note,
                 'issued_by' => $issuedBy?->id,
             ]);
 
             $active = $buyer->buyerStrikes()->active()->count();
 
-            $flagged   = $active >= $this->flagThreshold();
+            $flagged = $active >= $this->flagThreshold();
             $suspended = $active >= $this->suspendThreshold();
 
             $buyer->update([
-                'buyer_strikes'            => $active,
+                'buyer_strikes' => $active,
                 'buyer_strikes_updated_at' => now(),
-                'buyer_flagged'            => $flagged,
-                'buyer_flagged_at'         => $flagged ? ($buyer->buyer_flagged_at ?? now()) : null,
-                'purchases_suspended'      => $suspended,
-                'purchases_suspended_at'   => $suspended ? ($buyer->purchases_suspended_at ?? now()) : null,
+                'buyer_flagged' => $flagged,
+                'buyer_flagged_at' => $flagged ? ($buyer->buyer_flagged_at ?? now()) : null,
+                'purchases_suspended' => $suspended,
+                'purchases_suspended_at' => $suspended ? ($buyer->purchases_suspended_at ?? now()) : null,
             ]);
 
             $this->notify($buyer, $strike, $suspended);

@@ -18,6 +18,7 @@ class FollowController extends Controller
 
         if ($vendor->user_id === $user->id) {
             $this->flashWarning("You can't follow your own store.");
+
             return back();
         }
 

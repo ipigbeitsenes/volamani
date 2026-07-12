@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Browse Stores')
-@section('meta_description', 'Discover and follow verified African vendors on Volamani. Browse stores by popularity, rating and category.')
+@section('meta_description', 'Discover and follow verified vendors on Volamani. Browse stores by popularity, rating and category.')
 
 @section('content')
 <div class="container py-4">

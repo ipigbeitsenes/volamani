@@ -13,13 +13,13 @@ use Illuminate\View\View;
 class FinanceWithdrawalController extends Controller
 {
     public function __construct(
-        private AdminService     $admin,
+        private AdminService $admin,
         private WalletRepository $walletRepo,
     ) {}
 
     public function index(Request $request): View
     {
-        $filters     = $request->only('status', 'search');
+        $filters = $request->only('status', 'search');
         $withdrawals = $this->walletRepo->allWithdrawalsForAdmin(20, $filters);
 
         return view('finance.withdrawals.index', compact('withdrawals', 'filters'));

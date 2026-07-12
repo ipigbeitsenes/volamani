@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'About Volamani')
-@section('meta_description', "Volamani is Africa's complete digital business ecosystem — sell digital products, services and physical goods with escrow-protected payments.")
+@section('meta_description', 'Volamani is a complete digital business ecosystem — sell digital products, services and physical goods with escrow-protected payments.')
 
 @section('content')
 
@@ -9,7 +9,7 @@
 <section class="position-relative overflow-hidden text-white py-5" style="background: var(--vl-gradient-dark);">
     <div class="container py-4 position-relative text-center" style="max-width: 760px;">
         <span class="eyebrow text-warning"><i class="bi bi-stars"></i> Our story</span>
-        <h1 class="display-5 fw-bold text-white mt-2 mb-3">Empowering African entrepreneurs to grow online</h1>
+        <h1 class="display-5 fw-bold text-white mt-2 mb-3">Empowering entrepreneurs to grow online</h1>
         <p class="fs-5 mb-0" style="color:rgba(255,255,255,.74);">
             Volamani brings buyers and sellers together on one trusted platform — a branded storefront to sell
             digital products, services and physical goods, with escrow protection on every deal.
@@ -23,13 +23,13 @@
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
                 <span class="eyebrow"><i class="bi bi-bullseye"></i> Mission</span>
-                <h2 class="fw-bold mt-2 mb-3">Built for African business realities</h2>
+                <h2 class="fw-bold mt-2 mb-3">Built for real business realities</h2>
                 <p class="lead-muted">
                     Too many talented creators, freelancers and businesses struggle to sell online safely —
-                    payments fall through, trust is hard to establish, and global tools rarely fit the local market.
+                    payments fall through, trust is hard to establish, and generic tools rarely fit how they work.
                 </p>
                 <p class="lead-muted">
-                    Volamani fixes that with Naira-first payments, KYC-verified vendors, WhatsApp commerce and escrow
+                    Volamani fixes that with flexible payments, KYC-verified vendors, chat-based commerce and escrow
                     that holds funds until delivery is confirmed — so both sides can transact with confidence.
                 </p>
                 <a href="{{ route('register') }}" class="btn btn-primary mt-2 px-4">Start growing free <i class="bi bi-arrow-right ms-1"></i></a>
@@ -38,9 +38,9 @@
                 <div class="row g-3">
                     @foreach([
                         ['bi-shield-check','Escrow Protected','Funds released only on confirmed delivery.','success'],
-                        ['bi-patch-check','Verified Vendors','KYC, BVN/NIN and CAC verification.','primary'],
-                        ['bi-bank','Naira-First Payments','Paystack and direct bank transfer.','warning'],
-                        ['bi-globe-africa','Made for Africa','Localized for the way business works here.','info'],
+                        ['bi-patch-check','Verified Vendors','KYC identity and business verification.','primary'],
+                        ['bi-bank','Flexible Payments','Card and direct bank transfer.','warning'],
+                        ['bi-globe','Global-Ready','Built for the way you do business.','info'],
                     ] as $f)
                     <div class="col-6">
                         <div class="card h-100 p-3 text-center hover-lift">

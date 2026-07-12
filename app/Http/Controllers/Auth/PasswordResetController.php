@@ -40,8 +40,8 @@ class PasswordResetController extends Controller
     public function reset(Request $request): RedirectResponse
     {
         $request->validate([
-            'token'    => ['required'],
-            'email'    => ['required', 'email'],
+            'token' => ['required'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->numbers()],
         ]);
 

@@ -19,8 +19,8 @@ class SupportReturnController extends Controller
         $filters = $request->only('status', 'search');
 
         return view('support.returns.index', [
-            'returns'  => $this->returns->allForAdmin($filters),
-            'filters'  => $filters,
+            'returns' => $this->returns->allForAdmin($filters),
+            'filters' => $filters,
             'statuses' => ReturnStatus::cases(),
         ]);
     }

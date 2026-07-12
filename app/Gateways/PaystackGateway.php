@@ -9,13 +9,15 @@ use Illuminate\Support\Facades\Log;
 class PaystackGateway implements PaymentGatewayInterface
 {
     private string $secretKey;
+
     private string $baseUrl;
+
     private string $callbackUrl;
 
     public function __construct()
     {
-        $this->secretKey   = config('payment.paystack.secret_key');
-        $this->baseUrl     = config('payment.paystack.base_url');
+        $this->secretKey = config('payment.paystack.secret_key');
+        $this->baseUrl = config('payment.paystack.base_url');
         $this->callbackUrl = config('payment.paystack.callback_url');
     }
 
@@ -23,16 +25,16 @@ class PaystackGateway implements PaymentGatewayInterface
     {
         $response = Http::withToken($this->secretKey)
             ->post("{$this->baseUrl}/transaction/initialize", [
-                'email'        => $email,
-                'amount'       => $amountKobo,
-                'reference'    => $reference,
+                'email' => $email,
+                'amount' => $amountKobo,
+                'reference' => $reference,
                 'callback_url' => $this->callbackUrl,
-                'metadata'     => array_merge($metadata, ['cancel_action' => url()->previous()]),
+                'metadata' => array_merge($metadata, ['cancel_action' => url()->previous()]),
             ]);
 
-        if (!$response->successful() || !$response->json('status')) {
+        if (! $response->successful() || ! $response->json('status')) {
             Log::error('Paystack initiate failed', ['response' => $response->json()]);
-            throw new \RuntimeException('Payment gateway error: ' . ($response->json('message') ?? 'Unknown error'));
+            throw new \RuntimeException('Payment gateway error: '.($response->json('message') ?? 'Unknown error'));
         }
 
         return $response->json('data');
@@ -43,19 +45,19 @@ class PaystackGateway implements PaymentGatewayInterface
         $response = Http::withToken($this->secretKey)
             ->get("{$this->baseUrl}/transaction/verify/{$gatewayReference}");
 
-        if (!$response->successful() || !$response->json('status')) {
+        if (! $response->successful() || ! $response->json('status')) {
             Log::error('Paystack verify failed', ['reference' => $gatewayReference, 'response' => $response->json()]);
-            throw new \RuntimeException('Payment verification failed: ' . ($response->json('message') ?? 'Unknown error'));
+            throw new \RuntimeException('Payment verification failed: '.($response->json('message') ?? 'Unknown error'));
         }
 
         $data = $response->json('data');
 
         return [
-            'status'    => $data['status'],            // success|failed|abandoned|reversed
-            'amount'    => (int) $data['amount'],      // kobo
+            'status' => $data['status'],            // success|failed|abandoned|reversed
+            'amount' => (int) $data['amount'],      // kobo
             'reference' => $data['reference'],
-            'paid_at'   => $data['paid_at'] ?? null,
-            'metadata'  => $data,
+            'paid_at' => $data['paid_at'] ?? null,
+            'metadata' => $data,
         ];
     }
 
@@ -69,8 +71,9 @@ class PaystackGateway implements PaymentGatewayInterface
         $response = Http::withToken($this->secretKey)
             ->post("{$this->baseUrl}/refund", $body);
 
-        if (!$response->successful() || !$response->json('status')) {
+        if (! $response->successful() || ! $response->json('status')) {
             Log::error('Paystack refund failed', ['reference' => $gatewayReference, 'response' => $response->json()]);
+
             return false;
         }
 
@@ -80,6 +83,7 @@ class PaystackGateway implements PaymentGatewayInterface
     public function verifyWebhookSignature(string $payload, string $signature): bool
     {
         $computed = hash_hmac('sha512', $payload, $this->secretKey);
+
         return hash_equals($computed, $signature);
     }
 

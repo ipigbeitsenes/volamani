@@ -17,13 +17,13 @@ class ChatService extends BaseService
 {
     /** Setting keys + their sensible defaults so the widget works before anything is seeded. */
     public const DEFAULTS = [
-        'chat_enabled'         => '1',
-        'chat_greeting'        => "👋 Hi there! Need any help? We're here for you.",
-        'chat_welcome'         => 'Hello! Send us a message and our team will reply right here.',
-        'chat_support_email'   => 'support@volamani.com',
-        'chat_bot_delay'       => '60',
+        'chat_enabled' => '1',
+        'chat_greeting' => "👋 Hi there! Need any help? We're here for you.",
+        'chat_welcome' => 'Hello! Send us a message and our team will reply right here.',
+        'chat_support_email' => 'support@volamani.com',
+        'chat_bot_delay' => '60',
         'chat_offline_message' => "Thanks for reaching out! 🙏 All our chat agents are busy at the moment. Please email us at :email and we'll get back to you as soon as we can.",
-        'chat_team_name'       => 'Volamani Support',
+        'chat_team_name' => 'Volamani Support',
     ];
 
     public function __construct(private ChatRepository $conversations) {}
@@ -44,10 +44,10 @@ class ChatService extends BaseService
     public function widgetConfig(): array
     {
         return [
-            'enabled'   => $this->isEnabled(),
-            'greeting'  => $this->setting('chat_greeting'),
-            'welcome'   => $this->setting('chat_welcome'),
-            'teamName'  => $this->setting('chat_team_name'),
+            'enabled' => $this->isEnabled(),
+            'greeting' => $this->setting('chat_greeting'),
+            'welcome' => $this->setting('chat_welcome'),
+            'teamName' => $this->setting('chat_team_name'),
         ];
     }
 
@@ -67,7 +67,7 @@ class ChatService extends BaseService
             if ($existing && $existing->user_id === null) {
                 if (($name || $email) && ! $existing->isClosed()) {
                     $existing->fill(array_filter([
-                        'guest_name'  => $name,
+                        'guest_name' => $name,
                         'guest_email' => $email,
                     ]))->save();
                 }
@@ -77,7 +77,7 @@ class ChatService extends BaseService
         }
 
         return ChatConversation::create([
-            'guest_name'  => $name,
+            'guest_name' => $name,
             'guest_email' => $email,
         ]);
     }
@@ -88,9 +88,9 @@ class ChatService extends BaseService
     {
         return DB::transaction(function () use ($conversation, $body) {
             $message = $conversation->messages()->create([
-                'user_id'     => $conversation->user_id,
+                'user_id' => $conversation->user_id,
                 'sender_type' => ChatSenderType::Visitor,
-                'body'        => $body,
+                'body' => $body,
             ]);
 
             // A brand new message after the thread was closed re-opens it and
@@ -99,9 +99,9 @@ class ChatService extends BaseService
                 $conversation->bot_replied = false;
             }
 
-            $conversation->status          = ChatConversationStatus::Open;
+            $conversation->status = ChatConversationStatus::Open;
             $conversation->last_visitor_at = now();
-            $conversation->agent_unread    = $conversation->agent_unread + 1;
+            $conversation->agent_unread = $conversation->agent_unread + 1;
             $conversation->save();
 
             return $message;
@@ -112,15 +112,15 @@ class ChatService extends BaseService
     {
         return DB::transaction(function () use ($conversation, $agent, $body) {
             $message = $conversation->messages()->create([
-                'user_id'     => $agent->id,
+                'user_id' => $agent->id,
                 'sender_type' => ChatSenderType::Agent,
-                'body'        => $body,
+                'body' => $body,
             ]);
 
-            $conversation->status         = ChatConversationStatus::Pending;
-            $conversation->last_agent_at  = now();
-            $conversation->assigned_to  ??= $agent->id;
-            $conversation->agent_unread   = 0;
+            $conversation->status = ChatConversationStatus::Pending;
+            $conversation->last_agent_at = now();
+            $conversation->assigned_to ??= $agent->id;
+            $conversation->agent_unread = 0;
             $conversation->visitor_unread = $conversation->visitor_unread + 1;
             $conversation->save();
 
@@ -156,10 +156,10 @@ class ChatService extends BaseService
         return DB::transaction(function () use ($conversation, $body) {
             $message = $conversation->messages()->create([
                 'sender_type' => ChatSenderType::Bot,
-                'body'        => $body,
+                'body' => $body,
             ]);
 
-            $conversation->bot_replied    = true;
+            $conversation->bot_replied = true;
             $conversation->visitor_unread = $conversation->visitor_unread + 1;
             $conversation->save();
 
@@ -219,7 +219,7 @@ class ChatService extends BaseService
     public function reopen(ChatConversation $conversation): void
     {
         $conversation->forceFill([
-            'status'      => ChatConversationStatus::Open,
+            'status' => ChatConversationStatus::Open,
             'bot_replied' => false,
         ])->save();
     }
@@ -227,7 +227,7 @@ class ChatService extends BaseService
     public function updateSettings(array $data): void
     {
         $types = [
-            'chat_enabled'  => 'boolean',
+            'chat_enabled' => 'boolean',
             'chat_bot_delay' => 'integer',
         ];
 

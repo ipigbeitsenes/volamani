@@ -12,25 +12,25 @@ use App\Models\ServiceCategory;
  */
 enum CategoryDomain: string
 {
-    case Digital  = 'digital';
+    case Digital = 'digital';
     case Physical = 'physical';
-    case Service  = 'service';
+    case Service = 'service';
 
     public function label(): string
     {
         return match ($this) {
-            self::Digital  => 'Digital Product',
+            self::Digital => 'Digital Product',
             self::Physical => 'Physical Product',
-            self::Service  => 'Service',
+            self::Service => 'Service',
         };
     }
 
     public function badge(): string
     {
         return match ($this) {
-            self::Digital  => 'primary',
+            self::Digital => 'primary',
             self::Physical => 'warning',
-            self::Service  => 'success',
+            self::Service => 'success',
         };
     }
 
@@ -38,9 +38,9 @@ enum CategoryDomain: string
     public function modelClass(): string
     {
         return match ($this) {
-            self::Digital  => ProductCategory::class,
+            self::Digital => ProductCategory::class,
             self::Physical => PhysicalCategory::class,
-            self::Service  => ServiceCategory::class,
+            self::Service => ServiceCategory::class,
         };
     }
 }

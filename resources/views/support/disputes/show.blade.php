@@ -113,7 +113,7 @@
                                 </select>
                             </div>
                             <div class="mb-3 d-none" id="splitShare">
-                                <label class="form-label small fw-semibold">Vendor share (₦)</label>
+                                <label class="form-label small fw-semibold">Vendor share ({{ currency_symbol() }})</label>
                                 <input type="number" name="vendor_share" step="0.01" min="0" class="form-control form-control-sm"
                                        value="{{ old('vendor_share') }}">
                                 <div class="form-text">Released to vendor; remainder refunds to buyer.</div>

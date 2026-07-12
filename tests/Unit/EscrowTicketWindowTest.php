@@ -17,7 +17,7 @@ class EscrowTicketWindowTest extends TestCase
 {
     private function escrow(string $type, EscrowStatus $status, $heldAt): Escrow
     {
-        $escrow = new Escrow();
+        $escrow = new Escrow;
         $escrow->escrowable_type = $type;
         $escrow->status = $status;
         $escrow->held_at = $heldAt;

@@ -17,12 +17,12 @@ class ProductRequestQuotation extends Model
     protected function casts(): array
     {
         return [
-            'status'       => QuotationStatus::class,
-            'attachments'  => 'array',
-            'price'        => 'integer',
-            'viewed_at'    => 'datetime',
-            'accepted_at'  => 'datetime',
-            'rejected_at'  => 'datetime',
+            'status' => QuotationStatus::class,
+            'attachments' => 'array',
+            'price' => 'integer',
+            'viewed_at' => 'datetime',
+            'accepted_at' => 'datetime',
+            'rejected_at' => 'datetime',
             'withdrawn_at' => 'datetime',
         ];
     }
@@ -58,7 +58,7 @@ class ProductRequestQuotation extends Model
 
     public function markViewed(): void
     {
-        if (!$this->viewed_at) {
+        if (! $this->viewed_at) {
             $this->update(['viewed_at' => now()]);
         }
     }

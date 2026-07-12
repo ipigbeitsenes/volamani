@@ -10,7 +10,7 @@ class BusinessDayCalculatorTest extends TestCase
 {
     private function calc(): BusinessDayCalculator
     {
-        return new BusinessDayCalculator();
+        return new BusinessDayCalculator;
     }
 
     public function test_three_business_days_skip_weekend_and_public_holiday(): void

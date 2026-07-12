@@ -4,8 +4,8 @@ namespace App\Services\Escrow;
 
 use App\Actions\Escrow\DisputeEscrowAction;
 use App\Actions\Escrow\HoldEscrowAction;
-use App\Actions\Escrow\ReleaseEscrowAction;
 use App\Actions\Escrow\RefundEscrowAction;
+use App\Actions\Escrow\ReleaseEscrowAction;
 use App\Models\Escrow;
 use App\Models\Payment;
 use App\Models\User;
@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Log;
 class EscrowService
 {
     public function __construct(
-        private HoldEscrowAction    $holdAction,
+        private HoldEscrowAction $holdAction,
         private ReleaseEscrowAction $releaseAction,
-        private RefundEscrowAction  $refundAction,
+        private RefundEscrowAction $refundAction,
         private DisputeEscrowAction $disputeAction,
-        private EscrowRepository    $repo,
+        private EscrowRepository $repo,
     ) {}
 
     /**

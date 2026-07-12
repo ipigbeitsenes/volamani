@@ -19,11 +19,11 @@ class Review extends Model
     protected function casts(): array
     {
         return [
-            'is_approved'          => 'boolean',
+            'is_approved' => 'boolean',
             'is_verified_purchase' => 'boolean',
-            'rating'               => 'integer',
-            'helpful_count'        => 'integer',
-            'responded_at'         => 'datetime',
+            'rating' => 'integer',
+            'helpful_count' => 'integer',
+            'responded_at' => 'datetime',
         ];
     }
 
@@ -61,7 +61,7 @@ class Review extends Model
 
     public function hasResponse(): bool
     {
-        return !empty($this->response);
+        return ! empty($this->response);
     }
 
     public function votedHelpfulBy(?User $user): bool

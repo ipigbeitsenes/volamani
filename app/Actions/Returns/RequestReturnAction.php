@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class RequestReturnAction
 {
     public function __construct(
-        private EscrowService       $escrow,
+        private EscrowService $escrow,
         private NotificationService $notifications,
     ) {}
 
@@ -34,18 +34,18 @@ class RequestReturnAction
             $photos = [];
             foreach (($data['photos'] ?? []) as $file) {
                 if ($file instanceof UploadedFile) {
-                    $photos[] = $file->store('returns/' . $order->id, 'public');
+                    $photos[] = $file->store('returns/'.$order->id, 'public');
                 }
             }
 
             $return = ReturnRequest::create([
-                'order_id'     => $order->id,
-                'buyer_id'     => $buyer->id,
-                'vendor_id'    => $order->vendor_id,
-                'reason'       => $data['reason'],
-                'description'  => $data['description'] ?? null,
-                'photos'       => $photos ?: null,
-                'status'       => ReturnStatus::Requested,
+                'order_id' => $order->id,
+                'buyer_id' => $buyer->id,
+                'vendor_id' => $order->vendor_id,
+                'reason' => $data['reason'],
+                'description' => $data['description'] ?? null,
+                'photos' => $photos ?: null,
+                'status' => ReturnStatus::Requested,
                 'requested_at' => now(),
             ]);
 

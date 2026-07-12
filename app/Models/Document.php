@@ -28,22 +28,22 @@ class Document extends Model
     protected function casts(): array
     {
         return [
-            'type'            => DocumentType::class,
-            'status'          => DocumentStatus::class,
-            'subtotal'        => 'integer',
+            'type' => DocumentType::class,
+            'status' => DocumentStatus::class,
+            'subtotal' => 'integer',
             'discount_amount' => 'integer',
-            'tax_rate'        => 'decimal:2',
-            'tax_amount'      => 'integer',
-            'total'           => 'integer',
-            'amount_paid'     => 'integer',
-            'issue_date'      => 'date',
-            'due_date'        => 'date',
-            'valid_until'     => 'date',
-            'sent_at'         => 'datetime',
-            'viewed_at'       => 'datetime',
-            'paid_at'         => 'datetime',
-            'accepted_at'     => 'datetime',
-            'declined_at'     => 'datetime',
+            'tax_rate' => 'decimal:2',
+            'tax_amount' => 'integer',
+            'total' => 'integer',
+            'amount_paid' => 'integer',
+            'issue_date' => 'date',
+            'due_date' => 'date',
+            'valid_until' => 'date',
+            'sent_at' => 'datetime',
+            'viewed_at' => 'datetime',
+            'paid_at' => 'datetime',
+            'accepted_at' => 'datetime',
+            'declined_at' => 'datetime',
         ];
     }
 
@@ -187,13 +187,13 @@ class Document extends Model
     public function recalcTotals(): self
     {
         $subtotal = (int) $this->items()->sum('amount');
-        $taxable  = max(0, $subtotal - $this->discount_amount);
-        $tax      = (int) round($taxable * ((float) $this->tax_rate) / 100);
+        $taxable = max(0, $subtotal - $this->discount_amount);
+        $tax = (int) round($taxable * ((float) $this->tax_rate) / 100);
 
         $this->update([
-            'subtotal'   => $subtotal,
+            'subtotal' => $subtotal,
             'tax_amount' => $tax,
-            'total'      => $taxable + $tax,
+            'total' => $taxable + $tax,
         ]);
 
         return $this;

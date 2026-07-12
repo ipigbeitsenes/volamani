@@ -27,14 +27,14 @@ class AnalyticsController extends Controller
         $base = Order::where('vendor_id', $vendor->id);
 
         $stats = [
-            'total_orders'  => (clone $base)->count(),
-            'paid_orders'   => (clone $base)->whereIn('status', $paidStatuses)->count(),
-            'gross_sales'   => (int) (clone $base)->whereIn('status', $paidStatuses)->sum('total_amount'),
-            'net_earnings'  => (int) (clone $base)->whereIn('status', $paidStatuses)->sum('vendor_earnings'),
-            'products'      => $vendor->products()->count(),
-            'services'      => $vendor->services()->count(),
-            'avg_rating'    => round($vendor->averageRating(), 1),
-            'reviews'       => $vendor->totalReviews(),
+            'total_orders' => (clone $base)->count(),
+            'paid_orders' => (clone $base)->whereIn('status', $paidStatuses)->count(),
+            'gross_sales' => (int) (clone $base)->whereIn('status', $paidStatuses)->sum('total_amount'),
+            'net_earnings' => (int) (clone $base)->whereIn('status', $paidStatuses)->sum('vendor_earnings'),
+            'products' => $vendor->products()->count(),
+            'services' => $vendor->services()->count(),
+            'avg_rating' => round($vendor->averageRating(), 1),
+            'reviews' => $vendor->totalReviews(),
         ];
 
         // 14-day earnings trend (zero-filled).

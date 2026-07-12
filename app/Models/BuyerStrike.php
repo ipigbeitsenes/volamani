@@ -23,7 +23,7 @@ class BuyerStrike extends Model
     protected function casts(): array
     {
         return [
-            'reason'     => BuyerStrikeReason::class,
+            'reason' => BuyerStrikeReason::class,
             'cleared_at' => 'datetime',
         ];
     }

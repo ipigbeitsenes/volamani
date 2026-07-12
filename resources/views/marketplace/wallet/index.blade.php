@@ -47,14 +47,14 @@
                     <form action="{{ route('wallet.fund') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label">Amount (₦)</label>
+                            <label class="form-label">Amount ({{ currency_symbol() }})</label>
                             <input type="number" name="amount" class="form-control @error('amount') is-invalid @enderror"
                                    placeholder="Enter amount" min="500" step="100"
                                    value="{{ old('amount') }}">
                             @error('amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Minimum: ₦500</div>
+                            <div class="form-text">Minimum: {{ currency_symbol() }}500</div>
                         </div>
                         <div class="d-grid gap-2">
                             <button type="submit" name="method" value="paystack" class="btn btn-primary">
@@ -81,7 +81,7 @@
                     <form action="{{ route('wallet.withdraw') }}" method="POST">
                         @csrf
                         <div class="mb-2">
-                            <label class="form-label">Amount (₦)</label>
+                            <label class="form-label">Amount ({{ currency_symbol() }})</label>
                             <input type="number" name="amount" class="form-control @error('amount') is-invalid @enderror"
                                    placeholder="Enter amount" min="1000" step="100"
                                    value="{{ old('amount') }}">
@@ -92,7 +92,7 @@
                         <div class="mb-2">
                             <label class="form-label">Bank Name</label>
                             <input type="text" name="bank_name" class="form-control @error('bank_name') is-invalid @enderror"
-                                   value="{{ old('bank_name') }}" placeholder="e.g. Access Bank">
+                                   value="{{ old('bank_name') }}" placeholder="e.g. your bank">
                             @error('bank_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

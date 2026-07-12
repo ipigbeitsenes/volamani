@@ -15,15 +15,15 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'vendor_id'         => VendorFactory::new(),
-            'category_id'       => ProductCategoryFactory::new(),
-            'name'              => fake()->unique()->words(3, true),
+            'vendor_id' => VendorFactory::new(),
+            'category_id' => ProductCategoryFactory::new(),
+            'name' => fake()->unique()->words(3, true),
             'short_description' => fake()->sentence(),
-            'description'       => fake()->paragraphs(2, true),
-            'type'              => 'ebook',
-            'price'             => 100_000, // ₦1,000 in kobo
-            'status'            => 'active',
-            'approved_at'       => now(),
+            'description' => fake()->paragraphs(2, true),
+            'type' => 'ebook',
+            'price' => 100_000, // ₦1,000 in kobo
+            'status' => 'active',
+            'approved_at' => now(),
         ];
     }
 }

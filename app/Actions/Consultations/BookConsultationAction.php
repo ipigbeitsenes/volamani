@@ -18,23 +18,23 @@ class BookConsultationAction
         abort_if($profile->vendor->user_id === $buyer->id, 403, 'You cannot book your own consultation.');
 
         return DB::transaction(function () use ($profile, $package, $buyer, $data) {
-            $commissionRate     = $profile->vendor->getEffectiveCommissionRate();
-            $platformFee        = (int) round($package->price * ($commissionRate / 100));
+            $commissionRate = $profile->vendor->getEffectiveCommissionRate();
+            $platformFee = (int) round($package->price * ($commissionRate / 100));
             $consultantEarnings = $package->price - $platformFee;
 
             return ConsultationSession::create([
-                'package_id'           => $package->id,
-                'profile_id'           => $profile->id,
-                'buyer_id'             => $buyer->id,
-                'status'               => ConsultationSessionStatus::Pending,
-                'payment_status'       => PaymentStatus::Pending,
-                'price'                => $package->price,
-                'platform_fee'         => $platformFee,
-                'consultant_earnings'  => $consultantEarnings,
-                'scheduled_at'         => $data['scheduled_at'],
-                'duration_minutes'     => $package->duration_minutes,
-                'meeting_platform'     => $data['meeting_platform'] ?? null,
-                'notes'                => $data['notes'] ?? null,
+                'package_id' => $package->id,
+                'profile_id' => $profile->id,
+                'buyer_id' => $buyer->id,
+                'status' => ConsultationSessionStatus::Pending,
+                'payment_status' => PaymentStatus::Pending,
+                'price' => $package->price,
+                'platform_fee' => $platformFee,
+                'consultant_earnings' => $consultantEarnings,
+                'scheduled_at' => $data['scheduled_at'],
+                'duration_minutes' => $package->duration_minutes,
+                'meeting_platform' => $data['meeting_platform'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
         });
     }

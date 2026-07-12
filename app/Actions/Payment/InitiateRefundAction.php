@@ -25,20 +25,20 @@ class InitiateRefundAction
             abort_unless($success, 422, 'Refund failed. Please try again or contact support.');
 
             $payment->update([
-                'status'        => PaymentStatus::Refunded,
-                'refunded_at'   => now(),
+                'status' => PaymentStatus::Refunded,
+                'refunded_at' => now(),
                 'refund_amount' => $refundAmount,
                 'refund_reason' => $reason,
             ]);
 
             PaymentLog::create([
-                'payment_id'        => $payment->id,
-                'event'             => 'refund_initiated',
-                'gateway'           => $payment->gateway->value,
+                'payment_id' => $payment->id,
+                'event' => 'refund_initiated',
+                'gateway' => $payment->gateway->value,
                 'gateway_reference' => $payment->gateway_reference,
-                'payload'           => ['refund_amount' => $refundAmount, 'reason' => $reason],
-                'processed'         => true,
-                'created_at'        => now(),
+                'payload' => ['refund_amount' => $refundAmount, 'reason' => $reason],
+                'processed' => true,
+                'created_at' => now(),
             ]);
 
             return $payment->fresh();

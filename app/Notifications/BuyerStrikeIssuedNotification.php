@@ -42,7 +42,7 @@ class BuyerStrikeIssuedNotification extends VolamaniNotification
 
         return $mail
             ->subject($this->suspended ? 'Your account has been restricted' : 'A note about your account')
-            ->line('A buyer-protection claim you made was reviewed and not upheld: ' . $s->reason->label() . '.')
+            ->line('A buyer-protection claim you made was reviewed and not upheld: '.$s->reason->label().'.')
             ->when($s->note, fn ($m) => $m->line("Note: {$s->note}"))
             ->line($this->suspended
                 ? 'Because of repeated unupheld claims, your account has been temporarily restricted from new purchases. Please contact support if you believe this is a mistake.'
@@ -57,10 +57,10 @@ class BuyerStrikeIssuedNotification extends VolamaniNotification
 
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => $isAdmin ? 'Buyer strike recorded' : ($this->suspended ? 'Account restricted' : 'Account notice'),
-            'message'  => ($isAdmin ? 'A buyer strike was recorded: ' : 'A claim was not upheld: ') . $this->strike->reason->label() . '.',
-            'url'      => $isAdmin ? route('admin.buyers.show', $this->strike->user_id) : route('disputes.index'),
+            'icon' => $this->category()->icon(),
+            'title' => $isAdmin ? 'Buyer strike recorded' : ($this->suspended ? 'Account restricted' : 'Account notice'),
+            'message' => ($isAdmin ? 'A buyer strike was recorded: ' : 'A claim was not upheld: ').$this->strike->reason->label().'.',
+            'url' => $isAdmin ? route('admin.buyers.show', $this->strike->user_id) : route('disputes.index'),
         ];
     }
 }

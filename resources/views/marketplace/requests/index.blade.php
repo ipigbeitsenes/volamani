@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small text-uppercase text-muted">Max Budget (₦)</label>
+                            <label class="form-label fw-semibold small text-uppercase text-muted">Max Budget ({{ currency_symbol() }})</label>
                             <input type="number" name="budget_max" class="form-control form-control-sm"
                                 placeholder="e.g. 50000"
                                 value="{{ $filters['budget_max'] ?? '' }}" min="0">

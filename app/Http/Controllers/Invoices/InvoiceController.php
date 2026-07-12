@@ -14,7 +14,7 @@ class InvoiceController extends Controller
 {
     public function __construct(
         private DocumentService $documentService,
-        private PaymentService  $paymentService,
+        private PaymentService $paymentService,
     ) {}
 
     public function index(): View

@@ -4,20 +4,20 @@ namespace App\Enums;
 
 enum KYCDocumentType: string
 {
-    case NIN            = 'nin';
-    case BVN            = 'bvn';
-    case Passport       = 'passport';
+    case NIN = 'nin';
+    case BVN = 'bvn';
+    case Passport = 'passport';
     case DriversLicense = 'drivers_license';
-    case VotersCard     = 'voters_card';
+    case VotersCard = 'voters_card';
 
     public function label(): string
     {
-        return match($this) {
-            self::NIN            => 'National ID (NIN)',
-            self::BVN            => 'Bank Verification Number (BVN)',
-            self::Passport       => 'International Passport',
+        return match ($this) {
+            self::NIN => 'National ID (NIN)',
+            self::BVN => 'Bank Verification Number (BVN)',
+            self::Passport => 'International Passport',
             self::DriversLicense => "Driver's License",
-            self::VotersCard     => "Voter's Card",
+            self::VotersCard => "Voter's Card",
         };
     }
 

@@ -16,10 +16,10 @@ class VendorFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'       => User::factory(),
+            'user_id' => User::factory(),
             'business_name' => fake()->unique()->company(),
-            'status'        => 'active',
-            'approved_at'   => now(),
+            'status' => 'active',
+            'approved_at' => now(),
         ];
     }
 }

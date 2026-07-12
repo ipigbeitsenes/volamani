@@ -8,6 +8,7 @@ use App\Models\Escrow;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Services\Cart\CartService;
 use Database\Factories\ProductFactory;
 use Database\Factories\VendorFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,7 +32,7 @@ class CartCheckoutTest extends TestCase
 
     public function test_multi_vendor_wallet_checkout_creates_one_paid_order_and_escrow_per_vendor(): void
     {
-        $buyer    = $this->fundedBuyer(1_000_000);
+        $buyer = $this->fundedBuyer(1_000_000);
         $productA = ProductFactory::new()->create(['price' => 100_000]);
         $productB = ProductFactory::new()->create(['price' => 250_000]); // different vendor (factory makes one each)
 
@@ -68,7 +69,7 @@ class CartCheckoutTest extends TestCase
 
     public function test_replaying_checkout_does_not_double_charge(): void
     {
-        $buyer   = $this->fundedBuyer(500_000);
+        $buyer = $this->fundedBuyer(500_000);
         $product = ProductFactory::new()->create(['price' => 100_000]);
 
         $this->actingAs($buyer)->post(route('cart.products.add', $product));
@@ -86,7 +87,7 @@ class CartCheckoutTest extends TestCase
 
     public function test_insufficient_wallet_balance_blocks_checkout_without_side_effects(): void
     {
-        $buyer   = $this->fundedBuyer(10_000);
+        $buyer = $this->fundedBuyer(10_000);
         $product = ProductFactory::new()->create(['price' => 100_000]);
 
         $this->actingAs($buyer)->post(route('cart.products.add', $product));
@@ -102,7 +103,7 @@ class CartCheckoutTest extends TestCase
 
     public function test_a_vendor_cannot_add_their_own_product_to_the_cart(): void
     {
-        $vendor  = VendorFactory::new()->create();
+        $vendor = VendorFactory::new()->create();
         $product = ProductFactory::new()->create(['vendor_id' => $vendor->id]);
 
         $this->actingAs($vendor->user)
@@ -110,14 +111,14 @@ class CartCheckoutTest extends TestCase
             ->assertSessionHas('error');
 
         $this->actingAs($vendor->user)->get(route('cart.index'))->assertOk();
-        $this->assertSame(0, app(\App\Services\Cart\CartService::class)->count());
+        $this->assertSame(0, app(CartService::class)->count());
     }
 
     public function test_multi_vendor_cart_cannot_use_card_checkout(): void
     {
         $buyer = $this->fundedBuyer();
-        $a     = ProductFactory::new()->create(['price' => 50_000]);
-        $b     = ProductFactory::new()->create(['price' => 50_000]);
+        $a = ProductFactory::new()->create(['price' => 50_000]);
+        $b = ProductFactory::new()->create(['price' => 50_000]);
 
         $this->actingAs($buyer)->post(route('cart.products.add', $a));
         $this->actingAs($buyer)->post(route('cart.products.add', $b));

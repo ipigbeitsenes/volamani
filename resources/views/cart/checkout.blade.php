@@ -64,13 +64,8 @@
                                     <input type="text" name="ship_to_city" class="form-control" value="{{ old('ship_to_city') }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small">State</label>
-                                    <select name="ship_to_state" class="form-select">
-                                        <option value="">Select state</option>
-                                        @foreach(['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'] as $st)
-                                            <option value="{{ $st }}" {{ old('ship_to_state') === $st ? 'selected' : '' }}>{{ $st }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label small">State / Region</label>
+                                    <input type="text" name="ship_to_state" class="form-control" value="{{ old('ship_to_state') }}" placeholder="State / region">
                                 </div>
                             </div>
                             <div class="form-text mt-2">One address is used for all physical items. Shipping is a flat fee per seller.</div>

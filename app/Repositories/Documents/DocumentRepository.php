@@ -8,6 +8,7 @@ use App\Models\Document;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class DocumentRepository
 {
@@ -83,8 +84,8 @@ class DocumentRepository
         return [
             'outstanding' => (int) (clone $invoices)
                 ->whereIn('status', [DocumentStatus::Sent, DocumentStatus::Viewed, DocumentStatus::Partial, DocumentStatus::Overdue])
-                ->sum(\Illuminate\Support\Facades\DB::raw('total - amount_paid')),
-            'paid_total'  => (int) (clone $invoices)->where('status', DocumentStatus::Paid)->sum('total'),
+                ->sum(DB::raw('total - amount_paid')),
+            'paid_total' => (int) (clone $invoices)->where('status', DocumentStatus::Paid)->sum('total'),
             'draft_count' => (int) (clone $invoices)->where('status', DocumentStatus::Draft)->count(),
         ];
     }
@@ -96,8 +97,8 @@ class DocumentRepository
         return [
             'outstanding' => (int) (clone $invoices)
                 ->whereIn('status', [DocumentStatus::Sent, DocumentStatus::Viewed, DocumentStatus::Partial, DocumentStatus::Overdue])
-                ->sum(\Illuminate\Support\Facades\DB::raw('total - amount_paid')),
-            'paid_total'  => (int) (clone $invoices)->where('status', DocumentStatus::Paid)->sum('total'),
+                ->sum(DB::raw('total - amount_paid')),
+            'paid_total' => (int) (clone $invoices)->where('status', DocumentStatus::Paid)->sum('total'),
             'draft_count' => (int) (clone $invoices)->where('status', DocumentStatus::Draft)->count(),
         ];
     }

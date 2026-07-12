@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Requests\CreateProductRequestRequest;
 use App\Models\ProductRequest;
 use App\Models\ProductRequestQuotation;
+use App\Models\Vendor;
 use App\Repositories\Products\CategoryRepository;
 use App\Repositories\Requests\ProductRequestRepository;
 use App\Services\Requests\ProductRequestService;
@@ -15,14 +16,14 @@ class ProductRequestController extends Controller
 {
     public function __construct(
         private ProductRequestRepository $requestRepo,
-        private CategoryRepository       $categoryRepo,
-        private ProductRequestService    $requestService,
+        private CategoryRepository $categoryRepo,
+        private ProductRequestService $requestService,
     ) {}
 
     public function index(Request $request)
     {
-        $filters    = $request->only(['q', 'category', 'budget_max', 'deadline', 'sort']);
-        $requests   = $this->requestRepo->openRequests($filters);
+        $filters = $request->only(['q', 'category', 'budget_max', 'deadline', 'sort']);
+        $requests = $this->requestRepo->openRequests($filters);
         $categories = $this->categoryRepo->rootCategories();
 
         return view('marketplace.requests.index', compact('requests', 'categories', 'filters'));
@@ -31,20 +32,20 @@ class ProductRequestController extends Controller
     public function show(Request $request, int $id)
     {
         $productRequest = $this->requestRepo->findWithQuotations($id);
-        abort_if(!$productRequest, 404);
+        abort_if(! $productRequest, 404);
 
         // Private (direct) requests: only the buyer and the targeted vendor may view.
-        if (!$productRequest->is_public
+        if (! $productRequest->is_public
             && $productRequest->buyer_id !== auth()->id()
             && $productRequest->vendor_id !== auth()->user()?->vendor?->id) {
             abort(403);
         }
 
-        $user         = $request->user();
-        $isBuyer      = $user && $productRequest->buyer_id === $user->id;
+        $user = $request->user();
+        $isBuyer = $user && $productRequest->buyer_id === $user->id;
         $vendorRecord = $user?->vendor;
-        $hasQuoted    = $vendorRecord && $productRequest->hasQuotedBy($vendorRecord);
-        $myQuotation  = $hasQuoted ? $productRequest->getQuotationBy($vendorRecord) : null;
+        $hasQuoted = $vendorRecord && $productRequest->hasQuotedBy($vendorRecord);
+        $myQuotation = $hasQuoted ? $productRequest->getQuotationBy($vendorRecord) : null;
 
         if ($myQuotation) {
             $myQuotation->markViewed();
@@ -57,9 +58,9 @@ class ProductRequestController extends Controller
 
     public function create(Request $request)
     {
-        $categories   = $this->categoryRepo->allForSelect();
+        $categories = $this->categoryRepo->allForSelect();
         $targetVendor = $request->filled('vendor')
-            ? \App\Models\Vendor::with('user')->find($request->integer('vendor'))
+            ? Vendor::with('user')->find($request->integer('vendor'))
             : null;
 
         return view('marketplace.requests.create', compact('categories', 'targetVendor'));
@@ -82,6 +83,7 @@ class ProductRequestController extends Controller
     public function myRequests(Request $request)
     {
         $requests = $this->requestRepo->buyerRequests($request->user()->id);
+
         return view('marketplace.requests.my', compact('requests'));
     }
 
@@ -95,6 +97,7 @@ class ProductRequestController extends Controller
         $this->requestService->acceptQuotation($productRequest, $quotation);
 
         $this->flashSuccess('Quotation accepted! The vendor has been notified.');
+
         return redirect()->route('marketplace.requests.show', $productRequest->id);
     }
 
@@ -106,6 +109,7 @@ class ProductRequestController extends Controller
         $this->requestService->closeRequest($productRequest);
 
         $this->flashSuccess('Request closed.');
+
         return redirect()->route('marketplace.requests.my');
     }
 }

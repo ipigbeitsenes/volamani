@@ -20,12 +20,12 @@ class AffiliateCommission extends Model
     protected function casts(): array
     {
         return [
-            'type'         => CommissionType::class,
-            'status'       => CommissionStatus::class,
-            'amount'       => 'integer',
+            'type' => CommissionType::class,
+            'status' => CommissionStatus::class,
+            'amount' => 'integer',
             'rate_applied' => 'decimal:2',
-            'approved_at'  => 'datetime',
-            'paid_at'      => 'datetime',
+            'approved_at' => 'datetime',
+            'paid_at' => 'datetime',
         ];
     }
 

@@ -22,15 +22,15 @@ class ReturnRequest extends Model
     protected function casts(): array
     {
         return [
-            'reason'          => ReturnReason::class,
-            'status'          => ReturnStatus::class,
-            'photos'          => 'array',
+            'reason' => ReturnReason::class,
+            'status' => ReturnStatus::class,
+            'photos' => 'array',
             'refunded_amount' => 'integer',
-            'requested_at'    => 'datetime',
-            'approved_at'     => 'datetime',
-            'rejected_at'     => 'datetime',
+            'requested_at' => 'datetime',
+            'approved_at' => 'datetime',
+            'rejected_at' => 'datetime',
             'shipped_back_at' => 'datetime',
-            'refunded_at'     => 'datetime',
+            'refunded_at' => 'datetime',
         ];
     }
 

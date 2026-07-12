@@ -25,14 +25,14 @@ use Illuminate\Support\Facades\DB;
 class PhysicalCheckoutService
 {
     public function __construct(
-        private WalletService        $walletService,
+        private WalletService $walletService,
         private FulfillPaymentAction $fulfillAction,
-        private PaymentService       $paymentService,
+        private PaymentService $paymentService,
     ) {}
 
     /**
      * @return array{status:string, order?:Order, redirect?:string, shortfall?:int}
-     *   status ∈ own_item | unavailable | insufficient | paid | redirect
+     *                                                                              status ∈ own_item | unavailable | insufficient | paid | redirect
      */
     public function place(User $buyer, Product $product, ?ProductVariant $variant, int $qty, array $address, string $gateway): array
     {
@@ -55,19 +55,19 @@ class PhysicalCheckoutService
         }
 
         $unitPrice = $variant ? $variant->effectivePrice() : (int) $product->price;
-        $subtotal  = $unitPrice * $qty;
-        $shipping  = $product->vendor->shippingFeeFor($subtotal);
-        $total     = $subtotal + $shipping;
-        $feePct    = (float) config('payment.platform_fee_percent', 10);
-        $fee       = (int) round($subtotal * $feePct / 100); // commission on goods only
-        $earnings  = $total - $fee;
+        $subtotal = $unitPrice * $qty;
+        $shipping = $product->vendor->shippingFeeFor($subtotal);
+        $total = $subtotal + $shipping;
+        $feePct = (float) config('payment.platform_fee_percent', 10);
+        $fee = (int) round($subtotal * $feePct / 100); // commission on goods only
+        $earnings = $total - $fee;
 
         // Wallet: verify funds before creating an order to avoid orphans.
         if ($gateway === PaymentGateway::Wallet->value) {
             $wallet = $this->walletService->getOrCreate($buyer);
             if (! $wallet->canWithdraw($total)) {
                 return [
-                    'status'    => 'insufficient',
+                    'status' => 'insufficient',
                     'shortfall' => $total - $wallet->availableBalance(),
                 ];
             }
@@ -75,31 +75,31 @@ class PhysicalCheckoutService
 
         $order = DB::transaction(function () use ($buyer, $product, $variant, $qty, $address, $unitPrice, $subtotal, $shipping, $total, $fee, $earnings) {
             $order = Order::create([
-                'buyer_id'          => $buyer->id,
-                'vendor_id'         => $product->vendor_id,
-                'status'            => OrderStatus::Pending,
-                'payment_status'    => PaymentStatus::Pending,
+                'buyer_id' => $buyer->id,
+                'vendor_id' => $product->vendor_id,
+                'status' => OrderStatus::Pending,
+                'payment_status' => PaymentStatus::Pending,
                 'requires_shipping' => true,
-                'total_amount'      => $total,
-                'platform_fee'      => $fee,
-                'vendor_earnings'   => $earnings,
-                'shipping_fee'      => $shipping,
-                'ship_to_name'      => $address['ship_to_name'],
-                'ship_to_phone'     => $address['ship_to_phone'],
-                'ship_to_address'   => $address['ship_to_address'],
-                'ship_to_city'      => $address['ship_to_city'] ?? null,
-                'ship_to_state'     => $address['ship_to_state'] ?? null,
-                'currency'          => 'NGN',
+                'total_amount' => $total,
+                'platform_fee' => $fee,
+                'vendor_earnings' => $earnings,
+                'shipping_fee' => $shipping,
+                'ship_to_name' => $address['ship_to_name'],
+                'ship_to_phone' => $address['ship_to_phone'],
+                'ship_to_address' => $address['ship_to_address'],
+                'ship_to_city' => $address['ship_to_city'] ?? null,
+                'ship_to_state' => $address['ship_to_state'] ?? null,
+                'currency' => currency_code(),
             ]);
 
             $order->items()->create([
                 'product_id' => $product->id,
                 'variant_id' => $variant?->id,
-                'name'       => $product->name . ($variant ? ' — ' . $variant->name : ''),
-                'type'       => 'product',
-                'quantity'   => $qty,
+                'name' => $product->name.($variant ? ' — '.$variant->name : ''),
+                'type' => 'product',
+                'quantity' => $qty,
                 'unit_price' => $unitPrice,
-                'subtotal'   => $subtotal,
+                'subtotal' => $subtotal,
             ]);
 
             return $order;
@@ -117,16 +117,16 @@ class PhysicalCheckoutService
             $amount = (int) $order->total_amount;
 
             $payment = Payment::create([
-                'user_id'           => $buyer->id,
-                'payable_type'      => $order->getMorphClass(),
-                'payable_id'        => $order->getKey(),
-                'gateway'           => PaymentGateway::Wallet->value,
+                'user_id' => $buyer->id,
+                'payable_type' => $order->getMorphClass(),
+                'payable_id' => $order->getKey(),
+                'gateway' => PaymentGateway::Wallet->value,
                 'gateway_reference' => generate_reference('WAL'),
-                'status'            => PaymentStatus::Success,
-                'currency'          => 'NGN',
-                'amount'            => $amount,
-                'paid_at'           => now(),
-                'ip_address'        => request()->ip(),
+                'status' => PaymentStatus::Success,
+                'currency' => currency_code(),
+                'amount' => $amount,
+                'paid_at' => now(),
+                'ip_address' => request()->ip(),
             ]);
 
             $this->walletService->debit(

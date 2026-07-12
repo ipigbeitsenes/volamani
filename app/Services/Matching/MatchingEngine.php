@@ -18,7 +18,7 @@ class MatchingEngine
 {
     public function generate(MatchRequest $request): int
     {
-        $minScore   = (int) settings('match_min_score', 40);
+        $minScore = (int) settings('match_min_score', 40);
         $maxResults = (int) settings('match_max_results', 20);
 
         $candidates = Vendor::query()
@@ -42,12 +42,12 @@ class MatchingEngine
         foreach ($scored as $row) {
             $match = BusinessMatch::firstOrNew([
                 'match_request_id' => $request->id,
-                'vendor_id'        => $row['vendor']->id,
+                'vendor_id' => $row['vendor']->id,
             ]);
 
             $isNew = ! $match->exists;
 
-            $match->score           = $row['score'];
+            $match->score = $row['score'];
             $match->score_breakdown = $row['breakdown'];
             if ($isNew) {
                 $match->status = MatchStatus::Suggested;
@@ -72,10 +72,10 @@ class MatchingEngine
     {
         $breakdown = [
             'category' => $this->categoryScore($request, $vendor, $profile),
-            'skills'   => $this->skillsScore($request, $profile),
-            'budget'   => $this->budgetScore($request, $profile),
+            'skills' => $this->skillsScore($request, $profile),
+            'budget' => $this->budgetScore($request, $profile),
             'location' => $this->locationScore($request, $vendor, $profile),
-            'trust'    => (int) round(((int) $vendor->trust_score) / 100 * 15),
+            'trust' => (int) round(((int) $vendor->trust_score) / 100 * 15),
             'verified' => $vendor->isVerified() ? 5 : 0,
         ];
 
@@ -89,7 +89,7 @@ class MatchingEngine
         }
 
         $wanted = strtolower($request->category);
-        $pool   = array_map('strtolower', $profile->categories ?? []);
+        $pool = array_map('strtolower', $profile->categories ?? []);
         if ($vendor->category) {
             $pool[] = strtolower($vendor->category);
         }
@@ -104,7 +104,7 @@ class MatchingEngine
             return 12; // neutral
         }
 
-        $have    = $this->normalize($profile->skills ?? []);
+        $have = $this->normalize($profile->skills ?? []);
         $overlap = count(array_intersect($wanted, $have));
 
         return (int) round($overlap / count($wanted) * 25);
@@ -137,7 +137,7 @@ class MatchingEngine
             return 5; // no preference
         }
 
-        $loc  = strtolower($request->preferred_location);
+        $loc = strtolower($request->preferred_location);
         $pool = array_map('strtolower', array_filter([$vendor->city, $vendor->state, ...($profile->locations ?? [])]));
 
         foreach ($pool as $candidate) {

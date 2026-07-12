@@ -16,12 +16,12 @@ class AddInteractionAction
             $occurredAt = $data['occurred_at'] ?? now();
 
             $interaction = $client->interactions()->create([
-                'user_id'     => $author->id,
-                'type'        => $data['type'],
-                'title'       => $data['title'] ?? null,
-                'body'        => $data['body'] ?? null,
-                'pinned'      => $data['pinned'] ?? false,
-                'due_at'      => $data['due_at'] ?? null,
+                'user_id' => $author->id,
+                'type' => $data['type'],
+                'title' => $data['title'] ?? null,
+                'body' => $data['body'] ?? null,
+                'pinned' => $data['pinned'] ?? false,
+                'due_at' => $data['due_at'] ?? null,
                 'occurred_at' => $occurredAt,
             ]);
 

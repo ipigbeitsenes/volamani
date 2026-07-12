@@ -4,12 +4,12 @@ namespace App\Enums;
 
 enum WithdrawalStatus: string
 {
-    case Pending    = 'pending';
+    case Pending = 'pending';
     case Processing = 'processing';
-    case Approved   = 'approved';
-    case Paid       = 'paid';
-    case Rejected   = 'rejected';
-    case Failed     = 'failed';
+    case Approved = 'approved';
+    case Paid = 'paid';
+    case Rejected = 'rejected';
+    case Failed = 'failed';
 
     public function label(): string
     {
@@ -18,13 +18,13 @@ enum WithdrawalStatus: string
 
     public function badge(): string
     {
-        return match($this) {
-            self::Pending    => 'warning',
+        return match ($this) {
+            self::Pending => 'warning',
             self::Processing => 'info',
-            self::Approved   => 'primary',
-            self::Paid       => 'success',
-            self::Rejected   => 'danger',
-            self::Failed     => 'danger',
+            self::Approved => 'primary',
+            self::Paid => 'success',
+            self::Rejected => 'danger',
+            self::Failed => 'danger',
         };
     }
 }

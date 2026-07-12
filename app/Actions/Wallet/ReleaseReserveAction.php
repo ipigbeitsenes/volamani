@@ -38,7 +38,7 @@ class ReleaseReserveAction
             );
 
             $locked->update([
-                'status'      => 'released',
+                'status' => 'released',
                 'released_at' => now(),
             ]);
 

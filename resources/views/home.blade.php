@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 {{-- No @section('title') on purpose: the home page uses the branded default
-     "Volamani — Africa's Digital Business Ecosystem" from layouts.partials.seo. --}}
+     "Volamani — Your Digital Business Ecosystem" from layouts.partials.seo. --}}
 @section('meta_description', "Volamani helps individuals, startups, companies and agencies grow their online presence — a branded storefront to sell digital products, services and physical goods, with escrow-protected payments that bring buyers and sellers together.")
 
 @push('styles')
@@ -149,7 +149,7 @@
         <div class="row align-items-center g-5 py-4">
             <div class="col-lg-6 reveal reveal-left">
                 <span class="badge rounded-pill mb-3 px-3 py-2 fw-semibold glass text-white d-inline-flex align-items-center gap-2">
-                    <span class="vl-live-dot"></span> Grow your online presence — Naira-first
+                    <span class="vl-live-dot"></span> Grow your online presence
                 </span>
                 <h1 class="display-3 fw-bold text-white lh-1 mb-4">
                     Grow online.<br>
@@ -206,7 +206,7 @@
                     <div class="d-flex align-items-center justify-content-between mt-3 p-3 rounded-3" style="background:rgba(255,255,255,.95)">
                         <div>
                             <div class="text-muted" style="font-size:.7rem">Available balance</div>
-                            <div class="fw-bold fs-5 text-dark">₦248,500</div>
+                            <div class="fw-bold fs-5 text-dark">{{ currency_symbol() }}248,500</div>
                         </div>
                         <span class="btn btn-primary btn-sm">Withdraw <i class="bi bi-arrow-right ms-1"></i></span>
                     </div>
@@ -387,7 +387,7 @@
                     @foreach([
                         ['Open your free store','Create a branded storefront and list products, services or bookable consultations in minutes.'],
                         ['Make a sale','Buyers order and pay upfront. The money is secured in escrow, so you know it is really there before you start.'],
-                        ['Deliver & get paid','Deliver the work, the escrow releases to your wallet, and you withdraw straight to your Nigerian bank account.'],
+                        ['Deliver & get paid','Deliver the work, the escrow releases to your wallet, and you withdraw straight to your bank account.'],
                     ] as $i => $s)
                     <div class="d-flex gap-3 {{ $i < 2 ? 'mb-3 pb-3 border-bottom' : '' }}">
                         <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white"
@@ -460,14 +460,14 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6 reveal reveal-left">
-                <span class="eyebrow"><i class="bi bi-geo-alt"></i> African-first</span>
-                <h2 class="fw-bold mt-2 mb-4">Built for Nigerian &amp; African<br>business realities</h2>
+                <span class="eyebrow"><i class="bi bi-geo-alt"></i> Built for you</span>
+                <h2 class="fw-bold mt-2 mb-4">Built for real<br>business realities</h2>
                 <div class="d-flex flex-column gap-3">
                     @foreach([
-                        ['bi-bank','Bank Transfer Payments','Pay via Paystack or manual bank transfer — no card required.'],
+                        ['bi-bank','Flexible Payments','Pay by card or bank transfer — whatever works for you.'],
                         ['bi-shield-lock','Escrow Protection','Funds held safely until delivery is confirmed.'],
-                        ['bi-chat-dots','WhatsApp Commerce','Vendors display WhatsApp for direct negotiations.'],
-                        ['bi-award','Verified Vendors','KYC, BVN/NIN and CAC verification build real trust.'],
+                        ['bi-chat-dots','Direct Messaging','Vendors and buyers can chat and negotiate directly.'],
+                        ['bi-award','Verified Vendors','KYC identity and business verification build real trust.'],
                         ['bi-currency-exchange','Flexible Pricing','Fixed, milestone and installment payment options.'],
                     ] as $why)
                     <div class="d-flex gap-3">
@@ -579,7 +579,7 @@
                 ['What exactly is Volamani?', 'Volamani is an all-in-one marketplace where you can sell and buy digital products, freelance services, expert consultations and physical goods — with a branded storefront and escrow-protected payments built in.'],
                 ['How does escrow protect me?', "When a buyer pays, the money is held by Volamani instead of going straight to the seller. It's only released once delivery is confirmed — so buyers are covered if a seller doesn't deliver, and sellers know the funds are real before they start."],
                 ['What does it cost to start?', 'Creating an account and opening a storefront is completely free. We only take a small commission when you make a sale, and optional paid plans lower that commission and add features.'],
-                ['How do I get paid, and how fast?', 'Completed sales land in your Volamani wallet. Once your account is verified you can withdraw to your Nigerian bank account whenever you like.'],
+                ['How do I get paid, and how fast?', 'Completed sales land in your Volamani wallet. Once your account is verified you can withdraw to your bank account whenever you like.'],
                 ['What if something goes wrong with an order?', 'Try to sort it out with the other party first. If you can\'t, open a dispute from the order — this freezes the escrowed funds and our support team reviews the evidence and decides a fair outcome.'],
             ]; @endphp
             @foreach($homeFaqs as $i => $faq)
@@ -610,7 +610,7 @@
             <div class="position-absolute rounded-circle vl-cta-aura" style="width:300px;height:300px;bottom:-150px;right:-60px;background:rgba(255,255,255,.08);animation-delay:-4s;"></div>
             <div class="position-relative py-3">
                 <h2 class="fw-bold mb-3 text-white">Ready to grow your business?</h2>
-                <p class="mb-4 fs-5" style="color:rgba(255,255,255,.85)">Join thousands of African entrepreneurs already building on Volamani.</p>
+                <p class="mb-4 fs-5" style="color:rgba(255,255,255,.85)">Join thousands of entrepreneurs already building on Volamani.</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
                     <a href="{{ route('register') }}" class="btn btn-warning btn-lg fw-bold px-5">Create Free Account</a>
                     <a href="{{ route('marketplace.products.index') }}" class="btn btn-outline-light btn-lg px-4">Browse Marketplace</a>

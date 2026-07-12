@@ -16,7 +16,7 @@ class UserManagementController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->only('search', 'role', 'status');
-        $users   = $this->admin->users($filters);
+        $users = $this->admin->users($filters);
 
         return view('admin.users.index', compact('users', 'filters'));
     }

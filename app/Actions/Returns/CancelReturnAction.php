@@ -13,7 +13,7 @@ use App\Support\BusinessDayCalculator;
 class CancelReturnAction
 {
     public function __construct(
-        private EscrowService       $escrow,
+        private EscrowService $escrow,
         private NotificationService $notifications,
     ) {}
 

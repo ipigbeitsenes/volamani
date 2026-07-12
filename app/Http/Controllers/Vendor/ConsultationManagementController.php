@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Consultations\BookConsultationRequest;
 use App\Http\Requests\Consultations\CreateConsultantProfileRequest;
 use App\Http\Requests\Consultations\CreatePackageRequest;
 use App\Http\Requests\Consultations\UpdateConsultantProfileRequest;
@@ -19,7 +18,7 @@ class ConsultationManagementController extends Controller
 
     public function index()
     {
-        $vendor  = auth()->user()->vendor;
+        $vendor = auth()->user()->vendor;
         $profile = $vendor->consultantProfile;
 
         return view('vendor.consultations.index', compact('vendor', 'profile'));
@@ -151,7 +150,7 @@ class ConsultationManagementController extends Controller
     {
         $this->authorizeSession($session);
         $request->validate([
-            'meeting_link'    => ['required', 'url'],
+            'meeting_link' => ['required', 'url'],
             'meeting_platform' => ['nullable', 'string', 'in:google_meet,zoom,teams,phone,other'],
         ]);
 

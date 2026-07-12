@@ -25,17 +25,17 @@ class ClearBuyerStrikeAction
             ]);
 
             if ($buyer = $strike->user) {
-                $active    = $buyer->buyerStrikes()->active()->count();
-                $flagged   = $active >= $this->flagThreshold();
+                $active = $buyer->buyerStrikes()->active()->count();
+                $flagged = $active >= $this->flagThreshold();
                 $suspended = $active >= $this->suspendThreshold();
 
                 $buyer->update([
-                    'buyer_strikes'            => $active,
+                    'buyer_strikes' => $active,
                     'buyer_strikes_updated_at' => now(),
-                    'buyer_flagged'            => $flagged,
-                    'buyer_flagged_at'         => $flagged ? ($buyer->buyer_flagged_at ?? now()) : null,
-                    'purchases_suspended'      => $suspended,
-                    'purchases_suspended_at'   => $suspended ? ($buyer->purchases_suspended_at ?? now()) : null,
+                    'buyer_flagged' => $flagged,
+                    'buyer_flagged_at' => $flagged ? ($buyer->buyer_flagged_at ?? now()) : null,
+                    'purchases_suspended' => $suspended,
+                    'purchases_suspended_at' => $suspended ? ($buyer->purchases_suspended_at ?? now()) : null,
                 ]);
             }
 

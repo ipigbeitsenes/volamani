@@ -13,8 +13,8 @@ class VendorEscrowController extends Controller
 
     public function index(): View
     {
-        $vendor   = auth()->user()->vendor;
-        $escrows  = $this->escrowService->vendorEscrows($vendor);
+        $vendor = auth()->user()->vendor;
+        $escrows = $this->escrowService->vendorEscrows($vendor);
         $heldTotal = $this->escrowService->heldTotalForVendor($vendor);
 
         return view('vendor.escrows.index', compact('escrows', 'heldTotal'));

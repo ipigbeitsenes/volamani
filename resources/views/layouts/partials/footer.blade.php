@@ -14,7 +14,7 @@
                         {{ $vlFooterName }}
                     @endif
                 </h5>
-                <p class="text-white-50 small" style="max-width:320px;">Africa's complete digital business ecosystem. Sell products, offer services, and grow your business online — all from one dashboard.</p>
+                <p class="text-white-50 small" style="max-width:320px;">A complete digital business ecosystem. Sell products, offer services, and grow your business online — all from one dashboard.</p>
                 <div class="d-flex gap-2 mt-3">
                     @foreach([
                         ['bi-twitter-x', settings('social_twitter')],
@@ -76,7 +76,7 @@
             <span>&copy; {{ date('Y') }} Volamani. All rights reserved.</span>
             <span class="d-flex align-items-center gap-3">
                 <span><i class="bi bi-shield-check me-1"></i>Escrow protected</span>
-                <span>Made with <i class="bi bi-heart-fill text-danger"></i> for African entrepreneurs</span>
+                <span>Made with <i class="bi bi-heart-fill text-danger"></i> for entrepreneurs</span>
             </span>
         </div>
     </div>

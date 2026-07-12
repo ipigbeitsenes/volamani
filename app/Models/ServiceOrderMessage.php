@@ -16,7 +16,7 @@ class ServiceOrderMessage extends Model
     {
         return [
             'is_delivery' => 'boolean',
-            'is_system'   => 'boolean',
+            'is_system' => 'boolean',
         ];
     }
 

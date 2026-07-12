@@ -19,11 +19,11 @@ class ApproveKYCAction
 
         $kyc = DB::transaction(function () use ($kyc, $admin) {
             $kyc->update([
-                'status'           => KYCStatus::Verified,
+                'status' => KYCStatus::Verified,
                 'rejection_reason' => null,
-                'reviewed_by'      => $admin->id,
-                'reviewed_at'      => now(),
-                'verified_at'      => now(),
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
+                'verified_at' => now(),
             ]);
 
             $kyc->user->update(['kyc_status' => KYCStatus::Verified]);

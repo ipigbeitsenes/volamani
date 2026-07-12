@@ -23,7 +23,7 @@ class UpdatePreferencesAction
                 NotificationPreference::updateOrCreate(
                     ['user_id' => $user->id, 'category' => $category->value],
                     [
-                        'email'    => $category->isEssential() ? true : (bool) ($row['email'] ?? false),
+                        'email' => $category->isEssential() ? true : (bool) ($row['email'] ?? false),
                         'database' => $category->isEssential() ? true : (bool) ($row['database'] ?? false),
                     ],
                 );

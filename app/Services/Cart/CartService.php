@@ -58,7 +58,7 @@ class CartService
 
     public function addPhysical(int $productId, int $variantId = 0, int $qty = 1): void
     {
-        $key  = $this->physicalKey($productId, $variantId);
+        $key = $this->physicalKey($productId, $variantId);
         $cart = $this->raw();
         $cart['physical'][$key] = max(1, ($cart['physical'][$key] ?? 0) + $qty);
         $this->put($cart);
@@ -66,7 +66,7 @@ class CartService
 
     public function setPhysicalQty(int $productId, int $variantId, int $qty): void
     {
-        $key  = $this->physicalKey($productId, $variantId);
+        $key = $this->physicalKey($productId, $variantId);
         $cart = $this->raw();
         if ($qty < 1) {
             unset($cart['physical'][$key]);
@@ -109,6 +109,7 @@ class CartService
     public function count(): int
     {
         $cart = $this->raw();
+
         return array_sum($cart['products']) + array_sum($cart['physical']) + count($cart['services']);
     }
 
@@ -124,6 +125,7 @@ class CartService
                 return true;
             }
         }
+
         return false;
     }
 
@@ -137,7 +139,7 @@ class CartService
      */
     public function lines(): array
     {
-        $cart  = $this->raw();
+        $cart = $this->raw();
         $lines = [];
 
         // Digital products
@@ -184,13 +186,13 @@ class CartService
                     }
                 }
 
-                $qty       = max(1, (int) $qty);
+                $qty = max(1, (int) $qty);
                 $unitPrice = $variant ? $variant->effectivePrice() : (int) $product->price;
-                $lines[]   = [
+                $lines[] = [
                     'kind' => 'physical', 'id' => $product->id, 'model' => $product,
                     'product' => $product, 'variant' => $variant, 'variant_id' => $vid,
                     'vendor' => $product->vendor,
-                    'name' => $product->name . ($variant ? ' — ' . $variant->name : ''),
+                    'name' => $product->name.($variant ? ' — '.$variant->name : ''),
                     'qty' => $qty, 'unit_price' => $unitPrice, 'subtotal' => $unitPrice * $qty,
                     'in_stock' => $product->canFulfilQuantity($qty, $variant),
                 ];
@@ -209,7 +211,7 @@ class CartService
                     'kind' => 'service', 'id' => $package->id, 'model' => $package,
                     'product' => null, 'variant' => null, 'variant_id' => 0,
                     'vendor' => $package->service->vendor,
-                    'name' => $package->service->title . ' — ' . ucfirst($package->tier->value),
+                    'name' => $package->service->title.' — '.ucfirst($package->tier->value),
                     'qty' => 1, 'unit_price' => $package->price, 'subtotal' => $package->price,
                     'in_stock' => true,
                 ];
@@ -226,16 +228,16 @@ class CartService
     public function summary(): array
     {
         $groups = [];
-        $total  = 0;
+        $total = 0;
 
         foreach ($this->lines() as $line) {
             $vendorId = $line['vendor']?->id ?? 0;
             if (! isset($groups[$vendorId])) {
                 $groups[$vendorId] = ['vendor' => $line['vendor'], 'lines' => [], 'subtotal' => 0];
             }
-            $groups[$vendorId]['lines'][]   = $line;
+            $groups[$vendorId]['lines'][] = $line;
             $groups[$vendorId]['subtotal'] += $line['subtotal'];
-            $total                         += $line['subtotal'];
+            $total += $line['subtotal'];
         }
 
         return ['groups' => array_values($groups), 'total' => $total];
@@ -252,8 +254,8 @@ class CartService
         $byVendor = [];
         foreach ($this->lines() as $line) {
             if ($line['kind'] === 'physical' && $line['vendor']) {
-                $byVendor[$line['vendor']->id]['vendor']    = $line['vendor'];
-                $byVendor[$line['vendor']->id]['subtotal']  = ($byVendor[$line['vendor']->id]['subtotal'] ?? 0) + $line['subtotal'];
+                $byVendor[$line['vendor']->id]['vendor'] = $line['vendor'];
+                $byVendor[$line['vendor']->id]['subtotal'] = ($byVendor[$line['vendor']->id]['subtotal'] ?? 0) + $line['subtotal'];
             }
         }
 
@@ -261,6 +263,7 @@ class CartService
         foreach ($byVendor as $g) {
             $shipping += $g['vendor']->shippingFeeFor($g['subtotal']);
         }
+
         return $shipping;
     }
 
@@ -277,15 +280,15 @@ class CartService
      */
     public function payableCount(): int
     {
-        $keys     = [];
+        $keys = [];
         $services = 0;
 
         foreach ($this->lines() as $line) {
             $vendorId = $line['vendor']?->id ?? 0;
             if ($line['kind'] === 'product') {
-                $keys['d:' . $vendorId] = true;
+                $keys['d:'.$vendorId] = true;
             } elseif ($line['kind'] === 'physical') {
-                $keys['p:' . $vendorId] = true;
+                $keys['p:'.$vendorId] = true;
             } else {
                 $services++;
             }
@@ -298,7 +301,7 @@ class CartService
 
     private function physicalKey(int $productId, int $variantId): string
     {
-        return $productId . ':' . max(0, $variantId);
+        return $productId.':'.max(0, $variantId);
     }
 
     private function raw(): array

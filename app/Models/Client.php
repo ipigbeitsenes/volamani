@@ -23,13 +23,13 @@ class Client extends Model
     protected function casts(): array
     {
         return [
-            'status'              => ClientStatus::class,
-            'source'              => ClientSource::class,
-            'tags'                => 'array',
-            'total_spent'         => 'integer',
-            'orders_count'        => 'integer',
+            'status' => ClientStatus::class,
+            'source' => ClientSource::class,
+            'tags' => 'array',
+            'total_spent' => 'integer',
+            'orders_count' => 'integer',
             'last_interaction_at' => 'datetime',
-            'last_synced_at'      => 'datetime',
+            'last_synced_at' => 'datetime',
         ];
     }
 

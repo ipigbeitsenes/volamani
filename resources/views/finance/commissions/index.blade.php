@@ -27,14 +27,14 @@
                     <div class="form-text">Paid to referrers on a referred user's first purchase.</div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Withdrawal fee (kobo)</label>
+                    <label class="form-label fw-semibold">Withdrawal fee (minor units)</label>
                     <input type="number" name="withdrawal_fee" class="form-control" min="0" value="{{ old('withdrawal_fee', $commissions['withdrawal_fee']) }}" required>
-                    <div class="form-text">= {{ money($commissions['withdrawal_fee']) }} (100 kobo = ₦1)</div>
+                    <div class="form-text">= {{ money($commissions['withdrawal_fee']) }} (stored in minor units)</div>
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">Minimum withdrawal (kobo)</label>
+                    <label class="form-label fw-semibold">Minimum withdrawal (minor units)</label>
                     <input type="number" name="min_withdrawal" class="form-control" min="0" value="{{ old('min_withdrawal', $commissions['min_withdrawal']) }}" required>
-                    <div class="form-text">= {{ money($commissions['min_withdrawal']) }} (100 kobo = ₦1)</div>
+                    <div class="form-text">= {{ money($commissions['min_withdrawal']) }} (stored in minor units)</div>
                 </div>
             </div>
         </div>

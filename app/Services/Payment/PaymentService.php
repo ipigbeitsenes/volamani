@@ -11,15 +11,14 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class PaymentService
 {
     public function __construct(
-        private InitiatePaymentAction    $initiate,
-        private VerifyPaymentAction      $verify,
+        private InitiatePaymentAction $initiate,
+        private VerifyPaymentAction $verify,
         private ApproveBankTransferAction $approveTransfer,
-        private InitiateRefundAction     $refund,
+        private InitiateRefundAction $refund,
     ) {}
 
     public function initiatePaystackPayment(User $user, int $amountKobo, Model $payable, array $metadata = [], ?string $email = null): array
@@ -43,7 +42,9 @@ class PaymentService
             ->orWhere('gateway_reference', $reference)
             ->first();
 
-        if (!$payment) return null;
+        if (! $payment) {
+            return null;
+        }
 
         return $this->verify->execute($payment);
     }
@@ -53,14 +54,14 @@ class PaymentService
         $path = $file ? $file->store('bank-transfer-proofs', 'public') : null;
 
         return BankTransferProof::create([
-            'payment_id'    => $payment->id,
-            'user_id'       => $user->id,
-            'bank_name'     => $data['bank_name'],
-            'account_name'  => $data['account_name'],
-            'amount'        => to_kobo((float) $data['amount']),
+            'payment_id' => $payment->id,
+            'user_id' => $user->id,
+            'bank_name' => $data['bank_name'],
+            'account_name' => $data['account_name'],
+            'amount' => to_kobo((float) $data['amount']),
             'transfer_date' => $data['transfer_date'],
-            'proof_file'    => $path,
-            'notes'         => $data['notes'] ?? null,
+            'proof_file' => $path,
+            'notes' => $data['notes'] ?? null,
         ]);
     }
 

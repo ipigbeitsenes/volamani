@@ -29,17 +29,17 @@ class AddStrikeAction
         return DB::transaction(function () use ($vendor, $reason, $note, $sourceId, $issuedBy) {
             $strike = VendorStrike::create([
                 'vendor_id' => $vendor->id,
-                'reason'    => $reason,
-                'source'    => $reason->source(),
+                'reason' => $reason,
+                'source' => $reason->source(),
                 'source_id' => $sourceId,
-                'note'      => $note,
+                'note' => $note,
                 'issued_by' => $issuedBy?->id,
             ]);
 
             $active = $vendor->strikes()->active()->count();
 
             $vendor->update([
-                'strikes'            => $active,
+                'strikes' => $active,
                 'strikes_updated_at' => now(),
             ]);
 
@@ -47,7 +47,7 @@ class AddStrikeAction
 
             if ($active >= $this->threshold() && $vendor->status === Status::Active) {
                 $vendor->update([
-                    'status'                => Status::Suspended,
+                    'status' => Status::Suspended,
                     'suspended_for_strikes' => true,
                 ]);
                 $suspended = true;

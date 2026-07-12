@@ -23,20 +23,20 @@ class DisputeEscrowAction
             $locked = Escrow::where('id', $escrow->id)->lockForUpdate()->first();
 
             $locked->update([
-                'status'          => EscrowStatus::Disputed,
-                'disputed_at'     => now(),
+                'status' => EscrowStatus::Disputed,
+                'disputed_at' => now(),
                 'auto_release_at' => null,
-                'notes'           => $reason ?? $locked->notes,
+                'notes' => $reason ?? $locked->notes,
             ]);
 
             EscrowTransaction::create([
-                'escrow_id'     => $locked->id,
-                'type'          => EscrowTransactionType::Dispute,
-                'amount'        => $locked->heldAmount(),
+                'escrow_id' => $locked->id,
+                'type' => EscrowTransactionType::Dispute,
+                'amount' => $locked->heldAmount(),
                 'balance_after' => $locked->heldAmount(),
-                'description'   => "Escrow {$locked->reference} marked disputed — funds frozen",
-                'actor_id'      => $actor?->id,
-                'metadata'      => ['reason' => $reason],
+                'description' => "Escrow {$locked->reference} marked disputed — funds frozen",
+                'actor_id' => $actor?->id,
+                'metadata' => ['reason' => $reason],
             ]);
 
             return $locked->fresh();

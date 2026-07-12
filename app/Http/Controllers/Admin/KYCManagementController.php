@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\KYCVerification;
 use App\Services\KYC\KYCService;
+use App\Services\Storage\PrivateFileVault;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -14,11 +14,14 @@ class KYCManagementController extends Controller
 {
     private const DOCUMENT_FIELDS = ['document_front', 'document_back', 'selfie', 'proof_of_address'];
 
-    public function __construct(private KYCService $kycService) {}
+    public function __construct(
+        private KYCService $kycService,
+        private PrivateFileVault $vault,
+    ) {}
 
     public function index(): View
     {
-        $filters       = request()->only(['status', 'search']);
+        $filters = request()->only(['status', 'search']);
         $verifications = $this->kycService->forAdmin(20, $filters);
 
         return view('admin.kyc.index', compact('verifications', 'filters'));
@@ -55,8 +58,8 @@ class KYCManagementController extends Controller
         abort_unless(in_array($field, self::DOCUMENT_FIELDS, true), 404);
 
         $path = $kyc->{$field};
-        abort_unless($path && Storage::disk('private')->exists($path), 404);
+        abort_unless($this->vault->exists($path), 404);
 
-        return Storage::disk('private')->response($path);
+        return $this->vault->stream($path);
     }
 }

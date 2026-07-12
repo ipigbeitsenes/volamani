@@ -14,8 +14,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class FollowService
 {
     public function __construct(
-        private ToggleFollowAction  $toggleAction,
-        private FollowRepository    $repo,
+        private ToggleFollowAction $toggleAction,
+        private FollowRepository $repo,
         private NotificationService $notifications,
     ) {}
 

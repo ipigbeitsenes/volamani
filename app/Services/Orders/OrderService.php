@@ -2,27 +2,28 @@
 
 namespace App\Services\Orders;
 
+use App\Actions\Products\RestockOrderAction;
+use App\Enums\EscrowStatus;
 use App\Enums\NotificationCategory;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vendor;
-use App\Actions\Products\RestockOrderAction;
 use App\Repositories\Orders\OrderRepository;
 use App\Services\Escrow\EscrowService;
 use App\Services\Notifications\NotificationService;
+use App\Support\BusinessDayCalculator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class OrderService
 {
     public function __construct(
-        private OrderRepository     $repo,
-        private EscrowService       $escrow,
+        private OrderRepository $repo,
+        private EscrowService $escrow,
         private NotificationService $notifications,
-        private RestockOrderAction  $restock,
+        private RestockOrderAction $restock,
     ) {}
 
     public function forBuyer(User $user, int $perPage = 15): LengthAwarePaginator
@@ -48,7 +49,7 @@ class OrderService
 
         DB::transaction(function () use ($order, $actor) {
             $order->update([
-                'status'       => OrderStatus::Completed,
+                'status' => OrderStatus::Completed,
                 'completed_at' => now(),
             ]);
 
@@ -78,17 +79,17 @@ class OrderService
         }
 
         $order->update([
-            'status'          => OrderStatus::Shipped,
+            'status' => OrderStatus::Shipped,
             'tracking_number' => $trackingNumber,
-            'courier'         => $courier,
-            'shipped_at'      => now(),
+            'courier' => $courier,
+            'shipped_at' => now(),
         ]);
 
-        $tracking = $trackingNumber ? " Tracking: {$trackingNumber}" . ($courier ? " ({$courier})" : '') . '.' : '';
+        $tracking = $trackingNumber ? " Tracking: {$trackingNumber}".($courier ? " ({$courier})" : '').'.' : '';
         $this->notifyBuyer(
             $order,
             'Order shipped',
-            'Your order ' . $order->reference . ' is on its way.' . $tracking,
+            'Your order '.$order->reference.' is on its way.'.$tracking,
         );
 
         return true;
@@ -108,16 +109,16 @@ class OrderService
 
         DB::transaction(function () use ($order) {
             $order->update([
-                'status'       => OrderStatus::Delivered,
+                'status' => OrderStatus::Delivered,
                 'delivered_at' => now(),
             ]);
 
             if ($order->requires_shipping) {
                 $escrow = $this->escrow->forPayable($order);
-                if ($escrow && $escrow->auto_release_at === null && $escrow->status === \App\Enums\EscrowStatus::Holding) {
+                if ($escrow && $escrow->auto_release_at === null && $escrow->status === EscrowStatus::Holding) {
                     $days = (int) config('business_days.release_days', 3);
                     $escrow->update([
-                        'auto_release_at' => app(\App\Support\BusinessDayCalculator::class)->addBusinessDays(now(), max(1, $days)),
+                        'auto_release_at' => app(BusinessDayCalculator::class)->addBusinessDays(now(), max(1, $days)),
                     ]);
                 }
             }
@@ -126,7 +127,7 @@ class OrderService
         $this->notifyBuyer(
             $order,
             'Order delivered',
-            'Your order ' . $order->reference . ' has been marked as delivered. Confirm receipt to release payment.',
+            'Your order '.$order->reference.' has been marked as delivered. Confirm receipt to release payment.',
         );
 
         return true;
@@ -148,7 +149,7 @@ class OrderService
             // Refund the buyer: release the held escrow back to their wallet.
             $escrow = $this->escrow->forPayable($order);
             if ($escrow && $escrow->canRefund()) {
-                $this->escrow->refund($escrow, $actor, 'Order cancelled by seller: ' . $reason);
+                $this->escrow->refund($escrow, $actor, 'Order cancelled by seller: '.$reason);
             }
 
             // Return any physical stock to inventory.
@@ -157,17 +158,17 @@ class OrderService
             }
 
             $order->update([
-                'status'              => OrderStatus::Cancelled,
-                'cancelled_at'        => now(),
+                'status' => OrderStatus::Cancelled,
+                'cancelled_at' => now(),
                 'cancellation_reason' => $reason,
-                'cancelled_by'        => $actor->id,
+                'cancelled_by' => $actor->id,
             ]);
         });
 
         $this->notifyBuyer(
             $order,
             'Order cancelled by seller',
-            'Your order ' . $order->reference . ' was cancelled by the seller and any payment has been refunded to your Volamani wallet. Reason: ' . $reason,
+            'Your order '.$order->reference.' was cancelled by the seller and any payment has been refunded to your Volamani wallet. Reason: '.$reason,
         );
 
         return true;
@@ -176,17 +177,17 @@ class OrderService
     /** Attach a deliverable file to an order (custom work the buyer ordered). */
     public function attachDeliverable(Order $order, UploadedFile $file): string
     {
-        $path = $file->store('order-deliverables/' . $order->id, 'public');
+        $path = $file->store('order-deliverables/'.$order->id, 'public');
 
-        $note = '[' . now()->format('d M Y H:i') . '] Deliverable uploaded: ' . $file->getClientOriginalName() . ' (' . $path . ')';
+        $note = '['.now()->format('d M Y H:i').'] Deliverable uploaded: '.$file->getClientOriginalName().' ('.$path.')';
         $order->update([
-            'notes' => trim(($order->notes ? $order->notes . "\n" : '') . $note),
+            'notes' => trim(($order->notes ? $order->notes."\n" : '').$note),
         ]);
 
         $this->notifyBuyer(
             $order,
             'New deliverable available',
-            'The seller uploaded a file for your order ' . $order->reference . '.',
+            'The seller uploaded a file for your order '.$order->reference.'.',
         );
 
         return $path;

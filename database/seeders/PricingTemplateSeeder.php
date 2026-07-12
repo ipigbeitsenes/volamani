@@ -56,11 +56,11 @@ class PricingTemplateSeeder extends Seeder
             $template['features'] = json_encode($template['features']);
             DB::table('pricing_templates')->insertOrIgnore($template + [
                 'hourly_rate' => $template['hourly_rate'] ?? 0,
-                'min_hours'   => $template['min_hours'] ?? 0,
-                'max_hours'   => $template['max_hours'] ?? 0,
-                'is_active'   => 1,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'min_hours' => $template['min_hours'] ?? 0,
+                'max_hours' => $template['max_hours'] ?? 0,
+                'is_active' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 
@@ -96,7 +96,7 @@ class PricingTemplateSeeder extends Seeder
 
         foreach ($addOns as $addOn) {
             DB::table('pricing_add_ons')->insertOrIgnore($addOn + [
-                'is_active'  => 1,
+                'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
 
-            $key    = settings('s3_key');
+            $key = settings('s3_key');
             $secret = settings('s3_secret');
             $region = settings('s3_region');
             $bucket = settings('s3_bucket');
@@ -73,21 +73,21 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $base = [
-                'driver'                  => 's3',
-                'key'                     => $key,
-                'secret'                  => $secret,
-                'region'                  => $region,
-                'bucket'                  => $bucket,
-                'url'                     => settings('s3_url') ?: null,
-                'endpoint'                => settings('s3_endpoint') ?: null,
+                'driver' => 's3',
+                'key' => $key,
+                'secret' => $secret,
+                'region' => $region,
+                'bucket' => $bucket,
+                'url' => settings('s3_url') ?: null,
+                'endpoint' => settings('s3_endpoint') ?: null,
                 'use_path_style_endpoint' => (bool) settings('s3_path_style'),
-                'throw'                   => false,
-                'report'                  => false,
+                'throw' => false,
+                'report' => false,
             ];
 
             config([
-                'filesystems.disks.s3'      => $base,
-                'filesystems.disks.public'  => array_merge($base, ['visibility' => 'public']),
+                'filesystems.disks.s3' => $base,
+                'filesystems.disks.public' => array_merge($base, ['visibility' => 'public']),
                 'filesystems.disks.private' => array_merge($base, ['visibility' => 'private']),
             ]);
         } catch (\Throwable $e) {

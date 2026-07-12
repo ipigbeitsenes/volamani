@@ -1,0 +1,15 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+
+    paths:
+        - app
+
+    # Pre-existing findings are captured in phpstan-baseline.neon so CI stays
+    # green while holding all NEW code to level 5. Regenerate the baseline with:
+    #   vendor/bin/phpstan analyse --generate-baseline
+    excludePaths:
+        - app/**/*.blade.php

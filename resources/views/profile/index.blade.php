@@ -120,7 +120,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-medium small">Location</label>
                                 <input type="text" name="location" value="{{ old('location', $user->location) }}"
-                                       class="form-control" placeholder="Lagos, Nigeria">
+                                       class="form-control" placeholder="City, Country">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-medium small">Account Type</label>

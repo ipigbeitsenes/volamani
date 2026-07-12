@@ -18,21 +18,21 @@ class AcceptQuotationAction
 
         return DB::transaction(function () use ($request, $quotation) {
             $quotation->update([
-                'status'      => QuotationStatus::Accepted,
+                'status' => QuotationStatus::Accepted,
                 'accepted_at' => now(),
             ]);
 
             $request->quotations()
                 ->where('id', '!=', $quotation->id)
                 ->update([
-                    'status'      => QuotationStatus::Rejected,
+                    'status' => QuotationStatus::Rejected,
                     'rejected_at' => now(),
                 ]);
 
             $request->update([
-                'status'                 => RequestStatus::Accepted,
-                'accepted_quotation_id'  => $quotation->id,
-                'closed_at'              => now(),
+                'status' => RequestStatus::Accepted,
+                'accepted_quotation_id' => $quotation->id,
+                'closed_at' => now(),
             ]);
 
             return $request->fresh(['acceptedQuotation.vendor']);

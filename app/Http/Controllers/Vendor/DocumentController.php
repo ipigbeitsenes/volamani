@@ -17,26 +17,26 @@ class DocumentController extends Controller
 
     public function index(Request $request): View
     {
-        $vendor    = $request->user()->vendor;
-        $type      = $this->type();
-        $filters   = $request->only('status', 'search');
+        $vendor = $request->user()->vendor;
+        $type = $this->type();
+        $filters = $request->only('status', 'search');
         $documents = $this->documentService->forVendor($vendor, $type, 15, $filters);
-        $stats     = $type === DocumentType::Invoice ? $this->documentService->vendorStats($vendor) : null;
+        $stats = $type === DocumentType::Invoice ? $this->documentService->vendorStats($vendor) : null;
 
         return view('vendor.documents.index', [
             'documents' => $documents,
-            'type'      => $type,
+            'type' => $type,
             'routeBase' => $this->routeBase(),
-            'filters'   => $filters,
-            'stats'     => $stats,
+            'filters' => $filters,
+            'stats' => $stats,
         ]);
     }
 
     public function create(): View
     {
         return view('vendor.documents.form', [
-            'document'  => new Document(['type' => $this->type()]),
-            'type'      => $this->type(),
+            'document' => new Document(['type' => $this->type()]),
+            'type' => $this->type(),
             'routeBase' => $this->routeBase(),
         ]);
     }
@@ -50,9 +50,9 @@ class DocumentController extends Controller
             $request->user(),
         );
 
-        $this->flashSuccess($this->type()->label() . " {$document->number} created.");
+        $this->flashSuccess($this->type()->label()." {$document->number} created.");
 
-        return redirect()->route($this->routeBase() . '.show', $document);
+        return redirect()->route($this->routeBase().'.show', $document);
     }
 
     public function show(Document $document): View
@@ -61,8 +61,8 @@ class DocumentController extends Controller
         $document->load('items', 'client', 'convertedTo');
 
         return view('vendor.documents.show', [
-            'document'  => $document,
-            'type'      => $document->type,
+            'document' => $document,
+            'type' => $document->type,
             'routeBase' => $this->routeBaseFor($document),
         ]);
     }
@@ -74,8 +74,8 @@ class DocumentController extends Controller
         $document->load('items');
 
         return view('vendor.documents.form', [
-            'document'  => $document,
-            'type'      => $document->type,
+            'document' => $document,
+            'type' => $document->type,
             'routeBase' => $this->routeBaseFor($document),
         ]);
     }
@@ -89,7 +89,7 @@ class DocumentController extends Controller
 
         $this->flashSuccess("{$document->number} updated.");
 
-        return redirect()->route($this->routeBaseFor($document) . '.show', $document);
+        return redirect()->route($this->routeBaseFor($document).'.show', $document);
     }
 
     public function destroy(Document $document): RedirectResponse
@@ -101,7 +101,7 @@ class DocumentController extends Controller
 
         $this->flashSuccess("{$document->number} deleted.");
 
-        return redirect()->route($base . '.index');
+        return redirect()->route($base.'.index');
     }
 
     public function send(Document $document): RedirectResponse
@@ -171,7 +171,7 @@ class DocumentController extends Controller
         return match (true) {
             request()->routeIs('vendor.estimates.*') => DocumentType::Quotation,
             request()->routeIs('vendor.contracts.*') => DocumentType::Contract,
-            default                                  => DocumentType::Invoice,
+            default => DocumentType::Invoice,
         };
     }
 
@@ -189,8 +189,8 @@ class DocumentController extends Controller
     {
         return match ($type) {
             DocumentType::Quotation => 'vendor.estimates',
-            DocumentType::Contract  => 'vendor.contracts',
-            default                 => 'vendor.invoices',
+            DocumentType::Contract => 'vendor.contracts',
+            default => 'vendor.invoices',
         };
     }
 }

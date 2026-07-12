@@ -23,7 +23,7 @@ class StorefrontSettingsController extends Controller
     public function update(UpdateStorefrontRequest $request): RedirectResponse
     {
         $vendor = $request->user()->vendor;
-        $data   = $request->safe()->except(['logo', 'banner']);
+        $data = $request->safe()->except(['logo', 'banner']);
 
         // Shipping amounts are entered in naira; persist in kobo.
         $data['shipping_fee'] = isset($data['shipping_fee']) ? to_kobo($data['shipping_fee']) : 0;
@@ -31,15 +31,17 @@ class StorefrontSettingsController extends Controller
             ? to_kobo($data['free_shipping_threshold'])
             : null;
 
-        // Delivery-exclusion zones: states arrive as a checkbox array; cities as a
-        // comma-separated free-text field. Store both as clean string arrays.
-        $data['no_delivery_states'] = array_values(array_filter($data['no_delivery_states'] ?? []));
-        $data['no_delivery_cities'] = collect(explode(',', $data['no_delivery_cities'] ?? ''))
-            ->map(fn ($c) => trim($c))
+        // Delivery-exclusion zones: states/regions and cities both arrive as
+        // comma-separated free-text fields. Store both as clean string arrays.
+        $splitToArray = fn (?string $csv) => collect(explode(',', $csv ?? ''))
+            ->map(fn ($v) => trim($v))
             ->filter()
             ->unique()
             ->values()
             ->all();
+
+        $data['no_delivery_states'] = $splitToArray($data['no_delivery_states'] ?? '');
+        $data['no_delivery_cities'] = $splitToArray($data['no_delivery_cities'] ?? '');
 
         $this->vendorService->updateStorefront(
             $vendor,
@@ -57,7 +59,7 @@ class StorefrontSettingsController extends Controller
     public function updateBranding(Request $request): RedirectResponse
     {
         $request->validate([
-            'logo'   => ['nullable', 'image', 'max:2048'],
+            'logo' => ['nullable', 'image', 'max:2048'],
             'banner' => ['nullable', 'image', 'max:5120'],
         ]);
 

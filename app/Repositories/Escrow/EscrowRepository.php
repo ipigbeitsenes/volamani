@@ -31,12 +31,12 @@ class EscrowRepository
     {
         $query = Escrow::with(['buyer', 'vendor', 'escrowable'])->latest();
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['search'])) {
-            $query->where('reference', 'like', '%' . $filters['search'] . '%');
+        if (! empty($filters['search'])) {
+            $query->where('reference', 'like', '%'.$filters['search'].'%');
         }
 
         return $query->paginate($perPage);

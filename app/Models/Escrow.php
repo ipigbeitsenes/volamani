@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
 class Escrow extends Model
 {
@@ -22,17 +23,17 @@ class Escrow extends Model
     protected function casts(): array
     {
         return [
-            'status'          => EscrowStatus::class,
-            'total_amount'    => 'integer',
-            'platform_fee'    => 'integer',
+            'status' => EscrowStatus::class,
+            'total_amount' => 'integer',
+            'platform_fee' => 'integer',
             'vendor_earnings' => 'integer',
             'released_amount' => 'integer',
             'refunded_amount' => 'integer',
             'auto_release_at' => 'datetime',
-            'held_at'         => 'datetime',
-            'released_at'     => 'datetime',
-            'refunded_at'     => 'datetime',
-            'disputed_at'     => 'datetime',
+            'held_at' => 'datetime',
+            'released_at' => 'datetime',
+            'refunded_at' => 'datetime',
+            'disputed_at' => 'datetime',
         ];
     }
 
@@ -156,7 +157,7 @@ class Escrow extends Model
      * digital product purchases (measured from when the funds were held); null
      * for service/consultation escrows, which keep open-ended disputes.
      */
-    public function ticketWindowClosesAt(): ?\Illuminate\Support\Carbon
+    public function ticketWindowClosesAt(): ?Carbon
     {
         if (! $this->isProductEscrow() || ! $this->held_at) {
             return null;

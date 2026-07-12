@@ -16,7 +16,7 @@ class MarkReturnShippedAction
         abort_unless($return->canMarkShipped(), 422, 'You can only add return tracking once the return is approved.');
 
         $return->update([
-            'status'          => ReturnStatus::ShippedBack,
+            'status' => ReturnStatus::ShippedBack,
             'return_tracking' => $tracking,
             'shipped_back_at' => now(),
         ]);
@@ -27,7 +27,7 @@ class MarkReturnShippedAction
                 NotificationCategory::Orders,
                 'Return shipped back',
                 "The buyer shipped back the item for return {$return->reference}"
-                    . ($tracking ? " (tracking: {$tracking})" : '') . '. Confirm receipt to refund.',
+                    .($tracking ? " (tracking: {$tracking})" : '').'. Confirm receipt to refund.',
                 route('vendor.returns.index'),
                 'View return',
             );

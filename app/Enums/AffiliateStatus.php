@@ -4,15 +4,15 @@ namespace App\Enums;
 
 enum AffiliateStatus: string
 {
-    case Pending   = 'pending';
-    case Active    = 'active';
+    case Pending = 'pending';
+    case Active = 'active';
     case Suspended = 'suspended';
 
     public function label(): string
     {
         return match ($this) {
-            self::Pending   => 'Pending',
-            self::Active    => 'Active',
+            self::Pending => 'Pending',
+            self::Active => 'Active',
             self::Suspended => 'Suspended',
         };
     }
@@ -20,8 +20,8 @@ enum AffiliateStatus: string
     public function badge(): string
     {
         return match ($this) {
-            self::Pending   => 'warning',
-            self::Active    => 'success',
+            self::Pending => 'warning',
+            self::Active => 'success',
             self::Suspended => 'danger',
         };
     }

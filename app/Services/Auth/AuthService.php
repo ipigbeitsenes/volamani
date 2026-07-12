@@ -10,6 +10,7 @@ use App\Services\Security\SecurityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthService extends BaseService
@@ -72,7 +73,7 @@ class AuthService extends BaseService
     {
         return Password::reset($data, function (User $user, string $password) {
             $user->forceFill(['password' => $password])->save();
-            $user->setRememberToken(\Illuminate\Support\Str::random(60));
+            $user->setRememberToken(Str::random(60));
         });
     }
 }

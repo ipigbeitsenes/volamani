@@ -16,18 +16,18 @@ class VendorMatchController extends Controller
 
     public function index(Request $request): View
     {
-        $vendor  = $request->user()->vendor;
+        $vendor = $request->user()->vendor;
         $filters = $request->only('status');
-        $leads   = $this->matchingService->leadsForVendor($vendor, 12, $filters);
+        $leads = $this->matchingService->leadsForVendor($vendor, 12, $filters);
         $profile = $this->matchingService->profileForVendor($vendor);
-        $stats   = $this->matchingService->vendorStats($vendor);
+        $stats = $this->matchingService->vendorStats($vendor);
 
         return view('vendor.matching.index', compact('leads', 'profile', 'stats', 'filters'));
     }
 
     public function profile(): View
     {
-        $vendor  = auth()->user()->vendor;
+        $vendor = auth()->user()->vendor;
         $profile = $this->matchingService->profileForVendor($vendor);
 
         return view('vendor.matching.profile', compact('profile'));

@@ -16,10 +16,10 @@ class Referral extends Model
     protected function casts(): array
     {
         return [
-            'status'        => ReferralStatus::class,
+            'status' => ReferralStatus::class,
             'signup_reward' => 'integer',
-            'qualified_at'  => 'datetime',
-            'rewarded_at'   => 'datetime',
+            'qualified_at' => 'datetime',
+            'rewarded_at' => 'datetime',
         ];
     }
 

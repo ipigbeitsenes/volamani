@@ -154,7 +154,7 @@
                         <h6 class="fw-bold">Location</h6>
                         <p class="text-muted mb-0">
                             <i class="bi bi-geo-alt text-primary me-1"></i>
-                            {{ collect([$vendor->address, $vendor->city, $vendor->state, 'Nigeria'])->filter()->join(', ') }}
+                            {{ collect([$vendor->address, $vendor->city, $vendor->state])->filter()->join(', ') }}
                         </p>
                     </div>
                     @endif

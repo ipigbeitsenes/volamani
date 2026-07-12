@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
 use App\Services\Affiliate\AffiliateService;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ReferralLinkController extends Controller
 {
@@ -20,7 +20,7 @@ class ReferralLinkController extends Controller
     {
         $this->affiliateService->trackClick($code, $request);
 
-        $days     = (int) settings('affiliate_cookie_days', 30);
+        $days = (int) settings('affiliate_cookie_days', 30);
         $redirect = redirect()->route('register', ['ref' => $code]);
 
         // Remember the referrer across the visit even if they register later.

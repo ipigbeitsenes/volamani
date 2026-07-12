@@ -4,7 +4,7 @@
 
 @section('content')
     <h4 class="fw-bold mb-1">Create your account</h4>
-    <p class="text-muted mb-4 small">Join thousands of African entrepreneurs on Volamani</p>
+    <p class="text-muted mb-4 small">Join thousands of entrepreneurs on Volamani</p>
 
     <form method="POST" action="{{ route('register.post') }}{{ $referralCode ? '?ref=' . $referralCode : '' }}">
         @csrf

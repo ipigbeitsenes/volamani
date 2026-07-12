@@ -69,11 +69,11 @@ class AuthEventSubscriber
     public function subscribe(Dispatcher $events): array
     {
         return [
-            Login::class         => 'onLogin',
-            Logout::class        => 'onLogout',
-            Failed::class        => 'onFailed',
-            Registered::class    => 'onRegistered',
-            Verified::class      => 'onVerified',
+            Login::class => 'onLogin',
+            Logout::class => 'onLogout',
+            Failed::class => 'onFailed',
+            Registered::class => 'onRegistered',
+            Verified::class => 'onVerified',
             PasswordReset::class => 'onPasswordReset',
         ];
     }

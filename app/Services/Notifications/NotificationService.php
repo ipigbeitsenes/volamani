@@ -8,14 +8,15 @@ use App\Enums\NotificationCategory;
 use App\Models\User;
 use App\Repositories\Notifications\NotificationRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Collection;
 
 class NotificationService
 {
     public function __construct(
-        private SendNotificationAction    $sendAction,
-        private UpdatePreferencesAction   $updatePreferencesAction,
-        private NotificationRepository    $repo,
+        private SendNotificationAction $sendAction,
+        private UpdatePreferencesAction $updatePreferencesAction,
+        private NotificationRepository $repo,
     ) {}
 
     /**
@@ -51,7 +52,7 @@ class NotificationService
         return $this->repo->unreadCount($user);
     }
 
-    public function find(User $user, string $id): ?\Illuminate\Notifications\DatabaseNotification
+    public function find(User $user, string $id): ?DatabaseNotification
     {
         return $this->repo->find($user, $id);
     }

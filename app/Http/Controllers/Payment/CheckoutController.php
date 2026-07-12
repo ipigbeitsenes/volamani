@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Enums\PaymentGateway;
 use App\Http\Controllers\Controller;
-use App\Models\ConsultantProfile;
-use App\Models\ConsultationPackage;
 use App\Models\ConsultationSession;
-use App\Models\FreelanceService;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
@@ -19,7 +16,7 @@ use Illuminate\Http\Request;
 class CheckoutController extends Controller
 {
     public function __construct(
-        private PaymentService    $paymentService,
+        private PaymentService $paymentService,
         private PaymentRepository $repository,
     ) {}
 
@@ -75,11 +72,11 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'payable_type' => ['required', 'string', 'in:product,service_order,consultation'],
-            'payable_id'   => ['required', 'integer'],
-            'gateway'      => ['required', 'in:paystack,bank_transfer'],
+            'payable_id' => ['required', 'integer'],
+            'gateway' => ['required', 'in:paystack,bank_transfer'],
         ]);
 
-        $user    = auth()->user();
+        $user = auth()->user();
         $gateway = $request->gateway;
 
         [$payable, $amountKobo] = $this->resolvePayable($request->payable_type, $request->payable_id, $user);
@@ -88,11 +85,13 @@ class CheckoutController extends Controller
             $result = $this->paymentService->initiatePaystackPayment($user, $amountKobo, $payable, [
                 'payable_type' => $request->payable_type,
             ]);
+
             return redirect($result['authorization_url']);
         }
 
         // Bank transfer
         $result = $this->paymentService->initiateBankTransferPayment($user, $amountKobo, $payable);
+
         return redirect()->route('checkout.bank-transfer', $result['payment']);
     }
 
@@ -101,11 +100,11 @@ class CheckoutController extends Controller
     public function callback(Request $request)
     {
         $reference = $request->query('reference') ?? $request->query('trxref');
-        abort_if(!$reference, 400);
+        abort_if(! $reference, 400);
 
         $payment = $this->paymentService->verifyByReference($reference);
 
-        if (!$payment || !$payment->isSuccessful()) {
+        if (! $payment || ! $payment->isSuccessful()) {
             return redirect()->route('checkout.failed')->with('error', 'Payment could not be verified. Please contact support.');
         }
 
@@ -134,7 +133,7 @@ class CheckoutController extends Controller
     {
         abort_unless($payment->user_id === auth()->id(), 403);
         $bankDetails = config('payment.bank_transfer');
-        $proof       = $payment->bankTransferProof()->latest()->first();
+        $proof = $payment->bankTransferProof()->latest()->first();
 
         return view('marketplace.checkout.bank-transfer', compact('payment', 'bankDetails', 'proof'));
     }
@@ -142,6 +141,7 @@ class CheckoutController extends Controller
     public function pending(Payment $payment)
     {
         abort_unless($payment->user_id === auth()->id(), 403);
+
         return view('marketplace.checkout.pending', compact('payment'));
     }
 
@@ -174,23 +174,23 @@ class CheckoutController extends Controller
 
         if (! $order) {
             $order = Order::create([
-                'buyer_id'        => $user->id,
-                'vendor_id'       => $product->vendor_id,
-                'status'          => 'pending',
-                'payment_status'  => 'pending',
-                'total_amount'    => $product->price,
-                'platform_fee'    => $fee,
+                'buyer_id' => $user->id,
+                'vendor_id' => $product->vendor_id,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+                'total_amount' => $product->price,
+                'platform_fee' => $fee,
                 'vendor_earnings' => $product->price - $fee,
-                'currency'        => 'NGN',
+                'currency' => currency_code(),
             ]);
 
             $order->items()->create([
                 'product_id' => $productId,
-                'name'       => $product->name,
-                'type'       => 'product',
-                'quantity'   => 1,
+                'name' => $product->name,
+                'type' => 'product',
+                'quantity' => 1,
                 'unit_price' => $product->price,
-                'subtotal'   => $product->price,
+                'subtotal' => $product->price,
             ]);
         }
 
@@ -202,6 +202,7 @@ class CheckoutController extends Controller
         $serviceOrder = ServiceOrder::findOrFail($orderId);
         abort_unless($serviceOrder->buyer_id === $user->id, 403);
         abort_if($serviceOrder->isPaid(), 422, 'Already paid.');
+
         return [$serviceOrder, $serviceOrder->total_amount];
     }
 
@@ -210,6 +211,7 @@ class CheckoutController extends Controller
         $session = ConsultationSession::findOrFail($sessionId);
         abort_unless($session->buyer_id === $user->id, 403);
         abort_if($session->isPaid(), 422, 'Already paid.');
+
         return [$session, $session->price];
     }
 }

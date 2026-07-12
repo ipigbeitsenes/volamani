@@ -28,12 +28,12 @@ class DisputeRepository
     {
         $query = Dispute::with(['escrow', 'buyer', 'vendor', 'raisedBy'])->latest();
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['search'])) {
-            $query->where('reference', 'like', '%' . $filters['search'] . '%');
+        if (! empty($filters['search'])) {
+            $query->where('reference', 'like', '%'.$filters['search'].'%');
         }
 
         return $query->paginate($perPage);

@@ -17,8 +17,8 @@ class PaymentLog extends Model
     protected function casts(): array
     {
         return [
-            'payload'    => 'array',
-            'processed'  => 'boolean',
+            'payload' => 'array',
+            'processed' => 'boolean',
             'created_at' => 'datetime',
         ];
     }

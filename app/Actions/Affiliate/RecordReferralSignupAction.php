@@ -15,7 +15,7 @@ class RecordReferralSignupAction
 {
     public function __construct(
         private ApproveCommissionAction $approveAction,
-        private EnrollAffiliateAction   $enrollAction,
+        private EnrollAffiliateAction $enrollAction,
     ) {}
 
     /**
@@ -53,10 +53,10 @@ class RecordReferralSignupAction
 
             $referral = Referral::create([
                 'affiliate_account_id' => $account->id,
-                'referrer_id'          => $referrer->id,
-                'referred_user_id'     => $newUser->id,
-                'status'               => ReferralStatus::Pending,
-                'signup_reward'        => $bonus,
+                'referrer_id' => $referrer->id,
+                'referred_user_id' => $newUser->id,
+                'status' => ReferralStatus::Pending,
+                'signup_reward' => $bonus,
             ]);
 
             $account->increment('signups_count');
@@ -71,12 +71,12 @@ class RecordReferralSignupAction
             if ($bonus > 0) {
                 $commission = AffiliateCommission::create([
                     'affiliate_account_id' => $account->id,
-                    'referral_id'          => $referral->id,
-                    'buyer_id'             => $newUser->id,
-                    'type'                 => CommissionType::SignupBonus,
-                    'amount'               => $bonus,
-                    'status'               => CommissionStatus::Pending,
-                    'note'                 => "Signup bonus for {$newUser->name}",
+                    'referral_id' => $referral->id,
+                    'buyer_id' => $newUser->id,
+                    'type' => CommissionType::SignupBonus,
+                    'amount' => $bonus,
+                    'status' => CommissionStatus::Pending,
+                    'note' => "Signup bonus for {$newUser->name}",
                 ]);
 
                 $account->increment('total_earned', $bonus);

@@ -43,7 +43,7 @@ class AffiliateController extends Controller
 
     public function commissions(): View
     {
-        $account     = $this->requireAccount();
+        $account = $this->requireAccount();
         $commissions = $this->affiliateService->commissionsFor($account);
 
         return view('vendor.affiliates.commissions', compact('account', 'commissions'));
@@ -51,7 +51,7 @@ class AffiliateController extends Controller
 
     public function referrals(): View
     {
-        $account   = $this->requireAccount();
+        $account = $this->requireAccount();
         $referrals = $this->affiliateService->referralsFor($account);
 
         return view('vendor.affiliates.referrals', compact('account', 'referrals'));

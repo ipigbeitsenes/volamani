@@ -24,13 +24,13 @@ class ConsultationSession extends Model
     protected function casts(): array
     {
         return [
-            'status'         => ConsultationSessionStatus::class,
+            'status' => ConsultationSessionStatus::class,
             'payment_status' => PaymentStatus::class,
-            'scheduled_at'   => 'datetime',
-            'confirmed_at'   => 'datetime',
-            'started_at'     => 'datetime',
-            'completed_at'   => 'datetime',
-            'cancelled_at'   => 'datetime',
+            'scheduled_at' => 'datetime',
+            'confirmed_at' => 'datetime',
+            'started_at' => 'datetime',
+            'completed_at' => 'datetime',
+            'cancelled_at' => 'datetime',
         ];
     }
 

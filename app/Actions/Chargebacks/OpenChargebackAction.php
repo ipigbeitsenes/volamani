@@ -51,14 +51,14 @@ class OpenChargebackAction
 
         return DB::transaction(function () use ($payment, $escrow, $gatewayReference, $amount, $reason) {
             $chargeback = Chargeback::create([
-                'payment_id'        => $payment->id,
-                'escrow_id'         => $escrow?->id,
-                'buyer_id'          => $escrow?->buyer_id,
-                'vendor_id'         => $escrow?->vendor_id,
+                'payment_id' => $payment->id,
+                'escrow_id' => $escrow?->id,
+                'buyer_id' => $escrow?->buyer_id,
+                'vendor_id' => $escrow?->vendor_id,
                 'gateway_reference' => $gatewayReference,
-                'amount'            => $amount,
-                'reason'            => $reason,
-                'status'            => ChargebackStatus::Open,
+                'amount' => $amount,
+                'reason' => $reason,
+                'status' => ChargebackStatus::Open,
             ]);
 
             if ($escrow && $escrow->canDispute()) {
@@ -93,8 +93,8 @@ class OpenChargebackAction
         }
 
         // 2) Pull the remainder from spendable balance (capped, may leave a shortfall).
-        $remaining   = $target - $fromReserve;
-        $wallet      = $wallet->fresh();
+        $remaining = $target - $fromReserve;
+        $wallet = $wallet->fresh();
         $fromBalance = max(0, min($remaining, $wallet->availableBalance()));
 
         if ($fromBalance > 0) {
@@ -102,14 +102,14 @@ class OpenChargebackAction
             $wallet->update(['balance' => $newBalance]);
 
             WalletLedger::create([
-                'wallet_id'       => $wallet->id,
-                'type'            => TransactionType::Chargeback,
-                'amount'          => $fromBalance,
-                'balance_after'   => $newBalance,
-                'description'     => "Chargeback clawback for {$chargeback->reference}",
-                'metadata'        => ['chargeback_reference' => $chargeback->reference],
+                'wallet_id' => $wallet->id,
+                'type' => TransactionType::Chargeback,
+                'amount' => $fromBalance,
+                'balance_after' => $newBalance,
+                'description' => "Chargeback clawback for {$chargeback->reference}",
+                'metadata' => ['chargeback_reference' => $chargeback->reference],
                 'ledgerable_type' => Chargeback::class,
-                'ledgerable_id'   => $chargeback->id,
+                'ledgerable_id' => $chargeback->id,
             ]);
         }
 

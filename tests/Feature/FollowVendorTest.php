@@ -20,7 +20,7 @@ class FollowVendorTest extends TestCase
     public function test_a_user_can_follow_then_unfollow_a_vendor(): void
     {
         $vendor = $this->vendor();
-        $buyer  = User::factory()->create();
+        $buyer = User::factory()->create();
 
         // Follow
         $this->actingAs($buyer)
@@ -29,7 +29,7 @@ class FollowVendorTest extends TestCase
 
         $this->assertDatabaseHas('follows', [
             'follower_id' => $buyer->id,
-            'vendor_id'   => $vendor->id,
+            'vendor_id' => $vendor->id,
         ]);
         $this->assertSame(1, $vendor->fresh()->followers_count);
         $this->assertTrue($buyer->fresh()->isFollowing($vendor));
@@ -41,7 +41,7 @@ class FollowVendorTest extends TestCase
 
         $this->assertDatabaseMissing('follows', [
             'follower_id' => $buyer->id,
-            'vendor_id'   => $vendor->id,
+            'vendor_id' => $vendor->id,
         ]);
         $this->assertSame(0, $vendor->fresh()->followers_count);
     }

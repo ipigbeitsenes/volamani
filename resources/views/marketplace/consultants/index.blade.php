@@ -34,7 +34,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-semibold">Max. Session Price (₦)</label>
+                            <label class="form-label small fw-semibold">Max. Session Price ({{ currency_symbol() }})</label>
                             <input type="number" name="max_price" value="{{ $filters['max_price'] ?? '' }}"
                                 class="form-control form-control-sm" placeholder="e.g. 50000" min="0">
                         </div>

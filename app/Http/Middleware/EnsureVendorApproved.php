@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Enums\Status;
+use Closure;
 use Illuminate\Http\Request;
 
 class EnsureVendorApproved

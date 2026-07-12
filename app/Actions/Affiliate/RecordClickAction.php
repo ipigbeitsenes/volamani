@@ -15,12 +15,12 @@ class RecordClickAction
     {
         $click = AffiliateClick::create([
             'affiliate_account_id' => $account->id,
-            'ip_address'           => $request->ip(),
-            'user_agent'           => substr((string) $request->userAgent(), 0, 500),
-            'landing_page'         => $request->fullUrl(),
-            'referrer_url'         => $request->headers->get('referer'),
-            'converted'            => false,
-            'created_at'           => now(),
+            'ip_address' => $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 500),
+            'landing_page' => $request->fullUrl(),
+            'referrer_url' => $request->headers->get('referer'),
+            'converted' => false,
+            'created_at' => now(),
         ]);
 
         $account->increment('clicks_count');

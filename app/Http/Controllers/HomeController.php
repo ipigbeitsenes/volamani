@@ -13,7 +13,7 @@ class HomeController extends Controller
         try {
             $stats = [
                 'vendors' => User::role('vendor')->count(),
-                'buyers'  => User::role('buyer')->count(),
+                'buyers' => User::role('buyer')->count(),
             ];
         } catch (\Exception $e) {
             $stats = ['vendors' => 0, 'buyers' => 0];

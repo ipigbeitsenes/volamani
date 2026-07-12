@@ -27,7 +27,7 @@ class ClearStrikeAction
 
             if ($vendor) {
                 $vendor->update([
-                    'strikes'            => $vendor->strikes()->active()->count(),
+                    'strikes' => $vendor->strikes()->active()->count(),
                     'strikes_updated_at' => now(),
                 ]);
             }

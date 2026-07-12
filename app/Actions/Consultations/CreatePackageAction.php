@@ -12,15 +12,15 @@ class CreatePackageAction
         $maxOrder = $profile->allPackages()->max('sort_order') ?? 0;
 
         return ConsultationPackage::create([
-            'profile_id'             => $profile->id,
-            'name'                   => $data['name'],
-            'description'            => $data['description'],
-            'type'                   => $data['type'],
-            'duration_minutes'       => (int) $data['duration_minutes'],
-            'price'                  => to_kobo((float) $data['price']),
+            'profile_id' => $profile->id,
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'type' => $data['type'],
+            'duration_minutes' => (int) $data['duration_minutes'],
+            'price' => to_kobo((float) $data['price']),
             'max_sessions_per_month' => $data['max_sessions_per_month'] ?? null,
-            'is_active'              => true,
-            'sort_order'             => $maxOrder + 1,
+            'is_active' => true,
+            'sort_order' => $maxOrder + 1,
         ]);
     }
 }

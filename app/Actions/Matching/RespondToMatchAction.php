@@ -40,7 +40,7 @@ class RespondToMatchAction
             }
 
             if ($match->requester_interested && $match->vendor_interested) {
-                $match->status       = MatchStatus::Connected;
+                $match->status = MatchStatus::Connected;
                 $match->connected_at = $match->connected_at ?? now();
                 $match->save();
 

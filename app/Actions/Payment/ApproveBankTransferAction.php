@@ -17,7 +17,7 @@ class ApproveBankTransferAction
     {
         return DB::transaction(function () use ($proof, $admin) {
             $proof->update([
-                'status'      => BankTransferStatus::Approved,
+                'status' => BankTransferStatus::Approved,
                 'reviewed_by' => $admin->id,
                 'reviewed_at' => now(),
             ]);
@@ -27,9 +27,9 @@ class ApproveBankTransferAction
             // Idempotent: only mark paid + fulfil once.
             if ($payment->status !== PaymentStatus::Success) {
                 $payment->update([
-                    'status'            => PaymentStatus::Success,
-                    'gateway_reference' => 'BT-' . $proof->id,
-                    'paid_at'           => now(),
+                    'status' => PaymentStatus::Success,
+                    'gateway_reference' => 'BT-'.$proof->id,
+                    'paid_at' => now(),
                 ]);
 
                 // Canonical fulfilment — opens escrow, credits wallet fundings,
@@ -46,9 +46,9 @@ class ApproveBankTransferAction
     {
         DB::transaction(function () use ($proof, $admin, $reason) {
             $proof->update([
-                'status'           => BankTransferStatus::Rejected,
-                'reviewed_by'      => $admin->id,
-                'reviewed_at'      => now(),
+                'status' => BankTransferStatus::Rejected,
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
                 'rejection_reason' => $reason,
             ]);
 

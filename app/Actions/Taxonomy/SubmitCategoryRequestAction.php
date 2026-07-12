@@ -12,11 +12,11 @@ class SubmitCategoryRequestAction
     {
         return CategoryRequest::create([
             'vendor_id' => $vendor->id,
-            'domain'    => $data['domain'],
-            'name'      => $data['name'],
+            'domain' => $data['domain'],
+            'name' => $data['name'],
             'parent_id' => $data['parent_id'] ?? null,
-            'reason'    => $data['reason'] ?? null,
-            'status'    => CategoryRequestStatus::Pending,
+            'reason' => $data['reason'] ?? null,
+            'status' => CategoryRequestStatus::Pending,
         ]);
     }
 }

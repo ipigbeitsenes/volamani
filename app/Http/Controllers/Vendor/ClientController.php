@@ -18,17 +18,17 @@ class ClientController extends Controller
 
     public function index(Request $request): View
     {
-        $vendor  = $request->user()->vendor;
+        $vendor = $request->user()->vendor;
         $filters = $request->only('status', 'search', 'tag');
         $clients = $this->clientService->forVendor($vendor, 15, $filters);
-        $stats   = $this->clientService->vendorStats($vendor);
+        $stats = $this->clientService->vendorStats($vendor);
 
         return view('vendor.clients.index', compact('clients', 'stats', 'filters'));
     }
 
     public function create(): View
     {
-        return view('vendor.clients.form', ['client' => new Client()]);
+        return view('vendor.clients.form', ['client' => new Client]);
     }
 
     public function store(ClientRequest $request): RedirectResponse

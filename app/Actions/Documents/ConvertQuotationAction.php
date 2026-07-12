@@ -21,22 +21,22 @@ class ConvertQuotationAction
 
         return DB::transaction(function () use ($quotation) {
             $data = [
-                'client_id'       => $quotation->client_id,
-                'client_name'     => $quotation->client_name,
-                'client_email'    => $quotation->client_email,
-                'client_phone'    => $quotation->client_phone,
-                'client_address'  => $quotation->client_address,
-                'title'           => $quotation->title,
+                'client_id' => $quotation->client_id,
+                'client_name' => $quotation->client_name,
+                'client_email' => $quotation->client_email,
+                'client_phone' => $quotation->client_phone,
+                'client_address' => $quotation->client_address,
+                'title' => $quotation->title,
                 'discount_amount' => $quotation->discount_amount,
-                'tax_rate'        => $quotation->tax_rate,
-                'notes'           => $quotation->notes,
-                'terms'           => $quotation->terms,
-                'issue_date'      => now()->toDateString(),
-                'due_date'        => now()->addDays(14)->toDateString(),
-                'items'           => $quotation->items->map(fn ($item) => [
+                'tax_rate' => $quotation->tax_rate,
+                'notes' => $quotation->notes,
+                'terms' => $quotation->terms,
+                'issue_date' => now()->toDateString(),
+                'due_date' => now()->addDays(14)->toDateString(),
+                'items' => $quotation->items->map(fn ($item) => [
                     'description' => $item->description,
-                    'quantity'    => $item->quantity,
-                    'unit_price'  => $item->unit_price,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
                 ])->all(),
             ];
 
@@ -48,7 +48,7 @@ class ConvertQuotationAction
             );
 
             $quotation->update([
-                'status'          => DocumentStatus::Converted,
+                'status' => DocumentStatus::Converted,
                 'converted_to_id' => $invoice->id,
             ]);
 

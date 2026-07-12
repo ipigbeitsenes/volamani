@@ -18,8 +18,8 @@ class SecurityLog extends Model
     protected function casts(): array
     {
         return [
-            'event'      => SecurityEvent::class,
-            'metadata'   => 'array',
+            'event' => SecurityEvent::class,
+            'metadata' => 'array',
             'created_at' => 'datetime',
         ];
     }

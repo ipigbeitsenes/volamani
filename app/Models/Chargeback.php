@@ -22,12 +22,12 @@ class Chargeback extends Model
     protected function casts(): array
     {
         return [
-            'status'             => ChargebackStatus::class,
-            'evidence'           => 'array',
-            'amount'             => 'integer',
+            'status' => ChargebackStatus::class,
+            'evidence' => 'array',
+            'amount' => 'integer',
             'clawed_back_amount' => 'integer',
             'unrecovered_amount' => 'integer',
-            'resolved_at'        => 'datetime',
+            'resolved_at' => 'datetime',
         ];
     }
 

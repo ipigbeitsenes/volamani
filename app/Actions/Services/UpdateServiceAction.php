@@ -27,14 +27,14 @@ class UpdateServiceAction
                 && isset($data['title']);
 
             $service->update([
-                'category_id'       => $data['category_id'] ?? $service->category_id,
-                'title'             => $data['title'] ?? $service->title,
+                'category_id' => $data['category_id'] ?? $service->category_id,
+                'title' => $data['title'] ?? $service->title,
                 'short_description' => $data['short_description'] ?? $service->short_description,
-                'description'       => $data['description'] ?? $service->description,
-                'thumbnail'         => $thumbnail,
-                'status'            => $needsReview ? ProductStatus::Pending : $service->status,
-                'seo_title'         => $data['seo_title'] ?? $service->seo_title,
-                'seo_description'   => $data['seo_description'] ?? $service->seo_description,
+                'description' => $data['description'] ?? $service->description,
+                'thumbnail' => $thumbnail,
+                'status' => $needsReview ? ProductStatus::Pending : $service->status,
+                'seo_title' => $data['seo_title'] ?? $service->seo_title,
+                'seo_description' => $data['seo_description'] ?? $service->seo_description,
             ]);
 
             if (isset($data['packages'])) {
@@ -44,14 +44,14 @@ class UpdateServiceAction
                         continue;
                     }
                     ServicePackage::create([
-                        'service_id'    => $service->id,
-                        'tier'          => $pkgData['tier'],
-                        'name'          => $pkgData['name'],
-                        'description'   => $pkgData['description'] ?? '',
-                        'price'         => to_kobo($pkgData['price']),
+                        'service_id' => $service->id,
+                        'tier' => $pkgData['tier'],
+                        'name' => $pkgData['name'],
+                        'description' => $pkgData['description'] ?? '',
+                        'price' => to_kobo($pkgData['price']),
                         'delivery_days' => $pkgData['delivery_days'] ?? 3,
-                        'revisions'     => $pkgData['revisions'] ?? 1,
-                        'features'      => array_filter(explode("\n", $pkgData['features'] ?? '')),
+                        'revisions' => $pkgData['revisions'] ?? 1,
+                        'features' => array_filter(explode("\n", $pkgData['features'] ?? '')),
                     ]);
                 }
             }
@@ -64,8 +64,8 @@ class UpdateServiceAction
                     }
                     ServiceFaq::create([
                         'service_id' => $service->id,
-                        'question'   => $faqData['question'],
-                        'answer'     => $faqData['answer'] ?? '',
+                        'question' => $faqData['question'],
+                        'answer' => $faqData['answer'] ?? '',
                         'sort_order' => $index,
                     ]);
                 }

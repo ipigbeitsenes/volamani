@@ -92,7 +92,7 @@
 
                         {{-- Price Range --}}
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small text-uppercase text-muted">Price (₦)</label>
+                            <label class="form-label fw-semibold small text-uppercase text-muted">Price ({{ currency_symbol() }})</label>
                             <div class="row g-1">
                                 <div class="col">
                                     <input type="number" name="min_price" class="form-control form-control-sm"

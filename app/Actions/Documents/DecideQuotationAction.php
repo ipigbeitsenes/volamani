@@ -10,7 +10,7 @@ class DecideQuotationAction
     public function accept(Document $quotation): Document
     {
         $quotation->update([
-            'status'      => DocumentStatus::Accepted,
+            'status' => DocumentStatus::Accepted,
             'accepted_at' => now(),
         ]);
 
@@ -20,7 +20,7 @@ class DecideQuotationAction
     public function decline(Document $quotation): Document
     {
         $quotation->update([
-            'status'      => DocumentStatus::Declined,
+            'status' => DocumentStatus::Declined,
             'declined_at' => now(),
         ]);
 

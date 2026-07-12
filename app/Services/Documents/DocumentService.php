@@ -22,16 +22,16 @@ use App\Services\Wallet\WalletService;
 class DocumentService
 {
     public function __construct(
-        private CreateDocumentAction    $createAction,
-        private UpdateDocumentAction    $updateAction,
-        private SendDocumentAction      $sendAction,
-        private RecordPaymentAction     $recordPaymentAction,
-        private ConvertQuotationAction  $convertAction,
-        private DecideQuotationAction   $decideAction,
-        private CancelDocumentAction    $cancelAction,
-        private SignContractAction      $signAction,
-        private WalletService           $walletService,
-        private DocumentRepository      $repo,
+        private CreateDocumentAction $createAction,
+        private UpdateDocumentAction $updateAction,
+        private SendDocumentAction $sendAction,
+        private RecordPaymentAction $recordPaymentAction,
+        private ConvertQuotationAction $convertAction,
+        private DecideQuotationAction $decideAction,
+        private CancelDocumentAction $cancelAction,
+        private SignContractAction $signAction,
+        private WalletService $walletService,
+        private DocumentRepository $repo,
     ) {}
 
     public function create(Vendor $vendor, DocumentType $type, array $data, User $creator): Document

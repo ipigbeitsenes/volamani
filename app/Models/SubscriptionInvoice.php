@@ -16,11 +16,11 @@ class SubscriptionInvoice extends Model
     protected function casts(): array
     {
         return [
-            'status'       => SubscriptionInvoiceStatus::class,
-            'amount'       => 'integer',
+            'status' => SubscriptionInvoiceStatus::class,
+            'amount' => 'integer',
             'period_start' => 'datetime',
-            'period_end'   => 'datetime',
-            'paid_at'      => 'datetime',
+            'period_end' => 'datetime',
+            'paid_at' => 'datetime',
         ];
     }
 

@@ -19,15 +19,15 @@ class CreateClientAction
 
         return $vendor->clients()->create([
             'user_id' => $user?->id,
-            'name'    => $data['name'],
-            'email'   => $data['email'] ?? null,
-            'phone'   => $data['phone'] ?? null,
+            'name' => $data['name'],
+            'email' => $data['email'] ?? null,
+            'phone' => $data['phone'] ?? null,
             'company' => $data['company'] ?? null,
             'address' => $data['address'] ?? null,
-            'status'  => $data['status'] ?? ClientStatus::Lead->value,
-            'source'  => ClientSource::Manual->value,
-            'tags'    => $data['tags'] ?? null,
-            'about'   => $data['about'] ?? null,
+            'status' => $data['status'] ?? ClientStatus::Lead->value,
+            'source' => ClientSource::Manual->value,
+            'tags' => $data['tags'] ?? null,
+            'about' => $data['about'] ?? null,
         ]);
     }
 }

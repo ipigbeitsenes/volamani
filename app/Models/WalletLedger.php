@@ -19,8 +19,8 @@ class WalletLedger extends Model
     protected function casts(): array
     {
         return [
-            'type'       => TransactionType::class,
-            'metadata'   => 'array',
+            'type' => TransactionType::class,
+            'metadata' => 'array',
             'created_at' => 'datetime',
         ];
     }

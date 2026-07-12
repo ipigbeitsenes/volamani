@@ -16,10 +16,10 @@ class SubmitReviewRequest extends FormRequest
     {
         return [
             'reviewable_type' => ['required', Rule::in(['product', 'service', 'consultant'])],
-            'reviewable_id'   => ['required', 'integer'],
-            'rating'          => ['required', 'integer', 'min:1', 'max:5'],
-            'title'           => ['nullable', 'string', 'max:120'],
-            'body'            => ['nullable', 'string', 'max:2000'],
+            'reviewable_id' => ['required', 'integer'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
+            'title' => ['nullable', 'string', 'max:120'],
+            'body' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

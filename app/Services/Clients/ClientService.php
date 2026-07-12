@@ -15,11 +15,11 @@ use App\Repositories\Clients\ClientRepository;
 class ClientService
 {
     public function __construct(
-        private CreateClientAction  $createAction,
-        private UpdateClientAction  $updateAction,
+        private CreateClientAction $createAction,
+        private UpdateClientAction $updateAction,
         private AddInteractionAction $interactionAction,
-        private SyncClientsAction   $syncAction,
-        private ClientRepository    $repo,
+        private SyncClientsAction $syncAction,
+        private ClientRepository $repo,
     ) {}
 
     public function create(Vendor $vendor, array $data): Client

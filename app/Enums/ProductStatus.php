@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum ProductStatus: string
 {
-    case Draft    = 'draft';
-    case Pending  = 'pending';
-    case Active   = 'active';
+    case Draft = 'draft';
+    case Pending = 'pending';
+    case Active = 'active';
     case Rejected = 'rejected';
     case Archived = 'archived';
 
@@ -17,10 +17,10 @@ enum ProductStatus: string
 
     public function badge(): string
     {
-        return match($this) {
-            self::Draft    => 'secondary',
-            self::Pending  => 'warning',
-            self::Active   => 'success',
+        return match ($this) {
+            self::Draft => 'secondary',
+            self::Pending => 'warning',
+            self::Active => 'success',
             self::Rejected => 'danger',
             self::Archived => 'dark',
         };

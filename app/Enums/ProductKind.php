@@ -12,13 +12,13 @@ namespace App\Enums;
  */
 enum ProductKind: string
 {
-    case Digital  = 'digital';
+    case Digital = 'digital';
     case Physical = 'physical';
 
     public function label(): string
     {
         return match ($this) {
-            self::Digital  => 'Digital Product',
+            self::Digital => 'Digital Product',
             self::Physical => 'Physical Product',
         };
     }
@@ -26,7 +26,7 @@ enum ProductKind: string
     public function icon(): string
     {
         return match ($this) {
-            self::Digital  => 'bi-cloud-download',
+            self::Digital => 'bi-cloud-download',
             self::Physical => 'bi-box-seam',
         };
     }
@@ -34,7 +34,7 @@ enum ProductKind: string
     public function badge(): string
     {
         return match ($this) {
-            self::Digital  => 'primary',
+            self::Digital => 'primary',
             self::Physical => 'warning',
         };
     }

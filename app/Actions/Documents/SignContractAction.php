@@ -14,9 +14,9 @@ class SignContractAction
     public function execute(Document $contract, string $signedName, ?string $ip = null): Document
     {
         $contract->update([
-            'status'      => DocumentStatus::Signed,
+            'status' => DocumentStatus::Signed,
             'signed_name' => $signedName,
-            'signed_ip'   => $ip,
+            'signed_ip' => $ip,
             'accepted_at' => now(),
         ]);
 

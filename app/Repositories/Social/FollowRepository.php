@@ -28,7 +28,7 @@ class FollowRepository
             ->whereIn('id', $vendorIds)
             ->where('status', 'active')
             ->withCount(['products as active_products_count' => fn ($q) => $q->where('status', 'active')])
-            ->orderByRaw('FIELD(id, ' . ($vendorIds->isEmpty() ? '0' : $vendorIds->implode(',')) . ')')
+            ->orderByRaw('FIELD(id, '.($vendorIds->isEmpty() ? '0' : $vendorIds->implode(',')).')')
             ->paginate($perPage);
     }
 

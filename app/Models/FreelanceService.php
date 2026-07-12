@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProductStatus;
+use App\Services\Reviews\ReviewEligibilityService;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FreelanceService extends Model
 {
-    use SoftDeletes, HasSlug;
+    use HasSlug, SoftDeletes;
 
     protected $table = 'freelance_services';
 
@@ -27,7 +28,7 @@ class FreelanceService extends Model
     protected function casts(): array
     {
         return [
-            'status'      => ProductStatus::class,
+            'status' => ProductStatus::class,
             'is_featured' => 'boolean',
             'approved_at' => 'datetime',
         ];
@@ -73,9 +74,9 @@ class FreelanceService extends Model
             ->where('is_approved', true);
     }
 
-    public function canBeReviewedBy(?\App\Models\User $user): bool
+    public function canBeReviewedBy(?User $user): bool
     {
-        return $user && app(\App\Services\Reviews\ReviewEligibilityService::class)->canReview($user, $this);
+        return $user && app(ReviewEligibilityService::class)->canReview($user, $this);
     }
 
     public function approvedBy(): BelongsTo
@@ -99,7 +100,7 @@ class FreelanceService extends Model
     {
         return $query->where(function ($q) use ($term) {
             $q->where('title', 'like', "%{$term}%")
-              ->orWhere('short_description', 'like', "%{$term}%");
+                ->orWhere('short_description', 'like', "%{$term}%");
         });
     }
 

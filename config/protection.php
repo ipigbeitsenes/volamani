@@ -15,7 +15,7 @@ return [
     | `protection` settings group (chargeback_reserve_percent / _days).
     */
     'reserve_percent' => 0,     // 0–100
-    'reserve_days'    => 30,    // calendar days a reserve is held before payout
+    'reserve_days' => 30,    // calendar days a reserve is held before payout
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |                    triggers an automatic refund-to-buyer instead of a mere
     |                    escalation. Default false (safe: escalate only).
     */
-    'dispute_response_hours'  => 48,
+    'dispute_response_hours' => 48,
     'dispute_admin_sla_hours' => 72,
     'dispute_auto_refund_on_breach' => false,
 
@@ -59,7 +59,7 @@ return [
     |
     | Admin-overridable via `buyer_flag_threshold` / `buyer_suspend_threshold`.
     */
-    'buyer_flag_threshold'    => 2,
+    'buyer_flag_threshold' => 2,
     'buyer_suspend_threshold' => 4,
 
     /*
@@ -78,23 +78,23 @@ return [
     'tiers' => [
         TrustTier::New->value => [
             'withdrawal_cap_daily' => 10_000_000,   // ₦100,000
-            'escrow_release_days'  => 7,
-            'max_active_listings'  => 5,
+            'escrow_release_days' => 7,
+            'max_active_listings' => 5,
         ],
         TrustTier::Rising->value => [
             'withdrawal_cap_daily' => 50_000_000,   // ₦500,000
-            'escrow_release_days'  => 5,
-            'max_active_listings'  => 20,
+            'escrow_release_days' => 5,
+            'max_active_listings' => 20,
         ],
         TrustTier::Trusted->value => [
             'withdrawal_cap_daily' => 200_000_000,  // ₦2,000,000
-            'escrow_release_days'  => 3,
-            'max_active_listings'  => 100,
+            'escrow_release_days' => 3,
+            'max_active_listings' => 100,
         ],
         TrustTier::TopRated->value => [
             'withdrawal_cap_daily' => null,         // unlimited
-            'escrow_release_days'  => 2,
-            'max_active_listings'  => null,         // unlimited
+            'escrow_release_days' => 2,
+            'max_active_listings' => null,         // unlimited
         ],
     ],
 ];

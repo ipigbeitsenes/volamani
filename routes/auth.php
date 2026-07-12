@@ -1,10 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TermsController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -31,16 +34,16 @@ Route::middleware('auth')->group(function () {
         ->name('verification.resend');
 
     // Terms & Conditions acceptance gate (enforced by EnsureTermsAccepted).
-    Route::get('/terms/agree', [\App\Http\Controllers\TermsController::class, 'show'])->name('terms.show');
-    Route::post('/terms/agree', [\App\Http\Controllers\TermsController::class, 'accept'])->name('terms.accept');
+    Route::get('/terms/agree', [TermsController::class, 'show'])->name('terms.show');
+    Route::post('/terms/agree', [TermsController::class, 'accept'])->name('terms.accept');
 
-    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\ProfileController::class, 'index'])->name('index');
-        Route::get('/security', [\App\Http\Controllers\ProfileController::class, 'security'])->name('security');
-        Route::put('/', [\App\Http\Controllers\ProfileController::class, 'update'])->name('update');
-        Route::put('/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password');
-        Route::post('/avatar', [\App\Http\Controllers\ProfileController::class, 'updateAvatar'])->name('avatar');
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/security', [ProfileController::class, 'security'])->name('security');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::post('/avatar', [ProfileController::class, 'updateAvatar'])->name('avatar');
     });
 });

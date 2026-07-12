@@ -18,9 +18,9 @@ class ConsultationPackage extends Model
     protected function casts(): array
     {
         return [
-            'type'      => ConsultationPackageType::class,
+            'type' => ConsultationPackageType::class,
             'is_active' => 'boolean',
-            'price'     => 'integer',
+            'price' => 'integer',
         ];
     }
 
@@ -37,11 +37,12 @@ class ConsultationPackage extends Model
     public function durationLabel(): string
     {
         if ($this->duration_minutes < 60) {
-            return $this->duration_minutes . ' min';
+            return $this->duration_minutes.' min';
         }
         $hours = intdiv($this->duration_minutes, 60);
-        $mins  = $this->duration_minutes % 60;
-        return $mins > 0 ? "{$hours}h {$mins}min" : "{$hours} hour" . ($hours > 1 ? 's' : '');
+        $mins = $this->duration_minutes % 60;
+
+        return $mins > 0 ? "{$hours}h {$mins}min" : "{$hours} hour".($hours > 1 ? 's' : '');
     }
 
     public function getFormattedPriceAttribute(): string

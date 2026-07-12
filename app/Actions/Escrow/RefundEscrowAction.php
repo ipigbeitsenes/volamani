@@ -27,9 +27,9 @@ class RefundEscrowAction
         return DB::transaction(function () use ($escrow, $actor, $reason) {
             $locked = Escrow::where('id', $escrow->id)->lockForUpdate()->first();
 
-            $buyerRefund  = $locked->refundableAmount();   // total basis, fee-inclusive
-            $vendorHeld   = $locked->heldAmount();          // vendor basis
-            $buyerWallet  = $this->walletService->getOrCreate($locked->buyer);
+            $buyerRefund = $locked->refundableAmount();   // total basis, fee-inclusive
+            $vendorHeld = $locked->heldAmount();          // vendor basis
+            $buyerWallet = $this->walletService->getOrCreate($locked->buyer);
 
             // Reverse the vendor's pending escrow earnings for the held portion.
             if ($vendorHeld > 0) {
@@ -42,27 +42,27 @@ class RefundEscrowAction
                 $buyerWallet,
                 $buyerRefund,
                 TransactionType::Refund,
-                "Escrow refund for {$locked->reference}" . ($reason ? " — {$reason}" : ''),
+                "Escrow refund for {$locked->reference}".($reason ? " — {$reason}" : ''),
                 $locked,
                 ['escrow_reference' => $locked->reference, 'reason' => $reason]
             );
 
             $locked->update([
                 'refunded_amount' => $locked->refunded_amount + $buyerRefund,
-                'status'          => EscrowStatus::Refunded,
-                'refunded_at'     => now(),
+                'status' => EscrowStatus::Refunded,
+                'refunded_at' => now(),
                 'auto_release_at' => null,
-                'notes'           => $reason ?? $locked->notes,
+                'notes' => $reason ?? $locked->notes,
             ]);
 
             EscrowTransaction::create([
-                'escrow_id'     => $locked->id,
-                'type'          => EscrowTransactionType::Refund,
-                'amount'        => $buyerRefund,
+                'escrow_id' => $locked->id,
+                'type' => EscrowTransactionType::Refund,
+                'amount' => $buyerRefund,
                 'balance_after' => 0,
-                'description'   => "Refunded " . money($buyerRefund) . " to buyer for {$locked->reference}",
-                'actor_id'      => $actor?->id,
-                'metadata'      => ['reason' => $reason],
+                'description' => 'Refunded '.money($buyerRefund)." to buyer for {$locked->reference}",
+                'actor_id' => $actor?->id,
+                'metadata' => ['reason' => $reason],
             ]);
 
             return $locked->fresh();

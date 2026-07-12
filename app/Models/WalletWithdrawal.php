@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WalletWithdrawal extends Model
 {
-    use SoftDeletes, Auditable;
+    use Auditable, SoftDeletes;
 
     protected $fillable = [
         'reference', 'wallet_id', 'user_id', 'amount', 'fee', 'net_amount',
@@ -21,7 +21,7 @@ class WalletWithdrawal extends Model
     protected function casts(): array
     {
         return [
-            'status'       => WithdrawalStatus::class,
+            'status' => WithdrawalStatus::class,
             'processed_at' => 'datetime',
         ];
     }

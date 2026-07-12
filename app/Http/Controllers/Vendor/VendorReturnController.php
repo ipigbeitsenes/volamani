@@ -15,7 +15,7 @@ class VendorReturnController extends Controller
 
     public function index(Request $request): View
     {
-        $vendor  = $request->user()->vendor;
+        $vendor = $request->user()->vendor;
         $filters = $request->only('status');
 
         return view('vendor.returns.index', [

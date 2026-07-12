@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ConsultationSessionStatus;
+use App\Services\Reviews\ReviewEligibilityService;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +25,7 @@ class ConsultantProfile extends Model
     protected function casts(): array
     {
         return [
-            'expertise'    => 'array',
+            'expertise' => 'array',
             'is_available' => 'boolean',
         ];
     }
@@ -72,9 +74,9 @@ class ConsultantProfile extends Model
             ->where('is_approved', true);
     }
 
-    public function canBeReviewedBy(?\App\Models\User $user): bool
+    public function canBeReviewedBy(?User $user): bool
     {
-        return $user && app(\App\Services\Reviews\ReviewEligibilityService::class)->canReview($user, $this);
+        return $user && app(ReviewEligibilityService::class)->canReview($user, $this);
     }
 
     // ─── Scopes ───────────────────────────────────────────────────────────────
@@ -88,8 +90,8 @@ class ConsultantProfile extends Model
     {
         return $query->where(function ($q) use ($term) {
             $q->where('display_name', 'like', "%{$term}%")
-              ->orWhere('bio', 'like', "%{$term}%")
-              ->orWhere('niche', 'like', "%{$term}%");
+                ->orWhere('bio', 'like', "%{$term}%")
+                ->orWhere('niche', 'like', "%{$term}%");
         });
     }
 
@@ -103,7 +105,7 @@ class ConsultantProfile extends Model
     public function upcomingSessions(): HasMany
     {
         return $this->sessions()
-            ->where('status', \App\Enums\ConsultationSessionStatus::Confirmed)
+            ->where('status', ConsultationSessionStatus::Confirmed)
             ->where('scheduled_at', '>', now())
             ->orderBy('scheduled_at');
     }
@@ -115,10 +117,11 @@ class ConsultantProfile extends Model
         $result = [];
         foreach ($days as $i => $day) {
             $result[$i + 1] = [
-                'label'    => $day,
-                'slot'     => $slots->get($i + 1),
+                'label' => $day,
+                'slot' => $slots->get($i + 1),
             ];
         }
+
         return $result;
     }
 

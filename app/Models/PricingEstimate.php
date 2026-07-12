@@ -22,12 +22,12 @@ class PricingEstimate extends Model
     protected function casts(): array
     {
         return [
-            'category'           => PricingCategory::class,
-            'pricing_type'       => PricingType::class,
-            'add_ons'            => 'array',
-            'milestones'         => 'array',
+            'category' => PricingCategory::class,
+            'pricing_type' => PricingType::class,
+            'add_ons' => 'array',
+            'milestones' => 'array',
             'urgency_multiplier' => 'decimal:2',
-            'estimated_hours'    => 'decimal:1',
+            'estimated_hours' => 'decimal:1',
         ];
     }
 
@@ -53,20 +53,20 @@ class PricingEstimate extends Model
     public function urgencyLabel(): string
     {
         return match ($this->urgency) {
-            'soon'   => 'Soon (2 weeks)',
+            'soon' => 'Soon (2 weeks)',
             'urgent' => 'Urgent (1 week)',
-            'rush'   => 'Rush (48 hours)',
-            default  => 'Normal timeline',
+            'rush' => 'Rush (48 hours)',
+            default => 'Normal timeline',
         };
     }
 
     public function urgencyBadge(): string
     {
         return match ($this->urgency) {
-            'soon'   => 'warning',
+            'soon' => 'warning',
             'urgent' => 'orange',
-            'rush'   => 'danger',
-            default  => 'secondary',
+            'rush' => 'danger',
+            default => 'secondary',
         };
     }
 }

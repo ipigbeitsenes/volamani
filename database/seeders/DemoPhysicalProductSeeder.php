@@ -45,41 +45,41 @@ class DemoPhysicalProductSeeder extends Seeder
 
             // These demo stores now sell physical too, with a flat shipping fee.
             $vendor->update([
-                'store_focus'             => 'hybrid',
-                'shipping_fee'            => 2_000_00,   // ₦2,000 flat
-                'free_shipping_threshold' => 50_000_00,  // free over ₦50,000
-                'ships_to'                => 'Nationwide (Nigeria) · 2–5 business days',
+                'store_focus' => 'hybrid',
+                'shipping_fee' => 2_000_00,   // 2,000 flat
+                'free_shipping_threshold' => 50_000_00,  // free over 50,000
+                'ships_to' => 'Nationwide · 2–5 business days',
             ]);
 
             foreach ($products as $idx => [$name, $catName, $price, $short, $condition, $brand, $stock, $weight, $variants]) {
                 $product = Product::firstOrCreate(
                     ['slug' => Str::slug($name)],
                     [
-                        'vendor_id'            => $vendor->id,
-                        'kind'                 => 'physical',
+                        'vendor_id' => $vendor->id,
+                        'kind' => 'physical',
                         'physical_category_id' => $cat($catName),
-                        'name'                 => $name,
-                        'short_description'    => $short,
-                        'description'          => $short . ' ' . str_repeat('Carefully sourced and quality-checked before shipping, with a hassle-free returns window. ', 3),
-                        'type'                 => 'other',
-                        'price'                => $price,
-                        'compare_price'        => (int) round($price * 1.3),
-                        'status'               => 'active',
-                        'is_featured'          => $idx === 0,
-                        'is_downloadable'      => false,
-                        'approved_at'          => now(),
+                        'name' => $name,
+                        'short_description' => $short,
+                        'description' => $short.' '.str_repeat('Carefully sourced and quality-checked before shipping, with a hassle-free returns window. ', 3),
+                        'type' => 'other',
+                        'price' => $price,
+                        'compare_price' => (int) round($price * 1.3),
+                        'status' => 'active',
+                        'is_featured' => $idx === 0,
+                        'is_downloadable' => false,
+                        'approved_at' => now(),
                     ],
                 );
 
                 $product->physicalDetail()->firstOrCreate(
                     ['product_id' => $product->id],
                     [
-                        'stock_quantity'  => $variants ? 0 : $stock,
+                        'stock_quantity' => $variants ? 0 : $stock,
                         'track_inventory' => true,
                         'allow_backorder' => false,
-                        'condition'       => $condition,
-                        'brand'           => $brand,
-                        'weight_grams'    => $weight,
+                        'condition' => $condition,
+                        'brand' => $brand,
+                        'weight_grams' => $weight,
                     ],
                 );
 
@@ -89,8 +89,8 @@ class DemoPhysicalProductSeeder extends Seeder
                         [
                             'price_override' => $override ?: null,
                             'stock_quantity' => $vStock,
-                            'is_active'      => true,
-                            'sort_order'     => $vIdx,
+                            'is_active' => true,
+                            'sort_order' => $vIdx,
                         ],
                     );
                 }

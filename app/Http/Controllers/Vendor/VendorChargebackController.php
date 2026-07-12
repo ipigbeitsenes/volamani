@@ -15,12 +15,12 @@ class VendorChargebackController extends Controller
 
     public function index(Request $request): View
     {
-        $vendor  = $request->user()->vendor;
+        $vendor = $request->user()->vendor;
         $filters = $request->only('status');
 
         return view('vendor.chargebacks.index', [
             'chargebacks' => $this->chargebacks->forVendor($vendor, $filters),
-            'filters'     => $filters,
+            'filters' => $filters,
         ]);
     }
 
@@ -38,8 +38,8 @@ class VendorChargebackController extends Controller
         $this->authorizeVendor($chargeback);
 
         $data = $request->validate([
-            'note'    => ['required', 'string', 'max:2000'],
-            'files'   => ['nullable', 'array', 'max:5'],
+            'note' => ['required', 'string', 'max:2000'],
+            'files' => ['nullable', 'array', 'max:5'],
             'files.*' => ['file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ]);
 

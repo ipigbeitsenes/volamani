@@ -17,11 +17,11 @@ use App\Repositories\Subscription\SubscriptionRepository;
 class SubscriptionService
 {
     public function __construct(
-        private SubscribeAction            $subscribeAction,
+        private SubscribeAction $subscribeAction,
         private ActivateSubscriptionAction $activateAction,
-        private CancelSubscriptionAction   $cancelAction,
-        private RenewSubscriptionAction    $renewAction,
-        private SubscriptionRepository     $repo,
+        private CancelSubscriptionAction $cancelAction,
+        private RenewSubscriptionAction $renewAction,
+        private SubscriptionRepository $repo,
     ) {}
 
     // ─── Plan management (admin) ─────────────────────────────────────────────────
@@ -92,7 +92,7 @@ class SubscriptionService
      */
     public function processBillingCycle(): array
     {
-        $grace   = (int) settings('subscription_grace_days', 3);
+        $grace = (int) settings('subscription_grace_days', 3);
         $renewed = $expired = $failed = 0;
 
         foreach ($this->repo->dueForProcessing() as $subscription) {
@@ -103,6 +103,7 @@ class SubscriptionService
             if (! $renewable) {
                 $this->expire($subscription);
                 $expired++;
+
                 continue;
             }
 
@@ -111,6 +112,7 @@ class SubscriptionService
                 && $subscription->ends_at?->copy()->addDays($grace)->isPast()) {
                 $this->expire($subscription);
                 $expired++;
+
                 continue;
             }
 

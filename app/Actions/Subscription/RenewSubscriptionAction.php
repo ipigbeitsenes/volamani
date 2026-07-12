@@ -39,27 +39,27 @@ class RenewSubscriptionAction
                 $subscription,
             );
 
-            $base  = ($subscription->ends_at && $subscription->ends_at->isFuture())
+            $base = ($subscription->ends_at && $subscription->ends_at->isFuture())
                 ? $subscription->ends_at
                 : now();
-            $end   = $subscription->billing_interval->advance($base);
+            $end = $subscription->billing_interval->advance($base);
             $start = $subscription->ends_at ?? now();
 
             $subscription->update([
-                'status'          => SubscriptionStatus::Active,
-                'ends_at'         => $end,
+                'status' => SubscriptionStatus::Active,
+                'ends_at' => $end,
                 'last_payment_at' => now(),
             ]);
 
             $subscription->invoices()->create([
-                'plan_id'          => $subscription->plan_id,
-                'amount'           => $subscription->price,
-                'status'           => SubscriptionInvoiceStatus::Paid,
-                'method'           => 'wallet',
+                'plan_id' => $subscription->plan_id,
+                'amount' => $subscription->price,
+                'status' => SubscriptionInvoiceStatus::Paid,
+                'method' => 'wallet',
                 'wallet_ledger_id' => $ledger->id,
-                'period_start'     => $start,
-                'period_end'       => $end,
-                'paid_at'          => now(),
+                'period_start' => $start,
+                'period_end' => $end,
+                'paid_at' => now(),
             ]);
         });
 
@@ -72,9 +72,9 @@ class RenewSubscriptionAction
 
         $subscription->invoices()->create([
             'plan_id' => $subscription->plan_id,
-            'amount'  => $subscription->price,
-            'status'  => SubscriptionInvoiceStatus::Failed,
-            'method'  => 'wallet',
+            'amount' => $subscription->price,
+            'status' => SubscriptionInvoiceStatus::Failed,
+            'method' => 'wallet',
         ]);
     }
 }

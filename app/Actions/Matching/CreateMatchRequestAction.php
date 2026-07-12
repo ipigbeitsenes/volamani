@@ -19,17 +19,17 @@ class CreateMatchRequestAction
     {
         return DB::transaction(function () use ($user, $data) {
             $request = $user->matchRequests()->create([
-                'looking_for'        => $data['looking_for'] ?? 'vendor',
-                'title'              => $data['title'],
-                'description'        => $data['description'],
-                'category'           => $data['category'] ?? null,
-                'budget_min'         => $data['budget_min'] ?? null,
-                'budget_max'         => $data['budget_max'] ?? null,
+                'looking_for' => $data['looking_for'] ?? 'vendor',
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'category' => $data['category'] ?? null,
+                'budget_min' => $data['budget_min'] ?? null,
+                'budget_max' => $data['budget_max'] ?? null,
                 'preferred_location' => $data['preferred_location'] ?? null,
-                'remote_ok'          => $data['remote_ok'] ?? true,
-                'skills'             => $data['skills'] ?? null,
-                'timeline'           => $data['timeline'] ?? null,
-                'status'             => MatchRequestStatus::Open,
+                'remote_ok' => $data['remote_ok'] ?? true,
+                'skills' => $data['skills'] ?? null,
+                'timeline' => $data['timeline'] ?? null,
+                'status' => MatchRequestStatus::Open,
             ]);
 
             $this->engine->generate($request);

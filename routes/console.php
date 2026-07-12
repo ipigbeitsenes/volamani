@@ -25,3 +25,6 @@ Schedule::command('reserve:release')->dailyAt('03:00');
 
 // Enforce dispute SLAs: auto-escalate disputes that have gone unanswered.
 Schedule::command('disputes:enforce-sla')->hourly();
+
+// Nightly off-box database backup (point BACKUP_DISK at S3 for real DR).
+Schedule::command('db:backup')->dailyAt('01:30')->withoutOverlapping();

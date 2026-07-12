@@ -27,7 +27,7 @@ class StrikeIssuedNotification extends VolamaniNotification
         return (new MailMessage)
             ->subject('A strike was recorded on your store')
             ->greeting("Hello {$notifiable->name},")
-            ->line('A strike has been recorded against your store: ' . $s->reason->label() . '.')
+            ->line('A strike has been recorded against your store: '.$s->reason->label().'.')
             ->when($s->note, fn ($m) => $m->line("Note: {$s->note}"))
             ->line('Accumulating strikes can lead to your store being suspended. Please review our buyer-protection policy.')
             ->action('View Buyer Protection', route('buyer-protection'))
@@ -38,10 +38,10 @@ class StrikeIssuedNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => 'Store strike recorded',
-            'message'  => 'A strike was recorded: ' . $this->strike->reason->label() . '.',
-            'url'      => $this->urlFor($notifiable),
+            'icon' => $this->category()->icon(),
+            'title' => 'Store strike recorded',
+            'message' => 'A strike was recorded: '.$this->strike->reason->label().'.',
+            'url' => $this->urlFor($notifiable),
         ];
     }
 

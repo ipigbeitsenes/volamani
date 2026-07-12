@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class StaffSeeder extends Seeder
 {
@@ -16,7 +17,7 @@ class StaffSeeder extends Seeder
      */
     public function run(): void
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Ensure the roles exist even if this seeder runs standalone.
         Role::firstOrCreate(['name' => 'support', 'guard_name' => 'web']);
@@ -32,11 +33,11 @@ class StaffSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $email],
                 [
-                    'name'              => $name,
-                    'username'          => $username,
-                    'password'          => $password, // hashed via the model cast
-                    'user_type'         => 'individual',
-                    'is_active'         => true,
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password, // hashed via the model cast
+                    'user_type' => 'individual',
+                    'is_active' => true,
                     'email_verified_at' => now(),
                 ],
             );

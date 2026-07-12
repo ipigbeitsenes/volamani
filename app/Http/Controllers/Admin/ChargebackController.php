@@ -21,7 +21,7 @@ class ChargebackController extends Controller
 
         return view('admin.chargebacks.index', [
             'chargebacks' => $this->chargebacks->allForAdmin($filters),
-            'filters'     => $filters,
+            'filters' => $filters,
         ]);
     }
 
@@ -36,7 +36,7 @@ class ChargebackController extends Controller
     {
         $data = $request->validate([
             'outcome' => ['required', Rule::in([ChargebackStatus::Won->value, ChargebackStatus::Lost->value])],
-            'note'    => ['nullable', 'string', 'max:2000'],
+            'note' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $this->chargebacks->resolve(

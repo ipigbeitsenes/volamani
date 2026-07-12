@@ -70,7 +70,7 @@
                 <div class="mb-3">
                     <label class="form-label">Location <small class="text-muted">(optional)</small></label>
                     <input type="text" name="location" class="form-control form-control-sm"
-                        value="{{ old('location') }}" placeholder="Lagos, Nigeria">
+                        value="{{ old('location') }}" placeholder="City, Country">
                 </div>
             </div>
         </div>
@@ -80,9 +80,9 @@
             <div class="card-body">
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Minimum Budget (₦) <small class="text-muted">(optional)</small></label>
+                        <label class="form-label">Minimum Budget ({{ currency_symbol() }}) <small class="text-muted">(optional)</small></label>
                         <div class="input-group">
-                            <span class="input-group-text">₦</span>
+                            <span class="input-group-text">{{ currency_symbol() }}</span>
                             <input type="number" name="budget_min"
                                 class="form-control @error('budget_min') is-invalid @enderror"
                                 value="{{ old('budget_min') }}" min="0"
@@ -91,9 +91,9 @@
                         @error('budget_min') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Maximum Budget (₦) <small class="text-muted">(optional)</small></label>
+                        <label class="form-label">Maximum Budget ({{ currency_symbol() }}) <small class="text-muted">(optional)</small></label>
                         <div class="input-group">
-                            <span class="input-group-text">₦</span>
+                            <span class="input-group-text">{{ currency_symbol() }}</span>
                             <input type="number" name="budget_max"
                                 class="form-control @error('budget_max') is-invalid @enderror"
                                 value="{{ old('budget_max') }}" min="0"

@@ -73,7 +73,7 @@
                             @error('account_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Amount Transferred (₦) <span class="text-danger">*</span></label>
+                            <label class="form-label">Amount Transferred ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
                             <input type="number" name="amount" value="{{ old('amount', from_kobo($payment->amount)) }}"
                                 class="form-control @error('amount') is-invalid @enderror"
                                 step="0.01" min="1" required>

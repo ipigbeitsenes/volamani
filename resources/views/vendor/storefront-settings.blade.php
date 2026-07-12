@@ -132,16 +132,12 @@
                         <div class="col-md-6">
                             <label class="form-label fw-medium small">City</label>
                             <input type="text" name="city" value="{{ old('city', $vendor->city) }}"
-                                   class="form-control" placeholder="Lagos">
+                                   class="form-control" placeholder="City">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-medium small">State</label>
-                            <select name="state" class="form-select">
-                                <option value="">Select state</option>
-                                @foreach(['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'] as $state)
-                                    <option value="{{ $state }}" {{ old('state', $vendor->state) === $state ? 'selected' : '' }}>{{ $state }}</option>
-                                @endforeach
-                            </select>
+                            <label class="form-label fw-medium small">State / Region</label>
+                            <input type="text" name="state" value="{{ old('state', $vendor->state) }}"
+                                   class="form-control" placeholder="State / region">
                         </div>
                     </div>
                 </div>
@@ -154,9 +150,9 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-medium small">Flat Shipping Fee (₦)</label>
+                            <label class="form-label fw-medium small">Flat Shipping Fee ({{ currency_symbol() }})</label>
                             <div class="input-group">
-                                <span class="input-group-text">₦</span>
+                                <span class="input-group-text">{{ currency_symbol() }}</span>
                                 <input type="number" step="0.01" min="0" name="shipping_fee"
                                        class="form-control @error('shipping_fee') is-invalid @enderror"
                                        value="{{ old('shipping_fee', $vendor->shipping_fee ? from_kobo($vendor->shipping_fee) : '') }}"
@@ -166,9 +162,9 @@
                             <div class="form-text">Charged once per order. Leave 0 for free shipping.</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-medium small">Free Shipping Over (₦)</label>
+                            <label class="form-label fw-medium small">Free Shipping Over ({{ currency_symbol() }})</label>
                             <div class="input-group">
-                                <span class="input-group-text">₦</span>
+                                <span class="input-group-text">{{ currency_symbol() }}</span>
                                 <input type="number" step="0.01" min="0" name="free_shipping_threshold"
                                        class="form-control @error('free_shipping_threshold') is-invalid @enderror"
                                        value="{{ old('free_shipping_threshold', $vendor->free_shipping_threshold ? from_kobo($vendor->free_shipping_threshold) : '') }}"
@@ -181,38 +177,26 @@
                             <label class="form-label fw-medium small">Ships To</label>
                             <input type="text" name="ships_to" class="form-control"
                                    value="{{ old('ships_to', $vendor->ships_to) }}"
-                                   placeholder="e.g. Nationwide (Nigeria), 2–5 business days">
+                                   placeholder="e.g. Nationwide, 2–5 business days">
                         </div>
 
                         {{-- Delivery exclusions --}}
                         @php
-                            $vlmStates = ['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'];
-                            $vlmBlockedStates = old('no_delivery_states', $vendor->no_delivery_states ?? []);
+                            $vlmBlockedStates = old('no_delivery_states', implode(', ', $vendor->no_delivery_states ?? []));
                             $vlmBlockedCities = old('no_delivery_cities', implode(', ', $vendor->no_delivery_cities ?? []));
                         @endphp
                         <div class="col-12">
-                            <label class="form-label fw-medium small">States you <span class="text-danger">don't</span> deliver to</label>
-                            <div class="border rounded p-2" style="max-height:180px;overflow-y:auto;">
-                                <div class="row g-1">
-                                    @foreach($vlmStates as $st)
-                                        <div class="col-6 col-md-4">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="no_delivery_states[]"
-                                                       value="{{ $st }}" id="nds_{{ Str::slug($st) }}"
-                                                       {{ in_array($st, $vlmBlockedStates, true) ? 'checked' : '' }}>
-                                                <label class="form-check-label small" for="nds_{{ Str::slug($st) }}">{{ $st }}</label>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="form-text">Buyers with a shipping address in a checked state will be blocked from ordering your physical items.</div>
+                            <label class="form-label fw-medium small">States / regions you <span class="text-danger">don't</span> deliver to <span class="text-muted">(optional)</span></label>
+                            <input type="text" name="no_delivery_states" class="form-control"
+                                   value="{{ $vlmBlockedStates }}"
+                                   placeholder="Comma-separated, e.g. California, Texas">
+                            <div class="form-text">Buyers with a shipping address in a listed state or region will be blocked from ordering your physical items.</div>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-medium small">Cities you don't deliver to <span class="text-muted">(optional)</span></label>
                             <input type="text" name="no_delivery_cities" class="form-control"
                                    value="{{ $vlmBlockedCities }}"
-                                   placeholder="Comma-separated, e.g. Maiduguri, Sapele">
+                                   placeholder="Comma-separated, e.g. Austin, Portland">
                             <div class="form-text">Use for specific cities within states you otherwise deliver to.</div>
                         </div>
                     </div>

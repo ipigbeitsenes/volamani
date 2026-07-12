@@ -17,9 +17,9 @@ class ApproveReturnAction
         abort_unless($return->canApprove(), 422, 'This return cannot be approved at its current stage.');
 
         $return->update([
-            'status'        => ReturnStatus::Approved,
-            'approved_at'   => now(),
-            'decided_by'    => $actor->id,
+            'status' => ReturnStatus::Approved,
+            'approved_at' => now(),
+            'decided_by' => $actor->id,
             'decision_note' => $note,
         ]);
 

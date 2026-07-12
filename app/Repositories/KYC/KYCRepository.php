@@ -12,15 +12,22 @@ class KYCRepository
     {
         $query = KYCVerification::with(['user', 'reviewedBy'])->latest('submitted_at');
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('reference', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('full_name', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('id_number', 'like', '%' . $filters['search'] . '%');
+        if (! empty($filters['search'])) {
+            $term = $filters['search'];
+
+            // full_name / id_number are encrypted at rest, so a SQL LIKE can never
+            // match them. Search the reference and the linked user's name/email
+            // (the practical identifiers an admin has) instead.
+            $query->where(function ($q) use ($term) {
+                $q->where('reference', 'like', '%'.$term.'%')
+                    ->orWhereHas('user', function ($u) use ($term) {
+                        $u->where('name', 'like', '%'.$term.'%')
+                            ->orWhere('email', 'like', '%'.$term.'%');
+                    });
             });
         }
 

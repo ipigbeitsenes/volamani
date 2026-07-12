@@ -14,10 +14,10 @@ class BookConsultationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'package_id'      => ['required', 'integer', 'exists:consultation_packages,id'],
-            'scheduled_at'    => ['required', 'date', 'after:now'],
+            'package_id' => ['required', 'integer', 'exists:consultation_packages,id'],
+            'scheduled_at' => ['required', 'date', 'after:now'],
             'meeting_platform' => ['nullable', 'string', 'in:google_meet,zoom,teams,phone,other'],
-            'notes'           => ['nullable', 'string', 'max:1000'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

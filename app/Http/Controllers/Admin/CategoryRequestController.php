@@ -20,10 +20,10 @@ class CategoryRequestController extends Controller
         $filters = $request->only('status', 'domain', 'search');
 
         return view('admin.category-requests.index', [
-            'requests'  => $this->service->allForAdmin($filters),
-            'filters'   => $filters,
-            'statuses'  => CategoryRequestStatus::cases(),
-            'domains'   => CategoryDomain::cases(),
+            'requests' => $this->service->allForAdmin($filters),
+            'filters' => $filters,
+            'statuses' => CategoryRequestStatus::cases(),
+            'domains' => CategoryDomain::cases(),
         ]);
     }
 

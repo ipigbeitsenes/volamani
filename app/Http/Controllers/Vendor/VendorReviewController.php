@@ -15,7 +15,7 @@ class VendorReviewController extends Controller
 
     public function index(): View
     {
-        $vendor  = auth()->user()->vendor;
+        $vendor = auth()->user()->vendor;
         $reviews = $this->reviewService->forVendor(auth()->user());
 
         return view('vendor.reviews.index', compact('vendor', 'reviews'));

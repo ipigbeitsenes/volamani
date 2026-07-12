@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ProductKind;
 use App\Enums\ProductStatus;
 use App\Enums\ProductType;
+use App\Services\Reviews\ReviewEligibilityService;
 use App\Traits\Auditable;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use SoftDeletes, HasSlug, Auditable;
+    use Auditable, HasSlug, SoftDeletes;
 
     protected $fillable = [
         'vendor_id', 'kind', 'category_id', 'physical_category_id', 'name', 'slug', 'short_description',
@@ -30,15 +31,15 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'kind'           => ProductKind::class,
-            'status'         => ProductStatus::class,
-            'type'           => ProductType::class,
-            'is_featured'    => 'boolean',
-            'is_downloadable'=> 'boolean',
+            'kind' => ProductKind::class,
+            'status' => ProductStatus::class,
+            'type' => ProductType::class,
+            'is_featured' => 'boolean',
+            'is_downloadable' => 'boolean',
             'featured_until' => 'datetime',
-            'approved_at'    => 'datetime',
-            'price'          => 'integer',
-            'compare_price'  => 'integer',
+            'approved_at' => 'datetime',
+            'price' => 'integer',
+            'compare_price' => 'integer',
             'average_rating' => 'float',
         ];
     }
@@ -148,7 +149,7 @@ class Product extends Model
     {
         return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('short_description', 'like', "%{$term}%");
+                ->orWhere('short_description', 'like', "%{$term}%");
         });
     }
 
@@ -277,6 +278,7 @@ class Product extends Model
         if (! $this->hasDiscount()) {
             return 0;
         }
+
         return (int) round((($this->compare_price - $this->price) / $this->compare_price) * 100);
     }
 
@@ -286,17 +288,16 @@ class Product extends Model
             return false;
         }
 
-        return OrderItem::whereHas('order', fn ($q) =>
-                $q->where('buyer_id', $user->id)
-                  ->where('payment_status', 'success')
-            )
+        return OrderItem::whereHas('order', fn ($q) => $q->where('buyer_id', $user->id)
+            ->where('payment_status', 'success')
+        )
             ->where('product_id', $this->id)
             ->exists();
     }
 
     public function canBeReviewedBy(?User $user): bool
     {
-        return $user && app(\App\Services\Reviews\ReviewEligibilityService::class)->canReview($user, $this);
+        return $user && app(ReviewEligibilityService::class)->canReview($user, $this);
     }
 
     public function getThumbnailUrlAttribute(): string

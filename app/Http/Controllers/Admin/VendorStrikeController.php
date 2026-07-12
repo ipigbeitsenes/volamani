@@ -18,7 +18,7 @@ class VendorStrikeController extends Controller
     {
         $data = $request->validate([
             'reason' => ['required', new Enum(StrikeReason::class)],
-            'note'   => ['nullable', 'string', 'max:500'],
+            'note' => ['nullable', 'string', 'max:500'],
         ]);
 
         $addStrike->execute(

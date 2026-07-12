@@ -51,10 +51,10 @@ class SitemapController extends Controller
                 ->limit(5000)->each(function ($p) use (&$urls) {
                     if ($p->slug) {
                         $urls[] = [
-                            'loc'        => route('marketplace.products.show', $p->slug),
-                            'lastmod'    => optional($p->updated_at)->toAtomString(),
+                            'loc' => route('marketplace.products.show', $p->slug),
+                            'lastmod' => optional($p->updated_at)->toAtomString(),
                             'changefreq' => 'weekly',
-                            'priority'   => '0.8',
+                            'priority' => '0.8',
                         ];
                     }
                 });
@@ -67,10 +67,10 @@ class SitemapController extends Controller
                 ->limit(5000)->each(function ($s) use (&$urls) {
                     if ($s->slug) {
                         $urls[] = [
-                            'loc'        => route('marketplace.services.show', $s->slug),
-                            'lastmod'    => optional($s->updated_at)->toAtomString(),
+                            'loc' => route('marketplace.services.show', $s->slug),
+                            'lastmod' => optional($s->updated_at)->toAtomString(),
                             'changefreq' => 'weekly',
-                            'priority'   => '0.8',
+                            'priority' => '0.8',
                         ];
                     }
                 });
@@ -83,10 +83,10 @@ class SitemapController extends Controller
                 ->limit(2000)->each(function ($c) use (&$urls) {
                     if ($c->slug) {
                         $urls[] = [
-                            'loc'        => route('marketplace.consultants.show', $c->slug),
-                            'lastmod'    => optional($c->updated_at)->toAtomString(),
+                            'loc' => route('marketplace.consultants.show', $c->slug),
+                            'lastmod' => optional($c->updated_at)->toAtomString(),
                             'changefreq' => 'weekly',
-                            'priority'   => '0.7',
+                            'priority' => '0.7',
                         ];
                     }
                 });
@@ -100,10 +100,10 @@ class SitemapController extends Controller
                     $username = optional($v->user)->username;
                     if ($username) {
                         $urls[] = [
-                            'loc'        => route('storefront.show', $username),
-                            'lastmod'    => optional($v->updated_at)->toAtomString(),
+                            'loc' => route('storefront.show', $username),
+                            'lastmod' => optional($v->updated_at)->toAtomString(),
                             'changefreq' => 'weekly',
-                            'priority'   => '0.7',
+                            'priority' => '0.7',
                         ];
                     }
                 });

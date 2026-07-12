@@ -4,12 +4,11 @@ namespace App\Services\Products;
 
 use App\Actions\Products\GenerateDownloadLinkAction;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\ProductDownload;
 use App\Models\ProductFile;
 use App\Models\User;
 use App\Services\BaseService;
-use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -28,12 +27,12 @@ class DownloadService extends BaseService
     {
         $download = ProductDownload::firstOrCreate(
             [
-                'order_id'        => $order->id,
+                'order_id' => $order->id,
                 'product_file_id' => $file->id,
-                'user_id'         => $user->id,
+                'user_id' => $user->id,
             ],
             [
-                'product_id'     => $file->product_id,
+                'product_id' => $file->product_id,
                 'download_count' => 0,
             ]
         );
@@ -42,7 +41,7 @@ class DownloadService extends BaseService
             abort(403, 'Download limit reached for this file.');
         }
 
-        if (!Storage::disk('private')->exists($file->path)) {
+        if (! Storage::disk('private')->exists($file->path)) {
             abort(404, 'File not found.');
         }
 
@@ -52,7 +51,7 @@ class DownloadService extends BaseService
         return Storage::disk('private')->download($file->path, $file->original_name);
     }
 
-    public function getUserDownloads(Order $order, User $user): \Illuminate\Database\Eloquent\Collection
+    public function getUserDownloads(Order $order, User $user): Collection
     {
         return ProductDownload::with(['file', 'product'])
             ->where('order_id', $order->id)

@@ -8,21 +8,22 @@ use App\Models\Product;
 use App\Models\ServicePackage;
 use App\Services\Cart\CartCheckoutService;
 use App\Services\Cart\CartService;
+use App\Services\Wallet\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class CartController extends Controller
 {
     public function __construct(
-        private CartService         $cart,
+        private CartService $cart,
         private CartCheckoutService $checkout,
     ) {}
 
     public function index()
     {
         return view('cart.index', [
-            'summary'    => $this->cart->summary(),
-            'shipping'   => $this->cart->physicalShippingTotal(),
+            'summary' => $this->cart->summary(),
+            'shipping' => $this->cart->physicalShippingTotal(),
             'grandTotal' => $this->cart->grandTotal(),
         ]);
     }
@@ -42,7 +43,7 @@ class CartController extends Controller
         $qty = max(1, (int) $request->input('qty', 1));
         $this->cart->addProduct($product->id, $qty);
 
-        return back()->with('success', $product->name . ' added to your cart.');
+        return back()->with('success', $product->name.' added to your cart.');
     }
 
     public function updateProduct(Request $request, Product $product)
@@ -72,9 +73,9 @@ class CartController extends Controller
         }
 
         $product->loadMissing('variants', 'physicalDetail');
-        $qty       = max(1, (int) $request->input('qty', 1));
+        $qty = max(1, (int) $request->input('qty', 1));
         $variantId = (int) $request->input('variant_id', 0);
-        $variant   = null;
+        $variant = null;
 
         if ($product->hasVariants()) {
             $variant = $product->variants->firstWhere('id', $variantId);
@@ -90,7 +91,7 @@ class CartController extends Controller
 
         $this->cart->addPhysical($product->id, $variant?->id ?? 0, $qty);
 
-        return back()->with('success', $product->name . ' added to your cart.');
+        return back()->with('success', $product->name.' added to your cart.');
     }
 
     public function updatePhysical(Request $request, Product $product)
@@ -152,15 +153,15 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('info', 'Your cart is empty.');
         }
 
-        $wallet = app(\App\Services\Wallet\WalletService::class)->getOrCreate(auth()->user());
+        $wallet = app(WalletService::class)->getOrCreate(auth()->user());
 
         return view('cart.checkout', [
-            'summary'       => $this->cart->summary(),
-            'wallet'        => $wallet,
-            'payableCount'  => $this->cart->payableCount(),
-            'hasPhysical'   => $this->cart->hasPhysical(),
-            'shipping'      => $this->cart->physicalShippingTotal(),
-            'grandTotal'    => $this->cart->grandTotal(),
+            'summary' => $this->cart->summary(),
+            'wallet' => $wallet,
+            'payableCount' => $this->cart->payableCount(),
+            'hasPhysical' => $this->cart->hasPhysical(),
+            'shipping' => $this->cart->physicalShippingTotal(),
+            'grandTotal' => $this->cart->grandTotal(),
         ]);
     }
 
@@ -171,18 +172,18 @@ class CartController extends Controller
         // A delivery address is required when the cart contains physical items.
         if ($this->cart->hasPhysical()) {
             $rules += [
-                'ship_to_name'    => ['required', 'string', 'max:255'],
-                'ship_to_phone'   => ['required', 'string', 'max:30'],
+                'ship_to_name' => ['required', 'string', 'max:255'],
+                'ship_to_phone' => ['required', 'string', 'max:30'],
                 'ship_to_address' => ['required', 'string', 'max:255'],
-                'ship_to_city'    => ['nullable', 'string', 'max:80'],
-                'ship_to_state'   => ['nullable', 'string', 'max:80'],
+                'ship_to_city' => ['nullable', 'string', 'max:80'],
+                'ship_to_state' => ['nullable', 'string', 'max:80'],
             ];
         }
 
         $request->validate($rules);
 
         $gateway = $request->input('gateway');
-        $user    = auth()->user();
+        $user = auth()->user();
         $address = $request->only('ship_to_name', 'ship_to_phone', 'ship_to_address', 'ship_to_city', 'ship_to_state');
 
         // Idempotency guard: an atomic per-user lock stops a double-click /
@@ -210,16 +211,16 @@ class CartController extends Controller
         $result = $this->checkout->checkoutWithWallet($user, $address);
 
         return match ($result['status']) {
-            'empty'            => redirect()->route('cart.index')->with('info', 'Your cart is empty.'),
-            'own_item'         => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
+            'empty' => redirect()->route('cart.index')->with('info', 'Your cart is empty.'),
+            'own_item' => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
             'address_required' => back()->withInput()->with('error', 'Please enter a delivery address for the physical items in your cart.'),
-            'unavailable'      => back()->with('error', '"' . ($result['item'] ?? 'An item') . '" is out of stock. Adjust the quantity or remove it.'),
-            'no_delivery'      => back()->withInput()->with('error', 'The seller of "' . ($result['item'] ?? 'an item') . '" does not deliver to your address. Use a different address or remove the item.'),
-            'insufficient'     => back()->with('error',
-                'Insufficient wallet balance. You need ' . money($result['shortfall']) . ' more — fund your wallet or pay per item with card.'),
-            'paid'             => redirect()->route('orders.index')->with('success',
-                'Payment successful! ' . count($result['payables']) . ' order(s) placed.'),
-            default            => back()->with('error', 'Checkout could not be completed.'),
+            'unavailable' => back()->with('error', '"'.($result['item'] ?? 'An item').'" is out of stock. Adjust the quantity or remove it.'),
+            'no_delivery' => back()->withInput()->with('error', 'The seller of "'.($result['item'] ?? 'an item').'" does not deliver to your address. Use a different address or remove the item.'),
+            'insufficient' => back()->with('error',
+                'Insufficient wallet balance. You need '.money($result['shortfall']).' more — fund your wallet or pay per item with card.'),
+            'paid' => redirect()->route('orders.index')->with('success',
+                'Payment successful! '.count($result['payables']).' order(s) placed.'),
+            default => back()->with('error', 'Checkout could not be completed.'),
         };
     }
 
@@ -229,17 +230,17 @@ class CartController extends Controller
         $result = $this->checkout->checkoutWithGateway($user, $gateway, $address);
 
         return match ($result['status']) {
-            'empty'            => redirect()->route('cart.index')->with('info', 'Your cart is empty.'),
-            'own_item'         => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
+            'empty' => redirect()->route('cart.index')->with('info', 'Your cart is empty.'),
+            'own_item' => back()->with('error', 'Your cart contains your own listing. Remove it to check out.'),
             'address_required' => back()->withInput()->with('error', 'Please enter a delivery address for the physical items in your cart.'),
-            'unavailable'      => back()->with('error', '"' . ($result['item'] ?? 'An item') . '" is out of stock. Adjust the quantity or remove it.'),
-            'no_delivery'      => back()->withInput()->with('error', 'The seller of "' . ($result['item'] ?? 'an item') . '" does not deliver to your address. Use a different address or remove the item.'),
-            'multi'            => back()->with('error',
+            'unavailable' => back()->with('error', '"'.($result['item'] ?? 'An item').'" is out of stock. Adjust the quantity or remove it.'),
+            'no_delivery' => back()->withInput()->with('error', 'The seller of "'.($result['item'] ?? 'an item').'" does not deliver to your address. Use a different address or remove the item.'),
+            'multi' => back()->with('error',
                 'Card/bank checkout covers one seller at a time. Pay with your wallet to check out everything at once, or buy items individually.'),
-            'redirect'         => $gateway === PaymentGateway::BankTransfer->value
+            'redirect' => $gateway === PaymentGateway::BankTransfer->value
                 ? redirect()->route('checkout.bank-transfer', $result['result']['payment'])
                 : redirect()->away($result['result']['authorization_url']),
-            default            => back()->with('error', 'Checkout could not be completed.'),
+            default => back()->with('error', 'Checkout could not be completed.'),
         };
     }
 }

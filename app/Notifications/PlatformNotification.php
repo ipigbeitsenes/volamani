@@ -35,7 +35,7 @@ class PlatformNotification extends VolamaniNotification
     {
         $mail = (new MailMessage)
             ->subject($this->title)
-            ->greeting('Hello ' . ($notifiable->name ?? 'there') . ',')
+            ->greeting('Hello '.($notifiable->name ?? 'there').',')
             ->line($this->message);
 
         if ($this->url) {
@@ -49,10 +49,10 @@ class PlatformNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category->value,
-            'icon'     => $this->category->icon(),
-            'title'    => $this->title,
-            'message'  => $this->message,
-            'url'      => $this->url,
+            'icon' => $this->category->icon(),
+            'title' => $this->title,
+            'message' => $this->message,
+            'url' => $this->url,
         ];
     }
 }

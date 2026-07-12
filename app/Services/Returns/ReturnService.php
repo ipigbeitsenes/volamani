@@ -19,13 +19,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class ReturnService extends BaseService
 {
     public function __construct(
-        private ReturnRepository        $repo,
-        private RequestReturnAction     $requestAction,
-        private ApproveReturnAction     $approveAction,
-        private RejectReturnAction      $rejectAction,
+        private ReturnRepository $repo,
+        private RequestReturnAction $requestAction,
+        private ApproveReturnAction $approveAction,
+        private RejectReturnAction $rejectAction,
         private MarkReturnShippedAction $shippedAction,
-        private ConfirmReturnAction     $confirmAction,
-        private CancelReturnAction      $cancelAction,
+        private ConfirmReturnAction $confirmAction,
+        private CancelReturnAction $cancelAction,
     ) {}
 
     public function request(Order $order, User $buyer, array $data): ReturnRequest

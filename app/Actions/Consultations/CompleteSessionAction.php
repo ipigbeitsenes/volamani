@@ -17,8 +17,8 @@ class CompleteSessionAction
 
         return DB::transaction(function () use ($session, $consultantNotes) {
             $session->update([
-                'status'           => ConsultationSessionStatus::Completed,
-                'completed_at'     => now(),
+                'status' => ConsultationSessionStatus::Completed,
+                'completed_at' => now(),
                 'consultant_notes' => $consultantNotes,
             ]);
 

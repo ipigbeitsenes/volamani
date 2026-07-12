@@ -20,11 +20,11 @@ class ConsultationService
     public function __construct(
         private CreateConsultantProfileAction $createProfile,
         private UpdateConsultantProfileAction $updateProfile,
-        private BookConsultationAction        $book,
-        private ConfirmSessionAction          $confirm,
-        private CompleteSessionAction         $complete,
-        private CancelSessionAction           $cancel,
-        private CreatePackageAction           $createPackage,
+        private BookConsultationAction $book,
+        private ConfirmSessionAction $confirm,
+        private CompleteSessionAction $complete,
+        private CancelSessionAction $cancel,
+        private CreatePackageAction $createPackage,
     ) {}
 
     public function createProfile(Vendor $vendor, array $data): ConsultantProfile
@@ -64,7 +64,8 @@ class ConsultationService
 
     public function togglePackage(ConsultationPackage $package): ConsultationPackage
     {
-        $package->update(['is_active' => !$package->is_active]);
+        $package->update(['is_active' => ! $package->is_active]);
+
         return $package->fresh();
     }
 
@@ -80,7 +81,8 @@ class ConsultationService
 
     public function toggleAvailability(ConsultantProfile $profile): ConsultantProfile
     {
-        $profile->update(['is_available' => !$profile->is_available]);
+        $profile->update(['is_available' => ! $profile->is_available]);
+
         return $profile->fresh();
     }
 }

@@ -17,7 +17,7 @@ class SendDocumentAction
     public function execute(Document $document): Document
     {
         $document->update([
-            'status'  => DocumentStatus::Sent,
+            'status' => DocumentStatus::Sent,
             'sent_at' => $document->sent_at ?? now(),
         ]);
 

@@ -23,7 +23,7 @@ class ReviewRepository
     {
         $vendor = $vendorUser->vendor;
 
-        if (!$vendor) {
+        if (! $vendor) {
             return Review::whereRaw('1 = 0')->paginate($perPage);
         }
 
@@ -41,14 +41,14 @@ class ReviewRepository
             $query->where('is_approved', (bool) $filters['approved']);
         }
 
-        if (!empty($filters['rating'])) {
+        if (! empty($filters['rating'])) {
             $query->where('rating', (int) $filters['rating']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('title', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('body', 'like', '%' . $filters['search'] . '%');
+                $q->where('title', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('body', 'like', '%'.$filters['search'].'%');
             });
         }
 

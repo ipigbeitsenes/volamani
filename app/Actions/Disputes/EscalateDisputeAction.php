@@ -19,16 +19,16 @@ class EscalateDisputeAction
 
         return DB::transaction(function () use ($dispute, $admin, $note) {
             $dispute->update([
-                'status'       => DisputeStatus::Escalated,
+                'status' => DisputeStatus::Escalated,
                 'escalated_at' => now(),
             ]);
 
             DisputeMessage::create([
                 'dispute_id' => $dispute->id,
-                'sender_id'  => $admin->id,
-                'message'    => 'Dispute escalated for senior review.' . ($note ? " {$note}" : ''),
-                'is_staff'   => true,
-                'is_system'  => true,
+                'sender_id' => $admin->id,
+                'message' => 'Dispute escalated for senior review.'.($note ? " {$note}" : ''),
+                'is_staff' => true,
+                'is_system' => true,
             ]);
 
             return $dispute->fresh();

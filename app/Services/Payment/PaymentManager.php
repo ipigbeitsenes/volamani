@@ -13,7 +13,7 @@ class PaymentManager
 
         return match ($driver) {
             'paystack' => app(PaystackGateway::class),
-            default    => throw new \InvalidArgumentException("Unsupported payment gateway: [{$driver}]"),
+            default => throw new \InvalidArgumentException("Unsupported payment gateway: [{$driver}]"),
         };
     }
 

@@ -22,11 +22,11 @@ class CategoryRequestController extends Controller
         $vendor = $request->user()->vendor;
 
         return view('vendor.category-requests.index', [
-            'requests'           => $this->service->forVendor($vendor),
-            'digitalCategories'  => ProductCategory::active()->whereNull('parent_id')->orderBy('name')->get(),
+            'requests' => $this->service->forVendor($vendor),
+            'digitalCategories' => ProductCategory::active()->whereNull('parent_id')->orderBy('name')->get(),
             'physicalCategories' => PhysicalCategory::active()->roots()->orderBy('name')->get(),
-            'serviceCategories'  => ServiceCategory::active()->roots()->orderBy('name')->get(),
-            'domains'            => CategoryDomain::cases(),
+            'serviceCategories' => ServiceCategory::active()->roots()->orderBy('name')->get(),
+            'domains' => CategoryDomain::cases(),
         ]);
     }
 

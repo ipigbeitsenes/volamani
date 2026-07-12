@@ -19,11 +19,11 @@ class RejectKYCAction
 
         $kyc = DB::transaction(function () use ($kyc, $admin, $reason) {
             $kyc->update([
-                'status'           => KYCStatus::Rejected,
+                'status' => KYCStatus::Rejected,
                 'rejection_reason' => $reason,
-                'reviewed_by'      => $admin->id,
-                'reviewed_at'      => now(),
-                'verified_at'      => null,
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
+                'verified_at' => null,
             ]);
 
             $kyc->user->update(['kyc_status' => KYCStatus::Rejected]);
@@ -35,7 +35,7 @@ class RejectKYCAction
             $kyc->user,
             NotificationCategory::Verification,
             'Verification needs attention',
-            'Your KYC submission was not approved: ' . $reason . ' You can resubmit with corrected details.',
+            'Your KYC submission was not approved: '.$reason.' You can resubmit with corrected details.',
             route('kyc.index'),
             'Resubmit',
         );

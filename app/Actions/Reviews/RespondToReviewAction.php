@@ -16,7 +16,7 @@ class RespondToReviewAction
             'You can only respond to reviews on your own listings.');
 
         $review->update([
-            'response'     => $response,
+            'response' => $response,
             'responded_at' => now(),
         ]);
 
@@ -26,7 +26,7 @@ class RespondToReviewAction
     private function ownsReviewable(Review $review, User $user): bool
     {
         $reviewable = $review->reviewable;
-        $vendor     = $reviewable?->vendor ?? null;
+        $vendor = $reviewable?->vendor ?? null;
 
         return $vendor && $vendor->user_id === $user->id;
     }

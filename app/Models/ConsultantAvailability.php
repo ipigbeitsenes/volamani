@@ -30,6 +30,6 @@ class ConsultantAvailability extends Model
 
     public function getTimeRangeAttribute(): string
     {
-        return substr($this->start_time, 0, 5) . ' – ' . substr($this->end_time, 0, 5);
+        return substr($this->start_time, 0, 5).' – '.substr($this->end_time, 0, 5);
     }
 }

@@ -35,7 +35,7 @@ class VendorDirectoryTest extends TestCase
     public function test_a_buyer_can_follow_a_vendor_from_the_directory(): void
     {
         $vendor = VendorFactory::new()->create();
-        $buyer  = User::factory()->create();
+        $buyer = User::factory()->create();
 
         // The directory renders the follow control, and the toggle works.
         $this->actingAs($buyer)->get(route('vendors.index'))->assertOk();

@@ -18,7 +18,7 @@ class AcceptDeliveryAction
 
         return DB::transaction(function () use ($order) {
             $order->update([
-                'status'       => ServiceOrderStatus::Completed,
+                'status' => ServiceOrderStatus::Completed,
                 'completed_at' => now(),
             ]);
 
@@ -29,9 +29,9 @@ class AcceptDeliveryAction
 
             ServiceOrderMessage::create([
                 'service_order_id' => $order->id,
-                'sender_id'        => $order->buyer_id,
-                'message'          => 'Order marked as complete. Funds have been released to the vendor.',
-                'is_system'        => true,
+                'sender_id' => $order->buyer_id,
+                'message' => 'Order marked as complete. Funds have been released to the vendor.',
+                'is_system' => true,
             ]);
 
             return $order->fresh();

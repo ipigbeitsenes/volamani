@@ -8,7 +8,7 @@
         <div class="col-lg-10">
             <div class="text-center mb-5">
                 <h2 class="fw-bold">Business Pricing Calculator</h2>
-                <p class="text-muted lead">Get accurate pricing estimates for digital services in Nigeria. Stop undercharging.</p>
+                <p class="text-muted lead">Get accurate pricing estimates for your digital services. Stop undercharging.</p>
             </div>
 
             {{-- Step 1: Category --}}
@@ -86,7 +86,7 @@
                             {{-- Fixed pricing --}}
                             <div id="section-fixed">
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Project Price (₦)</label>
+                                    <label class="form-label fw-semibold">Project Price ({{ currency_symbol() }})</label>
                                     <input type="number" name="base_price" id="base_price"
                                         class="form-control form-control-lg" placeholder="e.g. 400000" min="0" step="1000">
                                     <div class="form-text">Enter your total fixed price for this project.</div>
@@ -97,7 +97,7 @@
                             <div id="section-hourly" style="display:none">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Hourly Rate (₦)</label>
+                                        <label class="form-label fw-semibold">Hourly Rate ({{ currency_symbol() }})</label>
                                         <input type="number" name="hourly_rate" id="hourly_rate"
                                             class="form-control" placeholder="e.g. 15000" min="0" step="500">
                                     </div>
@@ -109,7 +109,7 @@
                                 </div>
                                 <div class="mt-3 p-3 bg-light rounded">
                                     <strong>Estimated total: </strong>
-                                    <span id="hourly-calc-display" class="text-success fw-bold">₦0.00</span>
+                                    <span id="hourly-calc-display" class="text-success fw-bold">{{ currency_symbol() }}0.00</span>
                                 </div>
                             </div>
 
@@ -121,7 +121,7 @@
                                 </button>
                                 <div class="mt-3 p-3 bg-light rounded">
                                     <strong>Total across milestones: </strong>
-                                    <span id="milestone-total-display" class="text-success fw-bold">₦0.00</span>
+                                    <span id="milestone-total-display" class="text-success fw-bold">{{ currency_symbol() }}0.00</span>
                                 </div>
                             </div>
                         </div>
@@ -188,7 +188,7 @@
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small opacity-75">Estimated Total</div>
-                                <div class="h2 mb-0 fw-bold" id="live-total-display">₦0.00</div>
+                                <div class="h2 mb-0 fw-bold" id="live-total-display">{{ currency_symbol() }}0.00</div>
                             </div>
                             <div class="d-flex gap-2">
                                 <button type="submit" name="save" value="0" class="btn btn-light btn-lg px-4">
@@ -361,7 +361,7 @@
                     <input type="text" name="milestones[${idx}][name]" class="form-control form-control-sm" placeholder="e.g. Design Phase" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label small">Amount (₦)</label>
+                    <label class="form-label small">Amount ({{ currency_symbol() }})</label>
                     <input type="number" name="milestones[${idx}][amount]" class="form-control form-control-sm milestone-amount" min="0" step="1000" required>
                 </div>
                 <div class="col-md-2">
@@ -379,7 +379,7 @@
 
     // --- Main recalculate ---
     function formatNaira(kobo) {
-        return '₦' + (kobo / 100).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+        return @json(currency_symbol()) + (kobo / 100).toLocaleString('en-US', { minimumFractionDigits: 2 });
     }
 
     function recalculate() {

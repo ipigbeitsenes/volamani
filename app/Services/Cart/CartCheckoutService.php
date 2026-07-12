@@ -9,7 +9,6 @@ use App\Enums\PaymentStatus;
 use App\Enums\TransactionType;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\ServicePackage;
 use App\Models\User;
 use App\Services\Payment\PaymentService;
 use App\Services\Services\ServiceListingService;
@@ -30,11 +29,11 @@ use Illuminate\Support\Facades\DB;
 class CartCheckoutService
 {
     public function __construct(
-        private CartService           $cart,
-        private WalletService         $walletService,
+        private CartService $cart,
+        private WalletService $walletService,
         private ServiceListingService $serviceListing,
-        private FulfillPaymentAction  $fulfillAction,
-        private PaymentService        $paymentService,
+        private FulfillPaymentAction $fulfillAction,
+        private PaymentService $paymentService,
     ) {}
 
     /**
@@ -42,7 +41,7 @@ class CartCheckoutService
      *
      * @param  array|null  $address  Shipping address (required when the cart has physical items)
      * @return array{status:string, payables?:array, total?:int, shortfall?:int, item?:string}
-     *   status ∈ empty | own_item | address_required | unavailable | insufficient | paid
+     *                                                                                         status ∈ empty | own_item | address_required | unavailable | insufficient | paid
      */
     public function checkoutWithWallet(User $buyer, ?array $address = null): array
     {
@@ -55,13 +54,13 @@ class CartCheckoutService
             return $guard;
         }
 
-        $total  = $this->cart->grandTotal(); // items + physical shipping
+        $total = $this->cart->grandTotal(); // items + physical shipping
         $wallet = $this->walletService->getOrCreate($buyer);
 
         if (! $wallet->canWithdraw($total)) {
             return [
-                'status'    => 'insufficient',
-                'total'     => $total,
+                'status' => 'insufficient',
+                'total' => $total,
                 'shortfall' => $total - $wallet->availableBalance(),
             ];
         }
@@ -70,18 +69,18 @@ class CartCheckoutService
             $payables = $this->createPayables($lines, $buyer, $address);
 
             foreach ($payables as $payable) {
-                $amount  = (int) $payable->total_amount;
+                $amount = (int) $payable->total_amount;
                 $payment = Payment::create([
-                    'user_id'           => $buyer->id,
-                    'payable_type'      => $payable->getMorphClass(),
-                    'payable_id'        => $payable->getKey(),
-                    'gateway'           => PaymentGateway::Wallet->value,
+                    'user_id' => $buyer->id,
+                    'payable_type' => $payable->getMorphClass(),
+                    'payable_id' => $payable->getKey(),
+                    'gateway' => PaymentGateway::Wallet->value,
                     'gateway_reference' => generate_reference('WAL'),
-                    'status'            => PaymentStatus::Success,
-                    'currency'          => 'NGN',
-                    'amount'            => $amount,
-                    'paid_at'           => now(),
-                    'ip_address'        => request()->ip(),
+                    'status' => PaymentStatus::Success,
+                    'currency' => currency_code(),
+                    'amount' => $amount,
+                    'paid_at' => now(),
+                    'ip_address' => request()->ip(),
                 ]);
 
                 $this->walletService->debit(
@@ -112,7 +111,7 @@ class CartCheckoutService
      * send the buyer.
      *
      * @return array{status:string, gateway?:string, result?:array}
-     *   status ∈ empty | own_item | multi | redirect
+     *                                                              status ∈ empty | own_item | multi | redirect
      */
     public function checkoutWithGateway(User $buyer, string $gateway, ?array $address = null): array
     {
@@ -130,7 +129,7 @@ class CartCheckoutService
         }
 
         $payable = DB::transaction(fn () => $this->createPayables($lines, $buyer, $address)[0]);
-        $amount  = (int) $payable->total_amount;
+        $amount = (int) $payable->total_amount;
 
         $result = $gateway === PaymentGateway::BankTransfer->value
             ? $this->paymentService->initiateBankTransferPayment($buyer, $amount, $payable)
@@ -194,12 +193,12 @@ class CartCheckoutService
      * + ServiceOrders (one each). Digital and physical from the same vendor are
      * separate orders so escrow/shipping stay coherent.
      *
-     * @return array<int, Model>  freshly created pending payables
+     * @return array<int, Model> freshly created pending payables
      */
     private function createPayables(array $lines, User $buyer, ?array $address = null): array
     {
         $payables = [];
-        $digital  = [];
+        $digital = [];
         $physical = [];
 
         foreach ($lines as $line) {
@@ -226,40 +225,40 @@ class CartCheckoutService
 
     private function createPhysicalOrder(User $buyer, $vendor, array $lines, ?array $address): Order
     {
-        $subtotal   = array_sum(array_column($lines, 'subtotal'));
-        $shipping   = $vendor->shippingFeeFor($subtotal);
-        $total      = $subtotal + $shipping;
+        $subtotal = array_sum(array_column($lines, 'subtotal'));
+        $shipping = $vendor->shippingFeeFor($subtotal);
+        $total = $subtotal + $shipping;
         $feePercent = (float) config('payment.platform_fee_percent', 10);
-        $fee        = (int) round($subtotal * $feePercent / 100); // commission on goods only
-        $address  ??= [];
+        $fee = (int) round($subtotal * $feePercent / 100); // commission on goods only
+        $address ??= [];
 
         $order = Order::create([
-            'buyer_id'          => $buyer->id,
-            'vendor_id'         => $vendor->id,
-            'status'            => OrderStatus::Pending,
-            'payment_status'    => PaymentStatus::Pending,
+            'buyer_id' => $buyer->id,
+            'vendor_id' => $vendor->id,
+            'status' => OrderStatus::Pending,
+            'payment_status' => PaymentStatus::Pending,
             'requires_shipping' => true,
-            'total_amount'      => $total,
-            'platform_fee'      => $fee,
-            'vendor_earnings'   => $total - $fee,
-            'shipping_fee'      => $shipping,
-            'ship_to_name'      => $address['ship_to_name'] ?? null,
-            'ship_to_phone'     => $address['ship_to_phone'] ?? null,
-            'ship_to_address'   => $address['ship_to_address'] ?? null,
-            'ship_to_city'      => $address['ship_to_city'] ?? null,
-            'ship_to_state'     => $address['ship_to_state'] ?? null,
-            'currency'          => 'NGN',
+            'total_amount' => $total,
+            'platform_fee' => $fee,
+            'vendor_earnings' => $total - $fee,
+            'shipping_fee' => $shipping,
+            'ship_to_name' => $address['ship_to_name'] ?? null,
+            'ship_to_phone' => $address['ship_to_phone'] ?? null,
+            'ship_to_address' => $address['ship_to_address'] ?? null,
+            'ship_to_city' => $address['ship_to_city'] ?? null,
+            'ship_to_state' => $address['ship_to_state'] ?? null,
+            'currency' => currency_code(),
         ]);
 
         foreach ($lines as $line) {
             $order->items()->create([
                 'product_id' => $line['id'],
                 'variant_id' => $line['variant_id'] ?: null,
-                'name'       => $line['name'],
-                'type'       => 'product',
-                'quantity'   => $line['qty'],
+                'name' => $line['name'],
+                'type' => 'product',
+                'quantity' => $line['qty'],
                 'unit_price' => $line['unit_price'],
-                'subtotal'   => $line['subtotal'],
+                'subtotal' => $line['subtotal'],
             ]);
         }
 
@@ -268,29 +267,29 @@ class CartCheckoutService
 
     private function createProductOrder(User $buyer, int $vendorId, array $lines): Order
     {
-        $total      = array_sum(array_column($lines, 'subtotal'));
+        $total = array_sum(array_column($lines, 'subtotal'));
         $feePercent = (float) config('payment.platform_fee_percent', 10);
-        $fee        = (int) round($total * $feePercent / 100);
+        $fee = (int) round($total * $feePercent / 100);
 
         $order = Order::create([
-            'buyer_id'        => $buyer->id,
-            'vendor_id'       => $vendorId,
-            'status'          => OrderStatus::Pending,
-            'payment_status'  => PaymentStatus::Pending,
-            'total_amount'    => $total,
-            'platform_fee'    => $fee,
+            'buyer_id' => $buyer->id,
+            'vendor_id' => $vendorId,
+            'status' => OrderStatus::Pending,
+            'payment_status' => PaymentStatus::Pending,
+            'total_amount' => $total,
+            'platform_fee' => $fee,
             'vendor_earnings' => $total - $fee,
-            'currency'        => 'NGN',
+            'currency' => currency_code(),
         ]);
 
         foreach ($lines as $line) {
             $order->items()->create([
                 'product_id' => $line['id'],
-                'name'       => $line['name'],
-                'type'       => 'product',
-                'quantity'   => $line['qty'],
+                'name' => $line['name'],
+                'type' => 'product',
+                'quantity' => $line['qty'],
                 'unit_price' => $line['unit_price'],
-                'subtotal'   => $line['subtotal'],
+                'subtotal' => $line['subtotal'],
             ]);
         }
 

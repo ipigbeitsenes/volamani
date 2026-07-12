@@ -17,10 +17,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class ChargebackService extends BaseService
 {
     public function __construct(
-        private ChargebackRepository     $repo,
-        private OpenChargebackAction     $openAction,
-        private ContestChargebackAction  $contestAction,
-        private ResolveChargebackAction  $resolveAction,
+        private ChargebackRepository $repo,
+        private OpenChargebackAction $openAction,
+        private ContestChargebackAction $contestAction,
+        private ResolveChargebackAction $resolveAction,
     ) {}
 
     public function open(Payment $payment, ?string $gatewayReference = null, ?int $amountKobo = null, ?string $reason = null): Chargeback

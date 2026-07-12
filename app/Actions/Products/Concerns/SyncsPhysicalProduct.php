@@ -15,15 +15,15 @@ trait SyncsPhysicalProduct
         $product->physicalDetail()->updateOrCreate(
             ['product_id' => $product->id],
             [
-                'stock_quantity'  => (int) ($data['stock_quantity'] ?? 0),
+                'stock_quantity' => (int) ($data['stock_quantity'] ?? 0),
                 'track_inventory' => (bool) ($data['track_inventory'] ?? true),
                 'allow_backorder' => (bool) ($data['allow_backorder'] ?? false),
-                'condition'       => $data['condition'] ?? 'new',
-                'brand'           => $data['brand'] ?? null,
-                'weight_grams'    => $data['weight_grams'] ?? null,
-                'length_mm'       => $data['length_mm'] ?? null,
-                'width_mm'        => $data['width_mm'] ?? null,
-                'height_mm'       => $data['height_mm'] ?? null,
+                'condition' => $data['condition'] ?? 'new',
+                'brand' => $data['brand'] ?? null,
+                'weight_grams' => $data['weight_grams'] ?? null,
+                'length_mm' => $data['length_mm'] ?? null,
+                'width_mm' => $data['width_mm'] ?? null,
+                'height_mm' => $data['height_mm'] ?? null,
             ],
         );
 
@@ -44,12 +44,12 @@ trait SyncsPhysicalProduct
                 $price = $data['variant_prices'][$i] ?? null;
 
                 $product->variants()->create([
-                    'name'           => $name,
-                    'sku'            => $data['variant_skus'][$i] ?? null,
+                    'name' => $name,
+                    'sku' => $data['variant_skus'][$i] ?? null,
                     'price_override' => ($price === null || $price === '') ? null : to_kobo($price),
                     'stock_quantity' => (int) ($data['variant_stocks'][$i] ?? 0),
-                    'is_active'      => true,
-                    'sort_order'     => $i,
+                    'is_active' => true,
+                    'sort_order' => $i,
                 ]);
             }
         }

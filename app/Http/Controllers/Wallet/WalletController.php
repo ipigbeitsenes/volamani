@@ -15,10 +15,10 @@ class WalletController extends Controller
 
     public function index(): View
     {
-        $user         = auth()->user();
-        $wallet       = $this->walletService->getOrCreate($user);
+        $user = auth()->user();
+        $wallet = $this->walletService->getOrCreate($user);
         $transactions = $this->walletService->getTransactions($wallet, 10);
-        $withdrawals  = $this->walletService->getUserWithdrawals($user, 5);
+        $withdrawals = $this->walletService->getUserWithdrawals($user, 5);
 
         return view('marketplace.wallet.index', compact('wallet', 'transactions', 'withdrawals'));
     }
@@ -26,8 +26,8 @@ class WalletController extends Controller
     public function fund(FundWalletRequest $request): RedirectResponse
     {
         $amountKobo = to_kobo((float) $request->input('amount'));
-        $method     = $request->input('method', 'paystack');
-        $result     = $this->walletService->initiateFunding(auth()->user(), $amountKobo, $method);
+        $method = $request->input('method', 'paystack');
+        $result = $this->walletService->initiateFunding(auth()->user(), $amountKobo, $method);
 
         return redirect()->away($result['redirect']);
     }
@@ -42,7 +42,7 @@ class WalletController extends Controller
 
     public function transactions(): View
     {
-        $wallet       = $this->walletService->getOrCreate(auth()->user());
+        $wallet = $this->walletService->getOrCreate(auth()->user());
         $transactions = $this->walletService->getTransactions($wallet, 20);
 
         return view('marketplace.wallet.transactions', compact('wallet', 'transactions'));

@@ -33,7 +33,7 @@ trait HasSlug
         }
 
         while ($query->clone()->exists()) {
-            $slug = $original . '-' . $i++;
+            $slug = $original.'-'.$i++;
             $query = static::where('slug', $slug);
             if ($excludeId) {
                 $query->where((new static)->getKeyName(), '!=', $excludeId);

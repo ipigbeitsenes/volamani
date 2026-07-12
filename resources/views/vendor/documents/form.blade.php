@@ -86,13 +86,13 @@
                 <div class="table-responsive">
                     <table class="table align-middle mb-0">
                         <thead class="table-light">
-                            <tr><th style="width:45%">Description</th><th>Qty</th><th>Unit price (₦)</th><th class="text-end">Amount</th><th></th></tr>
+                            <tr><th style="width:45%">Description</th><th>Qty</th><th>Unit price ({{ currency_symbol() }})</th><th class="text-end">Amount</th><th></th></tr>
                         </thead>
                         <tbody id="itemsBody"></tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="3" class="text-end fw-semibold">Subtotal</td>
-                                <td class="text-end fw-semibold" id="subtotalCell">₦0.00</td><td></td>
+                                <td class="text-end fw-semibold" id="subtotalCell">{{ currency_symbol() }}0.00</td><td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -104,7 +104,7 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">Discount (₦)</label>
+                        <label class="form-label">Discount ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="discount" id="discount" class="form-control" value="{{ old('discount', $document->exists ? from_kobo($document->discount_amount) : 0) }}" oninput="recalc()">
                     </div>
                     <div class="col-md-3">
@@ -113,11 +113,11 @@
                     </div>
                     <div class="col-md-6">
                         <div class="border rounded p-3 bg-light">
-                            <div class="d-flex justify-content-between small"><span>Subtotal</span><span id="sumSubtotal">₦0.00</span></div>
-                            <div class="d-flex justify-content-between small"><span>Discount</span><span id="sumDiscount">₦0.00</span></div>
-                            <div class="d-flex justify-content-between small"><span>Tax</span><span id="sumTax">₦0.00</span></div>
+                            <div class="d-flex justify-content-between small"><span>Subtotal</span><span id="sumSubtotal">{{ currency_symbol() }}0.00</span></div>
+                            <div class="d-flex justify-content-between small"><span>Discount</span><span id="sumDiscount">{{ currency_symbol() }}0.00</span></div>
+                            <div class="d-flex justify-content-between small"><span>Tax</span><span id="sumTax">{{ currency_symbol() }}0.00</span></div>
                             <hr class="my-1">
-                            <div class="d-flex justify-content-between fw-bold"><span>Total</span><span id="sumTotal">₦0.00</span></div>
+                            <div class="d-flex justify-content-between fw-bold"><span>Total</span><span id="sumTotal">{{ currency_symbol() }}0.00</span></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -145,7 +145,7 @@
     let itemIndex = 0;
     const initialItems = @json(array_values($oldItems));
 
-    function fmt(n) { return '₦' + (n || 0).toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+    function fmt(n) { return @json(currency_symbol()) + (n || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
 
     function addItem(item = {description: '', quantity: 1, unit_price: ''}) {
         const i = itemIndex++;
@@ -154,7 +154,7 @@
             <td><input type="text" name="items[${i}][description]" class="form-control form-control-sm" value="${item.description ?? ''}" required></td>
             <td><input type="number" step="0.01" min="0.01" name="items[${i}][quantity]" class="form-control form-control-sm item-qty" style="width:90px" value="${item.quantity ?? 1}" oninput="recalc()" required></td>
             <td><input type="number" step="0.01" min="0" name="items[${i}][unit_price]" class="form-control form-control-sm item-price" style="width:130px" value="${item.unit_price ?? ''}" oninput="recalc()" required></td>
-            <td class="text-end item-amount">₦0.00</td>
+            <td class="text-end item-amount">{{ currency_symbol() }}0.00</td>
             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove(); recalc();"><i class="bi bi-x"></i></button></td>`;
         document.getElementById('itemsBody').appendChild(row);
         recalc();

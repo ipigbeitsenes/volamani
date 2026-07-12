@@ -18,14 +18,14 @@ class FundWalletAction
     public function execute(User $user, int $amountKobo, string $method = 'paystack'): array
     {
         return DB::transaction(function () use ($user, $amountKobo, $method) {
-            $wallet  = $user->wallet;
-            abort_if(!$wallet, 500, 'User wallet not found.');
+            $wallet = $user->wallet;
+            abort_if(! $wallet, 500, 'User wallet not found.');
 
             $funding = WalletFunding::create([
                 'wallet_id' => $wallet->id,
-                'user_id'   => $user->id,
-                'amount'    => $amountKobo,
-                'status'    => 'pending',
+                'user_id' => $user->id,
+                'amount' => $amountKobo,
+                'status' => 'pending',
             ]);
 
             $payments = app(PaymentService::class);

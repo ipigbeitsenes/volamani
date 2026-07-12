@@ -16,11 +16,11 @@ class Setting extends Model
             return $default;
         }
 
-        return match($setting->type) {
+        return match ($setting->type) {
             'boolean' => (bool) $setting->value,
             'integer' => (int) $setting->value,
-            'json'    => json_decode($setting->value, true),
-            default   => $setting->value,
+            'json' => json_decode($setting->value, true),
+            default => $setting->value,
         };
     }
 
@@ -33,6 +33,6 @@ class Setting extends Model
             ['value' => $stored, 'type' => $type]
         );
 
-        cache()->forget('settings.' . $key);
+        cache()->forget('settings.'.$key);
     }
 }

@@ -53,7 +53,7 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Price (₦)</label>
+                        <label class="form-label">Price ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="price" class="form-control"
                                value="{{ old('price', $plan->exists ? from_kobo($plan->price) : 0) }}" required>
                     </div>

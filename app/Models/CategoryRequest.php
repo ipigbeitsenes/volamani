@@ -20,8 +20,8 @@ class CategoryRequest extends Model
     protected function casts(): array
     {
         return [
-            'domain'      => CategoryDomain::class,
-            'status'      => CategoryRequestStatus::class,
+            'domain' => CategoryDomain::class,
+            'status' => CategoryRequestStatus::class,
             'reviewed_at' => 'datetime',
         ];
     }

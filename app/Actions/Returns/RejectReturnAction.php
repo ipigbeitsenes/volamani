@@ -14,7 +14,7 @@ use App\Support\BusinessDayCalculator;
 class RejectReturnAction
 {
     public function __construct(
-        private EscrowService       $escrow,
+        private EscrowService $escrow,
         private NotificationService $notifications,
     ) {}
 
@@ -23,9 +23,9 @@ class RejectReturnAction
         abort_unless($return->canReject(), 422, 'This return cannot be rejected at its current stage.');
 
         $return->update([
-            'status'        => ReturnStatus::Rejected,
-            'rejected_at'   => now(),
-            'decided_by'    => $actor->id,
+            'status' => ReturnStatus::Rejected,
+            'rejected_at' => now(),
+            'decided_by' => $actor->id,
             'decision_note' => $note,
         ]);
 

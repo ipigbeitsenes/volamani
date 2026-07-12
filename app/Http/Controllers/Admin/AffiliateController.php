@@ -17,13 +17,13 @@ class AffiliateController extends Controller
 
     public function index(Request $request): View
     {
-        $filters  = $request->only('status', 'search');
+        $filters = $request->only('status', 'search');
         $accounts = $this->affiliateService->accountsForAdmin(20, $filters);
 
         $stats = [
-            'pending_count'  => $this->affiliateService->pendingCommissionsCount(),
+            'pending_count' => $this->affiliateService->pendingCommissionsCount(),
             'pending_payout' => $this->affiliateService->pendingPayoutTotal(),
-            'top'            => $this->affiliateService->topAffiliates(5),
+            'top' => $this->affiliateService->topAffiliates(5),
         ];
 
         return view('admin.affiliates.index', compact('accounts', 'filters', 'stats'));
@@ -33,14 +33,14 @@ class AffiliateController extends Controller
     {
         $account->load('user');
         $commissions = $this->affiliateService->commissionsFor($account);
-        $referrals   = $account->referrals()->with('referredUser')->limit(10)->get();
+        $referrals = $account->referrals()->with('referredUser')->limit(10)->get();
 
         return view('admin.affiliates.show', compact('account', 'commissions', 'referrals'));
     }
 
     public function commissions(Request $request): View
     {
-        $filters     = $request->only('status', 'type');
+        $filters = $request->only('status', 'type');
         $commissions = $this->affiliateService->commissionsForAdmin(25, $filters);
 
         return view('admin.affiliates.commissions', compact('commissions', 'filters'));

@@ -8,12 +8,14 @@ use App\Enums\ProductStatus;
 use App\Enums\Status;
 use App\Enums\WithdrawalStatus;
 use App\Models\BankTransferProof;
+use App\Models\CategoryRequest;
 use App\Models\Dispute;
 use App\Models\Escrow;
 use App\Models\KYCVerification;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ReturnRequest;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\Vendor;
@@ -29,21 +31,21 @@ class AdminRepository
     public function dashboardStats(): array
     {
         return [
-            'users'          => User::count(),
+            'users' => User::count(),
             'vendors_active' => Vendor::where('status', Status::Active)->count(),
-            'orders'         => Order::count(),
-            'revenue'        => (int) Payment::where('status', PaymentStatus::Success)->sum('amount'),
-            'queues'         => [
-                'vendors'        => Vendor::where('status', Status::Pending)->count(),
-                'kyc'            => KYCVerification::where('status', KYCStatus::Pending)->count(),
-                'withdrawals'    => WalletWithdrawal::where('status', WithdrawalStatus::Pending)->count(),
-                'products'       => Product::where('status', ProductStatus::Pending)->count(),
-                'disputes'       => Dispute::whereIn('status', ['open', 'under_review', 'awaiting_response', 'escalated'])->count(),
+            'orders' => Order::count(),
+            'revenue' => (int) Payment::where('status', PaymentStatus::Success)->sum('amount'),
+            'queues' => [
+                'vendors' => Vendor::where('status', Status::Pending)->count(),
+                'kyc' => KYCVerification::where('status', KYCStatus::Pending)->count(),
+                'withdrawals' => WalletWithdrawal::where('status', WithdrawalStatus::Pending)->count(),
+                'products' => Product::where('status', ProductStatus::Pending)->count(),
+                'disputes' => Dispute::whereIn('status', ['open', 'under_review', 'awaiting_response', 'escalated'])->count(),
                 'bank_transfers' => BankTransferProof::where('status', 'pending')->count(),
-                'returns'        => \App\Models\ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
-                'category_requests' => \App\Models\CategoryRequest::where('status', 'pending')->count(),
+                'returns' => ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
+                'category_requests' => CategoryRequest::where('status', 'pending')->count(),
             ],
-            'recent_users'    => User::latest()->limit(6)->get(),
+            'recent_users' => User::latest()->limit(6)->get(),
             'recent_payments' => Payment::with('user')->latest()->limit(6)->get(),
         ];
     }
@@ -54,13 +56,13 @@ class AdminRepository
         $openStatuses = ['open', 'under_review', 'awaiting_response', 'escalated'];
 
         return [
-            'disputes_open'   => Dispute::whereIn('status', $openStatuses)->count(),
-            'disputes_today'  => Dispute::whereDate('created_at', today())->count(),
-            'returns_pending' => \App\Models\ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
-            'kyc_pending'     => KYCVerification::where('status', KYCStatus::Pending)->count(),
+            'disputes_open' => Dispute::whereIn('status', $openStatuses)->count(),
+            'disputes_today' => Dispute::whereDate('created_at', today())->count(),
+            'returns_pending' => ReturnRequest::whereIn('status', ['requested', 'approved', 'shipped_back'])->count(),
+            'kyc_pending' => KYCVerification::where('status', KYCStatus::Pending)->count(),
             'recent_disputes' => Dispute::with(['buyer', 'vendor'])->latest()->limit(6)->get(),
-            'recent_returns'  => \App\Models\ReturnRequest::with(['buyer', 'vendor'])->latest()->limit(6)->get(),
-            'recent_kyc'      => KYCVerification::with('user')->where('status', KYCStatus::Pending)->latest()->limit(6)->get(),
+            'recent_returns' => ReturnRequest::with(['buyer', 'vendor'])->latest()->limit(6)->get(),
+            'recent_kyc' => KYCVerification::with('user')->where('status', KYCStatus::Pending)->latest()->limit(6)->get(),
         ];
     }
 
@@ -68,14 +70,14 @@ class AdminRepository
     public function financeStats(): array
     {
         return [
-            'gross_revenue'      => (int) Payment::where('status', PaymentStatus::Success)->sum('amount'),
-            'escrow_held'        => (int) Escrow::whereIn('status', ['holding', 'partially_released'])
-                                        ->sum(DB::raw('vendor_earnings - released_amount')),
-            'withdrawals_pending'      => WalletWithdrawal::where('status', WithdrawalStatus::Pending)->count(),
-            'withdrawals_pending_sum'  => (int) WalletWithdrawal::where('status', WithdrawalStatus::Pending)->sum('amount'),
-            'bank_transfers'     => BankTransferProof::where('status', 'pending')->count(),
+            'gross_revenue' => (int) Payment::where('status', PaymentStatus::Success)->sum('amount'),
+            'escrow_held' => (int) Escrow::whereIn('status', ['holding', 'partially_released'])
+                ->sum(DB::raw('vendor_earnings - released_amount')),
+            'withdrawals_pending' => WalletWithdrawal::where('status', WithdrawalStatus::Pending)->count(),
+            'withdrawals_pending_sum' => (int) WalletWithdrawal::where('status', WithdrawalStatus::Pending)->sum('amount'),
+            'bank_transfers' => BankTransferProof::where('status', 'pending')->count(),
             'recent_withdrawals' => WalletWithdrawal::with('user')->latest()->limit(6)->get(),
-            'recent_payments'    => Payment::with('user')->latest()->limit(6)->get(),
+            'recent_payments' => Payment::with('user')->latest()->limit(6)->get(),
         ];
     }
 
@@ -172,7 +174,7 @@ class AdminRepository
         }
 
         if (! empty($filters['search'])) {
-            $query->where('description', 'like', '%' . $filters['search'] . '%');
+            $query->where('description', 'like', '%'.$filters['search'].'%');
         }
 
         return $query->paginate($perPage);

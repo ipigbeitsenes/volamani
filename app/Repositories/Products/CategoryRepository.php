@@ -17,7 +17,7 @@ class CategoryRepository extends BaseRepository
     {
         return $this->model->active()
             ->whereNull('parent_id')
-            ->with(['children' => fn($q) => $q->active()->orderBy('sort_order')])
+            ->with(['children' => fn ($q) => $q->active()->orderBy('sort_order')])
             ->orderBy('sort_order')
             ->get();
     }

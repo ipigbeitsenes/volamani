@@ -22,14 +22,14 @@ class MatchRequest extends Model
     protected function casts(): array
     {
         return [
-            'looking_for'   => MatchTargetType::class,
-            'status'        => MatchRequestStatus::class,
-            'budget_min'    => 'integer',
-            'budget_max'    => 'integer',
-            'remote_ok'     => 'boolean',
-            'skills'        => 'array',
+            'looking_for' => MatchTargetType::class,
+            'status' => MatchRequestStatus::class,
+            'budget_min' => 'integer',
+            'budget_max' => 'integer',
+            'remote_ok' => 'boolean',
+            'skills' => 'array',
             'matches_count' => 'integer',
-            'expires_at'    => 'datetime',
+            'expires_at' => 'datetime',
         ];
     }
 
@@ -64,10 +64,10 @@ class MatchRequest extends Model
     public function budgetLabel(): string
     {
         return match (true) {
-            $this->budget_min && $this->budget_max => money($this->budget_min) . ' – ' . money($this->budget_max),
-            (bool) $this->budget_max               => 'Up to ' . money($this->budget_max),
-            (bool) $this->budget_min               => 'From ' . money($this->budget_min),
-            default                                => 'Flexible',
+            $this->budget_min && $this->budget_max => money($this->budget_min).' – '.money($this->budget_max),
+            (bool) $this->budget_max => 'Up to '.money($this->budget_max),
+            (bool) $this->budget_min => 'From '.money($this->budget_min),
+            default => 'Flexible',
         };
     }
 }

@@ -17,10 +17,10 @@ class ServicePackage extends Model
     protected function casts(): array
     {
         return [
-            'tier'      => PackageTier::class,
-            'features'  => 'array',
+            'tier' => PackageTier::class,
+            'features' => 'array',
             'is_active' => 'boolean',
-            'price'     => 'integer',
+            'price' => 'integer',
         ];
     }
 

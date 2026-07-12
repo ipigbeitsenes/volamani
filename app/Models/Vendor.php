@@ -3,16 +3,21 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Enums\StoreFocus;
+use App\Enums\StoreType;
+use App\Enums\TrustTier;
 use App\Traits\Auditable;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vendor extends Model
 {
-    use SoftDeletes, HasSlug, Auditable;
+    use Auditable, HasSlug, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -57,20 +62,20 @@ class Vendor extends Model
     protected function casts(): array
     {
         return [
-            'social_links'   => 'array',
-            'is_featured'    => 'boolean',
-            'approved_at'    => 'datetime',
-            'verified_at'    => 'datetime',
-            'status'         => Status::class,
-            'store_type'     => \App\Enums\StoreType::class,
-            'store_focus'    => \App\Enums\StoreFocus::class,
-            'shipping_fee'   => 'integer',
+            'social_links' => 'array',
+            'is_featured' => 'boolean',
+            'approved_at' => 'datetime',
+            'verified_at' => 'datetime',
+            'status' => Status::class,
+            'store_type' => StoreType::class,
+            'store_focus' => StoreFocus::class,
+            'shipping_fee' => 'integer',
             'free_shipping_threshold' => 'integer',
             'no_delivery_states' => 'array',
             'no_delivery_cities' => 'array',
             'average_rating' => 'float',
-            'trust_score'    => 'integer',
-            'strikes'        => 'integer',
+            'trust_score' => 'integer',
+            'strikes' => 'integer',
             'strikes_updated_at' => 'datetime',
             'suspended_for_strikes' => 'boolean',
             'followers_count' => 'integer',
@@ -140,12 +145,12 @@ class Vendor extends Model
         return $this->hasMany(Document::class)->latest();
     }
 
-    public function matchingProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function matchingProfile(): HasOne
     {
         return $this->hasOne(MatchingProfile::class);
     }
 
-    public function consultantProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function consultantProfile(): HasOne
     {
         return $this->hasOne(ConsultantProfile::class);
     }
@@ -171,7 +176,7 @@ class Vendor extends Model
     }
 
     /** Users who follow this store — recipients for new-listing announcements. */
-    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'follows', 'vendor_id', 'follower_id')->withTimestamps();
     }
@@ -184,8 +189,8 @@ class Vendor extends Model
     public function reviews()
     {
         $map = [
-            Product::class           => $this->products()->pluck('id')->all(),
-            FreelanceService::class  => $this->services()->pluck('id')->all(),
+            Product::class => $this->products()->pluck('id')->all(),
+            FreelanceService::class => $this->services()->pluck('id')->all(),
             ConsultantProfile::class => ConsultantProfile::where('vendor_id', $this->id)->pluck('id')->all(),
         ];
 
@@ -194,7 +199,7 @@ class Vendor extends Model
             ->where(function ($q) use ($map) {
                 $q->whereRaw('1 = 0');
                 foreach ($map as $type => $ids) {
-                    if (!empty($ids)) {
+                    if (! empty($ids)) {
                         $q->orWhere(fn ($qq) => $qq->where('reviewable_type', $type)->whereIn('reviewable_id', $ids));
                     }
                 }
@@ -264,7 +269,7 @@ class Vendor extends Model
     public function getLogoUrlAttribute(): string
     {
         return media_url($this->logo)
-            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->business_name) . '&size=80&background=1a56db&color=fff';
+            ?? 'https://ui-avatars.com/api/?name='.urlencode($this->business_name).'&size=80&background=1a56db&color=fff';
     }
 
     public function getBannerUrlAttribute(): string
@@ -342,8 +347,8 @@ class Vendor extends Model
         return (int) $this->reviews_count;
     }
 
-    public function trustTier(): \App\Enums\TrustTier
+    public function trustTier(): TrustTier
     {
-        return \App\Enums\TrustTier::fromScore((int) $this->trust_score);
+        return TrustTier::fromScore((int) $this->trust_score);
     }
 }

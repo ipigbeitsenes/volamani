@@ -16,7 +16,7 @@ class Wallet extends Model
     protected function casts(): array
     {
         return [
-            'is_frozen'          => 'boolean',
+            'is_frozen' => 'boolean',
             'last_reconciled_at' => 'datetime',
         ];
     }
@@ -50,7 +50,7 @@ class Wallet extends Model
 
     public function canWithdraw(int $amountKobo): bool
     {
-        return !$this->is_frozen && $this->availableBalance() >= $amountKobo;
+        return ! $this->is_frozen && $this->availableBalance() >= $amountKobo;
     }
 
     public function getFormattedBalanceAttribute(): string
@@ -84,6 +84,7 @@ class Wallet extends Model
             ->value('net') ?? 0;
 
         $this->update(['balance' => max(0, (int) $sum), 'last_reconciled_at' => now()]);
+
         return (int) $sum;
     }
 }

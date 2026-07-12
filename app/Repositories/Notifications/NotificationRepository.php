@@ -53,7 +53,7 @@ class NotificationRepository
 
             $matrix[$category->value] = [
                 'category' => $category,
-                'email'    => $pref ? (bool) $pref->email : $category->defaultEmail(),
+                'email' => $pref ? (bool) $pref->email : $category->defaultEmail(),
                 'database' => $pref ? (bool) $pref->database : $category->defaultDatabase(),
             ];
         }

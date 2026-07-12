@@ -21,14 +21,14 @@ class AffiliateAccount extends Model
     protected function casts(): array
     {
         return [
-            'status'            => AffiliateStatus::class,
-            'commission_rate'   => 'decimal:2',
-            'clicks_count'      => 'integer',
-            'signups_count'     => 'integer',
+            'status' => AffiliateStatus::class,
+            'commission_rate' => 'decimal:2',
+            'clicks_count' => 'integer',
+            'signups_count' => 'integer',
             'conversions_count' => 'integer',
-            'total_earned'      => 'integer',
-            'total_paid'        => 'integer',
-            'joined_at'         => 'datetime',
+            'total_earned' => 'integer',
+            'total_paid' => 'integer',
+            'joined_at' => 'datetime',
         ];
     }
 

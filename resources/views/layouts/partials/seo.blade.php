@@ -13,9 +13,9 @@
 --}}
 @php
     $seoSite     = settings('site_name', config('app.name', 'Volamani'));
-    $seoTagline  = settings('site_tagline', "Africa's Digital Business Ecosystem");
+    $seoTagline  = settings('site_tagline', 'Your Digital Business Ecosystem');
     $seoDefaultDesc = 'Buy and sell digital products, freelance services and physical goods on '
-        . $seoSite . ' — Africa\'s trusted multi-vendor marketplace with secure escrow, buyer protection and instant payouts.';
+        . $seoSite . ' — a trusted multi-vendor marketplace with secure escrow, buyer protection and instant payouts.';
 
     $seoPageTitle = trim($__env->yieldContent('title'));
     $seoFullTitle = $seoPageTitle !== ''
@@ -24,8 +24,8 @@
 
     $seoDesc      = trim($__env->yieldContent('meta_description', $seoDefaultDesc));
     $seoKeywords  = trim($__env->yieldContent('meta_keywords',
-        'Volamani, African marketplace, digital products, freelance services, online marketplace Nigeria, '
-        . 'buy sell online Africa, escrow payment, multi-vendor, sell digital downloads, hire freelancers Africa'));
+        'Volamani, online marketplace, digital products, freelance services, '
+        . 'buy sell online, escrow payment, multi-vendor, sell digital downloads, hire freelancers'));
     $seoCanonical = trim($__env->yieldContent('canonical')) ?: url()->current();
     $seoRobots    = trim($__env->yieldContent('robots', 'index, follow')) . ', max-image-preview:large';
     $seoType      = trim($__env->yieldContent('og_type', 'website'));
@@ -73,7 +73,7 @@
 <meta property="og:title" content="{{ $seoFullTitle }}">
 <meta property="og:description" content="{{ $seoDesc }}">
 <meta property="og:url" content="{{ $seoCanonical }}">
-<meta property="og:locale" content="en_NG">
+<meta property="og:locale" content="en_US">
 @if($seoImage)
 <meta property="og:image" content="{{ $seoImage }}">
 <meta property="og:image:secure_url" content="{{ $seoImage }}">

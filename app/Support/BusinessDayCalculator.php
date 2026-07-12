@@ -19,7 +19,7 @@ class BusinessDayCalculator
      */
     public function addBusinessDays(CarbonInterface $from, int $days): Carbon
     {
-        $date  = $from->copy();
+        $date = $from->copy();
         $added = 0;
 
         while ($added < max(1, $days)) {
@@ -41,7 +41,7 @@ class BusinessDayCalculator
     public function isHoliday(CarbonInterface $date): bool
     {
         $annual = (array) config('business_days.holidays.annual', []);
-        $dates  = (array) config('business_days.holidays.dates', []);
+        $dates = (array) config('business_days.holidays.dates', []);
 
         return in_array($date->format('m-d'), $annual, true)
             || in_array($date->format('Y-m-d'), $dates, true);

@@ -13,7 +13,7 @@ class PricingCalculatorController extends Controller
 {
     public function __construct(
         private PricingCalculatorService $calculator,
-        private PricingRepository        $repository,
+        private PricingRepository $repository,
     ) {}
 
     public function index(Request $request)
@@ -22,8 +22,8 @@ class PricingCalculatorController extends Controller
         $pricingTypes = PricingType::cases();
 
         $selectedCategory = $request->query('category');
-        $templates        = $selectedCategory ? $this->repository->templatesByCategory($selectedCategory) : collect();
-        $addOns           = $selectedCategory ? $this->repository->addOnsByCategory($selectedCategory) : collect();
+        $templates = $selectedCategory ? $this->repository->templatesByCategory($selectedCategory) : collect();
+        $addOns = $selectedCategory ? $this->repository->addOnsByCategory($selectedCategory) : collect();
 
         $myEstimates = null;
         if (auth()->check()) {
@@ -37,12 +37,12 @@ class PricingCalculatorController extends Controller
 
     public function calculate(CalculatePriceRequest $request)
     {
-        $data      = $request->validated();
+        $data = $request->validated();
         $breakdown = $this->calculator->calculate($data);
 
         if ($request->boolean('save')) {
-            $user    = auth()->user();
-            $token   = $request->session()->getId();
+            $user = auth()->user();
+            $token = $request->session()->getId();
             $estimate = $this->calculator->saveEstimate($data, $breakdown, $user, $token);
 
             return redirect()->route('pricing-calculator.show', $estimate->reference)
@@ -54,31 +54,31 @@ class PricingCalculatorController extends Controller
             return response()->json([
                 'breakdown' => $breakdown,
                 'formatted' => [
-                    'base_price'        => money($breakdown['base_price']),
-                    'add_ons_total'     => money($breakdown['add_ons_total']),
-                    'subtotal'          => money($breakdown['subtotal']),
+                    'base_price' => money($breakdown['base_price']),
+                    'add_ons_total' => money($breakdown['add_ons_total']),
+                    'subtotal' => money($breakdown['subtotal']),
                     'urgency_surcharge' => money($breakdown['urgency_surcharge']),
-                    'total'             => money($breakdown['total']),
+                    'total' => money($breakdown['total']),
                 ],
             ]);
         }
 
         // Flash and show result inline
         return view('marketplace.pricing-calculator.result', [
-            'breakdown'   => $breakdown,
-            'data'        => $data,
-            'categories'  => PricingCategory::options(),
+            'breakdown' => $breakdown,
+            'data' => $data,
+            'categories' => PricingCategory::options(),
             'pricingTypes' => PricingType::cases(),
         ]);
     }
 
     public function save(CalculatePriceRequest $request)
     {
-        $data      = $request->validated();
+        $data = $request->validated();
         $breakdown = $this->calculator->calculate($data);
-        $user      = auth()->user();
-        $token     = $request->session()->getId();
-        $estimate  = $this->calculator->saveEstimate($data, $breakdown, $user, $token);
+        $user = auth()->user();
+        $token = $request->session()->getId();
+        $estimate = $this->calculator->saveEstimate($data, $breakdown, $user, $token);
 
         return redirect()->route('pricing-calculator.show', $estimate->reference)
             ->with('success', 'Estimate saved successfully!');
@@ -87,7 +87,7 @@ class PricingCalculatorController extends Controller
     public function show(string $reference)
     {
         $estimate = $this->repository->findEstimate($reference);
-        abort_if(!$estimate, 404);
+        abort_if(! $estimate, 404);
 
         // Only owner or guest who created it can view
         if ($estimate->user_id && auth()->id() !== $estimate->user_id) {
@@ -100,6 +100,7 @@ class PricingCalculatorController extends Controller
     public function myEstimates()
     {
         $estimates = $this->repository->userEstimates(auth()->id());
+
         return view('marketplace.pricing-calculator.my-estimates', compact('estimates'));
     }
 
@@ -112,26 +113,26 @@ class PricingCalculatorController extends Controller
         }
 
         $templates = $this->repository->templatesByCategory($category);
-        $addOns    = $this->repository->addOnsByCategory($category);
+        $addOns = $this->repository->addOnsByCategory($category);
 
         return response()->json([
             'templates' => $templates->map(fn ($t) => [
-                'id'           => $t->id,
-                'name'         => $t->name,
+                'id' => $t->id,
+                'name' => $t->name,
                 'pricing_type' => $t->pricing_type->value,
-                'base_price'   => from_kobo($t->base_price),
-                'hourly_rate'  => from_kobo($t->hourly_rate),
-                'min_hours'    => $t->min_hours,
-                'max_hours'    => $t->max_hours,
-                'description'  => $t->description,
-                'features'     => $t->features,
-                'price_range'  => $t->priceRange(),
+                'base_price' => from_kobo($t->base_price),
+                'hourly_rate' => from_kobo($t->hourly_rate),
+                'min_hours' => $t->min_hours,
+                'max_hours' => $t->max_hours,
+                'description' => $t->description,
+                'features' => $t->features,
+                'price_range' => $t->priceRange(),
             ]),
             'add_ons' => $addOns->map(fn ($a) => [
-                'id'            => $a->id,
-                'name'          => $a->name,
-                'description'   => $a->description,
-                'price'         => $a->is_percentage ? ($a->price / 100) : from_kobo($a->price),
+                'id' => $a->id,
+                'name' => $a->name,
+                'description' => $a->description,
+                'price' => $a->is_percentage ? ($a->price / 100) : from_kobo($a->price),
                 'is_percentage' => $a->is_percentage,
                 'display_price' => $a->displayPrice(),
             ]),

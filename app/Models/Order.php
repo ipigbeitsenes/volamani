@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 class Order extends Model
 {
-    use SoftDeletes, Auditable;
+    use Auditable, SoftDeletes;
 
     protected $fillable = [
         'reference', 'buyer_id', 'vendor_id', 'status', 'payment_status',
@@ -28,15 +28,15 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'status'            => OrderStatus::class,
-            'payment_status'    => PaymentStatus::class,
+            'status' => OrderStatus::class,
+            'payment_status' => PaymentStatus::class,
             'requires_shipping' => 'boolean',
-            'shipping_fee'      => 'integer',
-            'paid_at'           => 'datetime',
-            'shipped_at'        => 'datetime',
-            'delivered_at'      => 'datetime',
-            'completed_at'      => 'datetime',
-            'cancelled_at'      => 'datetime',
+            'shipping_fee' => 'integer',
+            'paid_at' => 'datetime',
+            'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
+            'completed_at' => 'datetime',
+            'cancelled_at' => 'datetime',
         ];
     }
 
@@ -164,7 +164,7 @@ class Order extends Model
         return $this->activeReturn() !== null;
     }
 
-    public function returnWindowClosesAt(): ?\Illuminate\Support\Carbon
+    public function returnWindowClosesAt(): ?Carbon
     {
         return $this->delivered_at?->copy()->addDays((int) config('business_days.return_window_days', 7));
     }
@@ -191,7 +191,7 @@ class Order extends Model
             $this->ship_to_name,
             $this->ship_to_phone,
             $this->ship_to_address,
-            trim(($this->ship_to_city ?? '') . ($this->ship_to_state ? ', ' . $this->ship_to_state : '')),
+            trim(($this->ship_to_city ?? '').($this->ship_to_state ? ', '.$this->ship_to_state : '')),
         ]));
     }
 }

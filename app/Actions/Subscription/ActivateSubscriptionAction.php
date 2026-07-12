@@ -18,37 +18,37 @@ class ActivateSubscriptionAction
      * path (wallet, gateway, free) — idempotent on an already-active period.
      */
     public function execute(
-        Subscription        $subscription,
+        Subscription $subscription,
         SubscriptionInvoice $invoice,
-        string              $method,
-        ?Payment            $payment = null,
-        ?WalletLedger       $ledger = null,
+        string $method,
+        ?Payment $payment = null,
+        ?WalletLedger $ledger = null,
     ): Subscription {
         return DB::transaction(function () use ($subscription, $invoice, $method, $payment, $ledger) {
-            $now   = now();
+            $now = now();
             $start = $subscription->starts_at ?? $now;
-            $end   = $subscription->billing_interval->advance($now); // null = lifetime
+            $end = $subscription->billing_interval->advance($now); // null = lifetime
 
             $subscription->update([
-                'status'          => SubscriptionStatus::Active,
-                'starts_at'       => $start,
-                'ends_at'         => $end,
+                'status' => SubscriptionStatus::Active,
+                'starts_at' => $start,
+                'ends_at' => $end,
                 'last_payment_at' => $now,
             ]);
 
             $invoice->update([
-                'status'           => SubscriptionInvoiceStatus::Paid,
-                'method'           => $method,
-                'payment_id'       => $payment?->id,
+                'status' => SubscriptionInvoiceStatus::Paid,
+                'method' => $method,
+                'payment_id' => $payment?->id,
                 'wallet_ledger_id' => $ledger?->id,
-                'period_start'     => $start,
-                'period_end'       => $end,
-                'paid_at'          => $now,
+                'period_start' => $start,
+                'period_end' => $end,
+                'paid_at' => $now,
             ]);
 
             // Reflect the active plan on the vendor for quick reads / featured logic.
             $subscription->vendor->update([
-                'plan'        => $subscription->plan->slug,
+                'plan' => $subscription->plan->slug,
                 'is_featured' => $subscription->plan->featured_listing ? true : $subscription->vendor->is_featured,
             ]);
 

@@ -16,9 +16,9 @@ class NotificationController extends Controller
 
     public function index(Request $request): View
     {
-        $filter        = $request->query('filter') === 'unread' ? 'unread' : null;
+        $filter = $request->query('filter') === 'unread' ? 'unread' : null;
         $notifications = $this->notifications->forUser($request->user(), 20, $filter);
-        $unread        = $this->notifications->unreadCount($request->user());
+        $unread = $this->notifications->unreadCount($request->user());
 
         return view('marketplace.notifications.index', compact('notifications', 'unread', 'filter'));
     }
@@ -30,14 +30,14 @@ class NotificationController extends Controller
 
         return response()->json([
             'unread' => $this->notifications->unreadCount($user),
-            'items'  => $this->notifications->recent($user)->map(fn ($n) => [
-                'id'      => $n->id,
-                'title'   => $n->data['title'] ?? 'Notification',
+            'items' => $this->notifications->recent($user)->map(fn ($n) => [
+                'id' => $n->id,
+                'title' => $n->data['title'] ?? 'Notification',
                 'message' => $n->data['message'] ?? '',
-                'icon'    => $n->data['icon'] ?? 'bi-bell',
-                'url'     => route('notifications.open', $n->id),
-                'read'    => $n->read_at !== null,
-                'time'    => $n->created_at->diffForHumans(),
+                'icon' => $n->data['icon'] ?? 'bi-bell',
+                'url' => route('notifications.open', $n->id),
+                'read' => $n->read_at !== null,
+                'time' => $n->created_at->diffForHumans(),
             ]),
         ]);
     }
@@ -45,7 +45,7 @@ class NotificationController extends Controller
     /** Mark a notification read, then bounce to its target URL. */
     public function open(Request $request, string $id): RedirectResponse
     {
-        $user         = $request->user();
+        $user = $request->user();
         $notification = $this->notifications->find($user, $id);
 
         $notification?->markAsRead();

@@ -22,15 +22,15 @@ class Subscription extends Model
     protected function casts(): array
     {
         return [
-            'status'           => SubscriptionStatus::class,
+            'status' => SubscriptionStatus::class,
             'billing_interval' => BillingInterval::class,
-            'price'            => 'integer',
-            'auto_renew'       => 'boolean',
-            'trial_ends_at'    => 'datetime',
-            'starts_at'        => 'datetime',
-            'ends_at'          => 'datetime',
-            'last_payment_at'  => 'datetime',
-            'cancelled_at'     => 'datetime',
+            'price' => 'integer',
+            'auto_renew' => 'boolean',
+            'trial_ends_at' => 'datetime',
+            'starts_at' => 'datetime',
+            'ends_at' => 'datetime',
+            'last_payment_at' => 'datetime',
+            'cancelled_at' => 'datetime',
         ];
     }
 

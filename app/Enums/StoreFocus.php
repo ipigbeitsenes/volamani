@@ -9,17 +9,17 @@ namespace App\Enums;
 enum StoreFocus: string
 {
     case Physical = 'physical';
-    case Digital  = 'digital';
-    case Service  = 'service';
-    case Hybrid   = 'hybrid';
+    case Digital = 'digital';
+    case Service = 'service';
+    case Hybrid = 'hybrid';
 
     public function label(): string
     {
         return match ($this) {
             self::Physical => 'Physical products only',
-            self::Digital  => 'Digital products only',
-            self::Service  => 'Services only',
-            self::Hybrid   => 'Hybrid store (mix of everything)',
+            self::Digital => 'Digital products only',
+            self::Service => 'Services only',
+            self::Hybrid => 'Hybrid store (mix of everything)',
         };
     }
 
@@ -27,9 +27,9 @@ enum StoreFocus: string
     {
         return match ($this) {
             self::Physical => 'bi-box-seam',
-            self::Digital  => 'bi-cloud-download',
-            self::Service  => 'bi-briefcase',
-            self::Hybrid   => 'bi-shuffle',
+            self::Digital => 'bi-cloud-download',
+            self::Service => 'bi-briefcase',
+            self::Hybrid => 'bi-shuffle',
         };
     }
 
@@ -37,9 +37,9 @@ enum StoreFocus: string
     {
         return match ($this) {
             self::Physical => 'warning',
-            self::Digital  => 'primary',
-            self::Service  => 'success',
-            self::Hybrid   => 'dark',
+            self::Digital => 'primary',
+            self::Service => 'success',
+            self::Hybrid => 'dark',
         };
     }
 

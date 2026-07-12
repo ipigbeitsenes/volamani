@@ -2,6 +2,7 @@
 
 namespace App\Actions\Payment;
 
+use App\Actions\Products\DecrementStockAction;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\ServiceOrderStatus;
@@ -30,11 +31,11 @@ use Illuminate\Support\Facades\Log;
 class FulfillPaymentAction
 {
     public function __construct(
-        private EscrowService       $escrowService,
-        private AffiliateService    $affiliateService,
+        private EscrowService $escrowService,
+        private AffiliateService $affiliateService,
         private SubscriptionService $subscriptionService,
-        private DocumentService     $documentService,
-        private WalletService       $walletService,
+        private DocumentService $documentService,
+        private WalletService $walletService,
     ) {}
 
     /**
@@ -49,38 +50,39 @@ class FulfillPaymentAction
 
     private function fulfillPayable(Payment $payment): void
     {
-        if (!$payment->payable_type || !$payment->payable_id) {
+        if (! $payment->payable_type || ! $payment->payable_id) {
             return;
         }
 
         $payable = $payment->payable;
-        if (!$payable) {
+        if (! $payable) {
             Log::warning("Payment {$payment->reference}: payable not found", [
                 'type' => $payment->payable_type,
-                'id'   => $payment->payable_id,
+                'id' => $payment->payable_id,
             ]);
+
             return;
         }
 
         match (true) {
-            $payable instanceof Order               => $this->fulfillOrder($payable, $payment),
-            $payable instanceof ServiceOrder        => $this->fulfillServiceOrder($payable, $payment),
+            $payable instanceof Order => $this->fulfillOrder($payable, $payment),
+            $payable instanceof ServiceOrder => $this->fulfillServiceOrder($payable, $payment),
             $payable instanceof ConsultationSession => $this->fulfillConsultationSession($payable, $payment),
-            $payable instanceof Subscription        => $this->subscriptionService->activateFromPayment($payment),
-            $payable instanceof Document            => $this->documentService->settleFromPayment($payment),
-            $payable instanceof WalletFunding       => $this->fulfillWalletFunding($payable),
-            default                                 => null,
+            $payable instanceof Subscription => $this->subscriptionService->activateFromPayment($payment),
+            $payable instanceof Document => $this->documentService->settleFromPayment($payment),
+            $payable instanceof WalletFunding => $this->fulfillWalletFunding($payable),
+            default => null,
         };
     }
 
     private function fulfillOrder(Order $order, Payment $payment): void
     {
         $order->update([
-            'payment_status'    => PaymentStatus::Success,
-            'status'            => OrderStatus::Paid,
+            'payment_status' => PaymentStatus::Success,
+            'status' => OrderStatus::Paid,
             'payment_reference' => $payment->gateway_reference,
-            'payment_method'    => $payment->gateway->value,
-            'paid_at'           => now(),
+            'payment_method' => $payment->gateway->value,
+            'paid_at' => now(),
         ]);
 
         $order = $order->fresh();
@@ -88,7 +90,8 @@ class FulfillPaymentAction
 
         if ($order->requires_shipping) {
             // Physical: draw down inventory; nothing to download.
-            app(\App\Actions\Products\DecrementStockAction::class)->execute($order);
+            app(DecrementStockAction::class)->execute($order);
+
             return;
         }
 
@@ -118,11 +121,11 @@ class FulfillPaymentAction
     private function fulfillServiceOrder(ServiceOrder $order, Payment $payment): void
     {
         $order->update([
-            'payment_status'    => PaymentStatus::Success,
-            'status'            => ServiceOrderStatus::Active,
+            'payment_status' => PaymentStatus::Success,
+            'status' => ServiceOrderStatus::Active,
             'payment_reference' => $payment->gateway_reference,
-            'payment_method'    => $payment->gateway->value,
-            'paid_at'           => now(),
+            'payment_method' => $payment->gateway->value,
+            'paid_at' => now(),
         ]);
 
         $this->escrowService->holdForPayable($order->fresh(), $payment);
@@ -132,7 +135,7 @@ class FulfillPaymentAction
     {
         $session->update([
             'payment_status' => PaymentStatus::Success,
-            'paid_at'        => now(),
+            'paid_at' => now(),
         ]);
 
         $this->escrowService->holdForPayable($session->fresh(), $payment);

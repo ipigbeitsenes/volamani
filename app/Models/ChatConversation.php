@@ -20,10 +20,10 @@ class ChatConversation extends Model
     protected function casts(): array
     {
         return [
-            'status'          => ChatConversationStatus::class,
+            'status' => ChatConversationStatus::class,
             'last_visitor_at' => 'datetime',
-            'last_agent_at'   => 'datetime',
-            'bot_replied'     => 'boolean',
+            'last_agent_at' => 'datetime',
+            'bot_replied' => 'boolean',
         ];
     }
 
@@ -34,9 +34,9 @@ class ChatConversation extends Model
             // Set defaults on the instance itself — DB column defaults are NOT
             // reflected back on the model returned by create(), which otherwise
             // leaves status null and crashes status->value on the first response.
-            $conversation->status         ??= ChatConversationStatus::Open;
-            $conversation->bot_replied    ??= false;
-            $conversation->agent_unread   ??= 0;
+            $conversation->status ??= ChatConversationStatus::Open;
+            $conversation->bot_replied ??= false;
+            $conversation->agent_unread ??= 0;
             $conversation->visitor_unread ??= 0;
         });
     }

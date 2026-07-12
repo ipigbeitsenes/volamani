@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\EncryptedDate;
 use App\Enums\KYCDocumentType;
 use App\Enums\KYCStatus;
 use App\Enums\KYCType;
@@ -28,13 +29,21 @@ class KYCVerification extends Model
     protected function casts(): array
     {
         return [
-            'type'          => KYCType::class,
-            'status'        => KYCStatus::class,
-            'id_type'       => KYCDocumentType::class,
-            'date_of_birth' => 'date',
-            'submitted_at'  => 'datetime',
-            'reviewed_at'   => 'datetime',
-            'verified_at'   => 'datetime',
+            'type' => KYCType::class,
+            'status' => KYCStatus::class,
+            'id_type' => KYCDocumentType::class,
+
+            // PII encrypted at rest (see 2026_07_11 migration). Decryption is
+            // transparent on read, so views/services are unaffected.
+            'full_name' => 'encrypted',
+            'id_number' => 'encrypted',
+            'address' => 'encrypted',
+            'rc_number' => 'encrypted',
+            'date_of_birth' => EncryptedDate::class,
+
+            'submitted_at' => 'datetime',
+            'reviewed_at' => 'datetime',
+            'verified_at' => 'datetime',
         ];
     }
 
@@ -78,9 +87,9 @@ class KYCVerification extends Model
     public function documents(): array
     {
         return array_filter([
-            'document_front'   => $this->document_front,
-            'document_back'    => $this->document_back,
-            'selfie'           => $this->selfie,
+            'document_front' => $this->document_front,
+            'document_back' => $this->document_back,
+            'selfie' => $this->selfie,
             'proof_of_address' => $this->proof_of_address,
         ]);
     }

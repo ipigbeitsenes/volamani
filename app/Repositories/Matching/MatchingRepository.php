@@ -46,9 +46,9 @@ class MatchingRepository
         $base = BusinessMatch::where('vendor_id', $vendor->id);
 
         return [
-            'leads'      => (clone $base)->count(),
-            'pending'    => (clone $base)->whereIn('status', [MatchStatus::Suggested, MatchStatus::Viewed, MatchStatus::Interested])->count(),
-            'connected'  => (clone $base)->where('status', MatchStatus::Connected)->count(),
+            'leads' => (clone $base)->count(),
+            'pending' => (clone $base)->whereIn('status', [MatchStatus::Suggested, MatchStatus::Viewed, MatchStatus::Interested])->count(),
+            'connected' => (clone $base)->where('status', MatchStatus::Connected)->count(),
         ];
     }
 }

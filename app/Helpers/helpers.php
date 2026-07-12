@@ -1,11 +1,36 @@
 <?php
 
+use App\Models\Setting;
+use App\Support\BusinessDayCalculator;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-if (! function_exists('money')) {
-    function money(int|float $kobo, string $symbol = '₦'): string
+if (! function_exists('currency_symbol')) {
+    /** The platform's display currency symbol (admin-configurable, default $). */
+    function currency_symbol(): string
     {
-        return $symbol . number_format($kobo / 100, 2);
+        return (string) settings('currency_symbol', '$');
+    }
+}
+
+if (! function_exists('currency_code')) {
+    /** The platform's ISO currency code (admin-configurable, default USD). */
+    function currency_code(): string
+    {
+        return (string) settings('currency_code', 'USD');
+    }
+}
+
+if (! function_exists('money')) {
+    /**
+     * Format a minor-unit amount (e.g. cents) for display. The symbol defaults to
+     * the configured platform currency; pass one explicitly to override.
+     */
+    function money(int|float $minor, ?string $symbol = null): string
+    {
+        return ($symbol ?? currency_symbol()).number_format($minor / 100, 2);
     }
 }
 
@@ -26,7 +51,7 @@ if (! function_exists('from_kobo')) {
 if (! function_exists('generate_reference')) {
     function generate_reference(string $prefix = 'VLM'): string
     {
-        return strtoupper($prefix) . '-' . strtoupper(Str::random(10)) . '-' . time();
+        return strtoupper($prefix).'-'.strtoupper(Str::random(10)).'-'.time();
     }
 }
 
@@ -40,14 +65,14 @@ if (! function_exists('active_route')) {
 if (! function_exists('active_prefix')) {
     function active_prefix(string $prefix, string $class = 'active'): string
     {
-        return request()->is($prefix . '*') ? $class : '';
+        return request()->is($prefix.'*') ? $class : '';
     }
 }
 
 if (! function_exists('add_business_days')) {
-    function add_business_days(int $days, ?\Carbon\CarbonInterface $from = null): \Carbon\Carbon
+    function add_business_days(int $days, ?CarbonInterface $from = null): Carbon
     {
-        return app(\App\Support\BusinessDayCalculator::class)
+        return app(BusinessDayCalculator::class)
             ->addBusinessDays($from ?? now(), $days);
     }
 }
@@ -55,8 +80,8 @@ if (! function_exists('add_business_days')) {
 if (! function_exists('settings')) {
     function settings(string $key, mixed $default = null): mixed
     {
-        return cache()->rememberForever('settings.' . $key, function () use ($key, $default) {
-            return \App\Models\Setting::where('key', $key)->value('value') ?? $default;
+        return cache()->rememberForever('settings.'.$key, function () use ($key, $default) {
+            return Setting::where('key', $key)->value('value') ?? $default;
         });
     }
 }
@@ -68,7 +93,7 @@ if (! function_exists('feature')) {
      */
     function feature(string $key): bool
     {
-        return (bool) settings('feature_' . $key, true);
+        return (bool) settings('feature_'.$key, true);
     }
 }
 
@@ -85,17 +110,17 @@ if (! function_exists('media_url')) {
         }
 
         // Already a full URL (e.g. an external avatar) — return untouched.
-        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '//', 'data:'])) {
+        if (Str::startsWith($path, ['http://', 'https://', '//', 'data:'])) {
             return $path;
         }
 
-        $url = \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        $url = Storage::disk('public')->url($path);
 
         // For local storage, strip the host so images load from whatever address
         // the page is served on (localhost, 127.0.0.1, a forwarded port or a
         // tunnel) instead of the hard-coded APP_URL host. S3/CDN URLs stay absolute.
         if (settings('storage_driver', 'local') !== 's3'
-            && \Illuminate\Support\Str::startsWith($url, ['http://', 'https://'])) {
+            && Str::startsWith($url, ['http://', 'https://'])) {
             $relative = parse_url($url, PHP_URL_PATH);
 
             return $relative !== false && $relative !== null ? $relative : $url;

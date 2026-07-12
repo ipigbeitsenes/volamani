@@ -22,11 +22,11 @@ class ProductRequest extends Model
     protected function casts(): array
     {
         return [
-            'status'      => RequestStatus::class,
+            'status' => RequestStatus::class,
             'attachments' => 'array',
-            'is_public'   => 'boolean',
+            'is_public' => 'boolean',
             'deadline_at' => 'datetime',
-            'closed_at'   => 'datetime',
+            'closed_at' => 'datetime',
         ];
     }
 
@@ -96,14 +96,15 @@ class ProductRequest extends Model
     public function budgetRange(): string
     {
         if ($this->budget_min && $this->budget_max) {
-            return money($this->budget_min) . ' – ' . money($this->budget_max);
+            return money($this->budget_min).' – '.money($this->budget_max);
         }
         if ($this->budget_max) {
-            return 'Up to ' . money($this->budget_max);
+            return 'Up to '.money($this->budget_max);
         }
         if ($this->budget_min) {
-            return 'From ' . money($this->budget_min);
+            return 'From '.money($this->budget_min);
         }
+
         return 'Flexible';
     }
 

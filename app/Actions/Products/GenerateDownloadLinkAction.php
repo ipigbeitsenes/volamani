@@ -14,12 +14,12 @@ class GenerateDownloadLinkAction
     {
         $download = ProductDownload::firstOrCreate(
             [
-                'order_id'       => $order->id,
+                'order_id' => $order->id,
                 'product_file_id' => $file->id,
-                'user_id'        => $user->id,
+                'user_id' => $user->id,
             ],
             [
-                'product_id'     => $file->product_id,
+                'product_id' => $file->product_id,
                 'download_count' => 0,
             ]
         );
@@ -35,7 +35,7 @@ class GenerateDownloadLinkAction
             'products.download',
             now()->addHours($expiryHours),
             [
-                'order'       => $order->id,
+                'order' => $order->id,
                 'productFile' => $file->id,
             ]
         );

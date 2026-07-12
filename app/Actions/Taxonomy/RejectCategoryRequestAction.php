@@ -15,8 +15,8 @@ class RejectCategoryRequestAction
         }
 
         $request->update([
-            'status'      => CategoryRequestStatus::Rejected,
-            'admin_note'  => $note,
+            'status' => CategoryRequestStatus::Rejected,
+            'admin_note' => $note,
             'reviewed_by' => $admin->id,
             'reviewed_at' => now(),
         ]);

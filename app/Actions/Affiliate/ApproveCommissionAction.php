@@ -24,7 +24,7 @@ class ApproveCommissionAction
 
         return DB::transaction(function () use ($commission) {
             $account = $commission->account;
-            $wallet  = $this->walletService->getOrCreate($account->user);
+            $wallet = $this->walletService->getOrCreate($account->user);
 
             $ledger = $this->walletService->credit(
                 $wallet,
@@ -35,10 +35,10 @@ class ApproveCommissionAction
             );
 
             $commission->update([
-                'status'           => CommissionStatus::Paid,
+                'status' => CommissionStatus::Paid,
                 'wallet_ledger_id' => $ledger->id,
-                'approved_at'      => $commission->approved_at ?? now(),
-                'paid_at'          => now(),
+                'approved_at' => $commission->approved_at ?? now(),
+                'paid_at' => now(),
             ]);
 
             $account->increment('total_paid', $commission->amount);
@@ -60,7 +60,7 @@ class ApproveCommissionAction
 
             $commission->update([
                 'status' => CommissionStatus::Cancelled,
-                'note'   => $reason ?: $commission->note,
+                'note' => $reason ?: $commission->note,
             ]);
 
             return $commission->fresh();

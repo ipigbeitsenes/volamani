@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Repositories\Vendors\VendorRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -32,15 +33,15 @@ class StorefrontController extends Controller
 
         $vendor->incrementViews();
 
-        $products = \Illuminate\Support\Facades\Schema::hasTable('products')
+        $products = Schema::hasTable('products')
             ? $vendor->products()->where('status', 'active')->latest()->limit(12)->get()
             : collect();
 
-        $services = \Illuminate\Support\Facades\Schema::hasTable('freelance_services')
+        $services = Schema::hasTable('freelance_services')
             ? $vendor->services()->where('status', 'active')->latest()->limit(6)->get()
             : collect();
 
-        $recentReviews = \Illuminate\Support\Facades\Schema::hasTable('reviews')
+        $recentReviews = Schema::hasTable('reviews')
             ? $vendor->reviews()->with('reviewer')->latest()->limit(5)->get()
             : collect();
 

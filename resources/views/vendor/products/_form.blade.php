@@ -182,7 +182,7 @@
                             <input type="text" name="variant_skus[]" class="form-control form-control-sm" value="{{ $v->sku }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label small">Price (₦)</label>
+                            <label class="form-label small">Price ({{ currency_symbol() }})</label>
                             <input type="number" step="0.01" min="0" name="variant_prices[]" class="form-control form-control-sm" value="{{ $v->price_override ? from_kobo($v->price_override) : '' }}" placeholder="base">
                         </div>
                         <div class="col-md-2">
@@ -211,9 +211,9 @@
             <div class="card-header bg-white fw-semibold">Pricing</div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Price (₦) <span class="text-danger">*</span></label>
+                    <label class="form-label">Price ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
                     <div class="input-group">
-                        <span class="input-group-text">₦</span>
+                        <span class="input-group-text">{{ currency_symbol() }}</span>
                         <input type="number" name="price" step="0.01" min="0"
                             class="form-control @error('price') is-invalid @enderror"
                             value="{{ old('price', isset($product) ? from_kobo($product->price) : '') }}" required>
@@ -221,9 +221,9 @@
                     @error('price') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Compare-at Price (₦) <small class="text-muted">(strikethrough)</small></label>
+                    <label class="form-label">Compare-at Price ({{ currency_symbol() }}) <small class="text-muted">(strikethrough)</small></label>
                     <div class="input-group">
-                        <span class="input-group-text">₦</span>
+                        <span class="input-group-text">{{ currency_symbol() }}</span>
                         <input type="number" name="compare_price" step="0.01" min="0"
                             class="form-control @error('compare_price') is-invalid @enderror"
                             value="{{ old('compare_price', isset($product) && $product->compare_price ? from_kobo($product->compare_price) : '') }}">
@@ -403,7 +403,7 @@ function addVariantRow() {
             <input type="text" name="variant_names[]" class="form-control form-control-sm" placeholder="e.g. Large / Black"></div>
         <div class="col-md-3"><label class="form-label small">SKU</label>
             <input type="text" name="variant_skus[]" class="form-control form-control-sm"></div>
-        <div class="col-md-2"><label class="form-label small">Price (₦)</label>
+        <div class="col-md-2"><label class="form-label small">Price ({{ currency_symbol() }})</label>
             <input type="number" step="0.01" min="0" name="variant_prices[]" class="form-control form-control-sm" placeholder="base"></div>
         <div class="col-md-2"><label class="form-label small">Stock</label>
             <input type="number" min="0" name="variant_stocks[]" class="form-control form-control-sm"></div>

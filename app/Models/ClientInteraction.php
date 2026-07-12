@@ -16,11 +16,11 @@ class ClientInteraction extends Model
     protected function casts(): array
     {
         return [
-            'type'         => InteractionType::class,
-            'pinned'       => 'boolean',
-            'due_at'       => 'datetime',
+            'type' => InteractionType::class,
+            'pinned' => 'boolean',
+            'due_at' => 'datetime',
             'completed_at' => 'datetime',
-            'occurred_at'  => 'datetime',
+            'occurred_at' => 'datetime',
         ];
     }
 

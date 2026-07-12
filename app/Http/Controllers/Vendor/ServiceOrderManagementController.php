@@ -29,7 +29,7 @@ class ServiceOrderManagementController extends Controller
         abort_unless($serviceOrder->vendor_id === $vendor->id, 403);
 
         $request->validate([
-            'message'    => ['required', 'string', 'min:20'],
+            'message' => ['required', 'string', 'min:20'],
             'attachment' => ['nullable', 'file', 'max:51200'],
         ]);
 
@@ -40,6 +40,7 @@ class ServiceOrderManagementController extends Controller
         );
 
         $this->flashSuccess('Delivery submitted. The buyer has been notified.');
+
         return back();
     }
 
@@ -49,7 +50,7 @@ class ServiceOrderManagementController extends Controller
         abort_unless($serviceOrder->vendor_id === $vendor->id, 403);
 
         $request->validate([
-            'message'    => ['required_without:attachment', 'nullable', 'string'],
+            'message' => ['required_without:attachment', 'nullable', 'string'],
             'attachment' => ['nullable', 'file', 'max:20480'],
         ]);
 

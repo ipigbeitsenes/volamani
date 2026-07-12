@@ -19,31 +19,31 @@ class FreelanceServiceRepository extends BaseRepository
     {
         $query = $this->model->with(['vendor', 'category', 'packages'])->active();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $query->search($filters['q']);
         }
 
-        if (!empty($filters['category'])) {
+        if (! empty($filters['category'])) {
             $query->where('category_id', $filters['category']);
         }
 
-        if (!empty($filters['delivery'])) {
-            $query->whereHas('packages', fn($q) => $q->where('delivery_days', '<=', $filters['delivery']));
+        if (! empty($filters['delivery'])) {
+            $query->whereHas('packages', fn ($q) => $q->where('delivery_days', '<=', $filters['delivery']));
         }
 
-        if (!empty($filters['budget'])) {
-            $query->whereHas('packages', fn($q) => $q->where('price', '<=', to_kobo($filters['budget'])));
+        if (! empty($filters['budget'])) {
+            $query->whereHas('packages', fn ($q) => $q->where('price', '<=', to_kobo($filters['budget'])));
         }
 
-        if (!empty($filters['vendor'])) {
-            $query->whereHas('vendor', fn($q) => $q->where('slug', $filters['vendor']));
+        if (! empty($filters['vendor'])) {
+            $query->whereHas('vendor', fn ($q) => $q->where('slug', $filters['vendor']));
         }
 
         $sort = $filters['sort'] ?? 'latest';
         match ($sort) {
-            'popular'   => $query->orderByDesc('orders_count'),
+            'popular' => $query->orderByDesc('orders_count'),
             'top_rated' => $query->orderByDesc('average_rating'),
-            default     => $query->latest(),
+            default => $query->latest(),
         };
 
         return $query->paginate($perPage)->appends($filters);

@@ -22,19 +22,19 @@ class PlatformDocumentController extends Controller
 
     public function index(Request $request): View
     {
-        $type      = $this->typeFromRequest($request) ?? DocumentType::Invoice;
-        $filters   = $request->only('status', 'search');
+        $type = $this->typeFromRequest($request) ?? DocumentType::Invoice;
+        $filters = $request->only('status', 'search');
         $documents = $this->documentService->forPlatform($type, 15, $filters);
-        $stats     = $type === DocumentType::Invoice ? $this->documentService->platformStats() : null;
+        $stats = $type === DocumentType::Invoice ? $this->documentService->platformStats() : null;
 
         return view('vendor.documents.index', [
             'documents' => $documents,
-            'type'      => $type,
+            'type' => $type,
             'platformTabs' => true,   // render Invoices | Contracts tabs
             'routeBase' => 'admin.documents',
             'docLayout' => 'layouts.admin',
-            'filters'   => $filters,
-            'stats'     => $stats,
+            'filters' => $filters,
+            'stats' => $stats,
         ]);
     }
 
@@ -43,8 +43,8 @@ class PlatformDocumentController extends Controller
         $type = $this->typeFromRequest($request) ?? DocumentType::Invoice;
 
         return view('vendor.documents.form', [
-            'document'  => new Document(['type' => $type]),
-            'type'      => $type,
+            'document' => new Document(['type' => $type]),
+            'type' => $type,
             'routeBase' => 'admin.documents',
             'docLayout' => 'layouts.admin',
         ]);
@@ -52,10 +52,10 @@ class PlatformDocumentController extends Controller
 
     public function store(PlatformDocumentRequest $request): RedirectResponse
     {
-        $type     = $this->typeFromRequest($request) ?? DocumentType::Invoice;
+        $type = $this->typeFromRequest($request) ?? DocumentType::Invoice;
         $document = $this->documentService->createForPlatform($type, $request->documentData(), $request->user());
 
-        $this->flashSuccess($type->label() . " {$document->number} created.");
+        $this->flashSuccess($type->label()." {$document->number} created.");
 
         return redirect()->route('admin.documents.show', $document);
     }
@@ -66,8 +66,8 @@ class PlatformDocumentController extends Controller
         $document->load('items', 'client');
 
         return view('vendor.documents.show', [
-            'document'  => $document,
-            'type'      => $document->type,
+            'document' => $document,
+            'type' => $document->type,
             'routeBase' => 'admin.documents',
             'docLayout' => 'layouts.admin',
         ]);
@@ -80,8 +80,8 @@ class PlatformDocumentController extends Controller
         $document->load('items');
 
         return view('admin.documents.form', [
-            'document'  => $document,
-            'type'      => $document->type,
+            'document' => $document,
+            'type' => $document->type,
             'routeBase' => 'admin.documents',
             'docLayout' => 'layouts.admin',
         ]);
@@ -155,9 +155,9 @@ class PlatformDocumentController extends Controller
     private function typeFromRequest(Request $request): ?DocumentType
     {
         return match ($request->input('type')) {
-            'invoice'  => DocumentType::Invoice,
+            'invoice' => DocumentType::Invoice,
             'contract' => DocumentType::Contract,
-            default    => null,
+            default => null,
         };
     }
 }

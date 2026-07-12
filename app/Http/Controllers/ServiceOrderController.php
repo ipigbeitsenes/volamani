@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ServiceOrderStatus;
-use App\Models\FreelanceService;
 use App\Models\ServiceOrder;
-use App\Models\ServicePackage;
 use App\Services\Services\ServiceListingService;
 use Illuminate\Http\Request;
 
@@ -32,7 +30,7 @@ class ServiceOrderController extends Controller
         );
 
         $serviceOrder->load(['service', 'package', 'buyer', 'vendor.user', 'messages.sender']);
-        $isBuyer  = $serviceOrder->buyer_id === $user->id;
+        $isBuyer = $serviceOrder->buyer_id === $user->id;
         $isVendor = $serviceOrder->vendor->user_id === $user->id;
 
         return view('service-orders.show', compact('serviceOrder', 'isBuyer', 'isVendor'));
@@ -48,6 +46,7 @@ class ServiceOrderController extends Controller
         $this->serviceManager->submitRequirements($serviceOrder, $request->requirements);
 
         $this->flashSuccess('Requirements submitted. The vendor has been notified.');
+
         return back();
     }
 
@@ -61,6 +60,7 @@ class ServiceOrderController extends Controller
         $this->serviceManager->requestRevision($serviceOrder, $request->feedback);
 
         $this->flashSuccess('Revision requested.');
+
         return back();
     }
 
@@ -72,6 +72,7 @@ class ServiceOrderController extends Controller
         $this->serviceManager->acceptDelivery($serviceOrder);
 
         $this->flashSuccess('Order completed. Thank you!');
+
         return back();
     }
 
@@ -84,7 +85,7 @@ class ServiceOrderController extends Controller
         );
 
         $request->validate([
-            'message'    => ['required_without:attachment', 'nullable', 'string'],
+            'message' => ['required_without:attachment', 'nullable', 'string'],
             'attachment' => ['nullable', 'file', 'max:20480'],
         ]);
 

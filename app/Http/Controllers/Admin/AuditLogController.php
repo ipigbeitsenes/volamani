@@ -14,7 +14,7 @@ class AuditLogController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->only('log', 'search');
-        $logs    = $this->admin->auditLogs($filters);
+        $logs = $this->admin->auditLogs($filters);
         $logNames = $this->admin->auditLogNames();
 
         return view('admin.audit-logs.index', compact('logs', 'logNames', 'filters'));

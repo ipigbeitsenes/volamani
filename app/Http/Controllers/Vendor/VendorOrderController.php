@@ -35,7 +35,7 @@ class VendorOrderController extends Controller
 
         $data = $request->validate([
             'tracking_number' => ['nullable', 'string', 'max:120'],
-            'courier'         => ['nullable', 'string', 'max:120'],
+            'courier' => ['nullable', 'string', 'max:120'],
         ]);
 
         if ($this->orders->markShipped($order, $data['tracking_number'] ?? null, $data['courier'] ?? null)) {

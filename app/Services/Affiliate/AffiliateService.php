@@ -7,6 +7,7 @@ use App\Actions\Affiliate\EnrollAffiliateAction;
 use App\Actions\Affiliate\RecordClickAction;
 use App\Actions\Affiliate\RecordConversionAction;
 use App\Actions\Affiliate\RecordReferralSignupAction;
+use App\Enums\AffiliateStatus;
 use App\Models\AffiliateAccount;
 use App\Models\AffiliateCommission;
 use App\Models\Payment;
@@ -18,12 +19,12 @@ use Illuminate\Http\Request;
 class AffiliateService
 {
     public function __construct(
-        private EnrollAffiliateAction        $enrollAction,
-        private RecordClickAction            $clickAction,
-        private RecordReferralSignupAction   $signupAction,
-        private RecordConversionAction       $conversionAction,
-        private ApproveCommissionAction      $approveAction,
-        private AffiliateRepository          $repo,
+        private EnrollAffiliateAction $enrollAction,
+        private RecordClickAction $clickAction,
+        private RecordReferralSignupAction $signupAction,
+        private RecordConversionAction $conversionAction,
+        private ApproveCommissionAction $approveAction,
+        private AffiliateRepository $repo,
     ) {}
 
     public function enroll(User $user): AffiliateAccount
@@ -81,7 +82,7 @@ class AffiliateService
         return $this->approveAction->cancel($commission, $reason);
     }
 
-    public function setStatus(AffiliateAccount $account, \App\Enums\AffiliateStatus $status): AffiliateAccount
+    public function setStatus(AffiliateAccount $account, AffiliateStatus $status): AffiliateAccount
     {
         $account->update(['status' => $status]);
 

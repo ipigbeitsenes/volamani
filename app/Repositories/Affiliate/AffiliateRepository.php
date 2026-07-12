@@ -5,7 +5,6 @@ namespace App\Repositories\Affiliate;
 use App\Enums\CommissionStatus;
 use App\Models\AffiliateAccount;
 use App\Models\AffiliateCommission;
-use App\Models\Referral;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -65,8 +64,8 @@ class AffiliateRepository
             $term = $filters['search'];
             $query->whereHas('user', function ($q) use ($term) {
                 $q->where('name', 'like', "%{$term}%")
-                  ->orWhere('email', 'like', "%{$term}%")
-                  ->orWhere('referral_code', 'like', "%{$term}%");
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('referral_code', 'like', "%{$term}%");
             });
         }
 

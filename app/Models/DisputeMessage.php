@@ -16,7 +16,7 @@ class DisputeMessage extends Model
     protected function casts(): array
     {
         return [
-            'is_staff'  => 'boolean',
+            'is_staff' => 'boolean',
             'is_system' => 'boolean',
         ];
     }

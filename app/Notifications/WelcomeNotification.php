@@ -16,11 +16,11 @@ class WelcomeNotification extends VolamaniNotification
     {
         return (new MailMessage)
             ->subject('Welcome to Volamani!')
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Welcome to Volamani — Africa\'s Digital Business Ecosystem.')
-            ->line('You can now explore thousands of digital products and services from verified African vendors.')
+            ->greeting('Hello '.$notifiable->name.'!')
+            ->line('Welcome to Volamani — '.settings('site_tagline', 'Your Digital Business Ecosystem').'.')
+            ->line('You can now explore thousands of digital products and services from verified vendors.')
             ->action('Explore Marketplace', route('marketplace.products.index'))
-            ->line('If you\'re looking to sell, set up your vendor account to start reaching buyers across Africa.')
+            ->line('If you\'re looking to sell, set up your vendor account to start reaching buyers everywhere.')
             ->salutation('The Volamani Team');
     }
 
@@ -28,10 +28,10 @@ class WelcomeNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => 'Welcome to Volamani!',
-            'message'  => 'Your account has been created. Start exploring the marketplace.',
-            'url'      => route('marketplace.products.index'),
+            'icon' => $this->category()->icon(),
+            'title' => 'Welcome to Volamani!',
+            'message' => 'Your account has been created. Start exploring the marketplace.',
+            'url' => route('marketplace.products.index'),
         ];
     }
 }

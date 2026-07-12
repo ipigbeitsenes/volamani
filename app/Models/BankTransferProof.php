@@ -17,9 +17,9 @@ class BankTransferProof extends Model
     protected function casts(): array
     {
         return [
-            'status'        => BankTransferStatus::class,
+            'status' => BankTransferStatus::class,
             'transfer_date' => 'date',
-            'reviewed_at'   => 'datetime',
+            'reviewed_at' => 'datetime',
         ];
     }
 

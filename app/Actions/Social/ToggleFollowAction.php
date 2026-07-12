@@ -26,12 +26,13 @@ class ToggleFollowAction
                 if ($vendor->followers_count > 0) {
                     $vendor->decrement('followers_count');
                 }
+
                 return false;
             }
 
             Follow::create([
                 'follower_id' => $user->id,
-                'vendor_id'   => $vendor->id,
+                'vendor_id' => $vendor->id,
             ]);
             $vendor->increment('followers_count');
 

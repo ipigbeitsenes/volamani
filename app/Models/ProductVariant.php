@@ -17,8 +17,8 @@ class ProductVariant extends Model
         return [
             'price_override' => 'integer',
             'stock_quantity' => 'integer',
-            'attributes'     => 'array',
-            'is_active'      => 'boolean',
+            'attributes' => 'array',
+            'is_active' => 'boolean',
         ];
     }
 

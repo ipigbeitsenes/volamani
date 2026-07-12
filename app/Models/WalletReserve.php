@@ -18,9 +18,9 @@ class WalletReserve extends Model
     protected function casts(): array
     {
         return [
-            'amount'         => 'integer',
-            'release_at'     => 'datetime',
-            'released_at'    => 'datetime',
+            'amount' => 'integer',
+            'release_at' => 'datetime',
+            'released_at' => 'datetime',
             'clawed_back_at' => 'datetime',
         ];
     }

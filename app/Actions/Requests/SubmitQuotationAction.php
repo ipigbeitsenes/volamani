@@ -17,7 +17,7 @@ class SubmitQuotationAction
         abort_if($request->buyer_id === $vendor->user_id, 403, 'You cannot quote on your own request.');
 
         $attachments = [];
-        if (!empty($data['attachments'])) {
+        if (! empty($data['attachments'])) {
             foreach ($data['attachments'] as $file) {
                 if ($file instanceof UploadedFile) {
                     $attachments[] = $file->store('quotations/attachments', 'public');
@@ -26,13 +26,13 @@ class SubmitQuotationAction
         }
 
         $quotation = ProductRequestQuotation::create([
-            'request_id'    => $request->id,
-            'vendor_id'     => $vendor->id,
-            'price'         => to_kobo($data['price']),
+            'request_id' => $request->id,
+            'vendor_id' => $vendor->id,
+            'price' => to_kobo($data['price']),
             'delivery_days' => $data['delivery_days'],
-            'message'       => $data['message'],
-            'attachments'   => $attachments ?: null,
-            'status'        => QuotationStatus::Pending,
+            'message' => $data['message'],
+            'attachments' => $attachments ?: null,
+            'status' => QuotationStatus::Pending,
         ]);
 
         $request->increment('quotations_count');

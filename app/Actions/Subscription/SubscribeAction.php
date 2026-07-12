@@ -5,6 +5,7 @@ namespace App\Actions\Subscription;
 use App\Enums\SubscriptionInvoiceStatus;
 use App\Enums\SubscriptionStatus;
 use App\Enums\TransactionType;
+use App\Models\Subscription;
 use App\Models\SubscriptionInvoice;
 use App\Models\SubscriptionPlan;
 use App\Models\Vendor;
@@ -16,14 +17,14 @@ class SubscribeAction
 {
     public function __construct(
         private ActivateSubscriptionAction $activateAction,
-        private WalletService              $walletService,
+        private WalletService $walletService,
     ) {}
 
     /**
      * Subscribe a vendor to a plan.
      *
-     * @return array{status:string, url?:string, subscription?:\App\Models\Subscription}
-     *   status ∈ active | trialing | redirect | insufficient | exists
+     * @return array{status:string, url?:string, subscription?:Subscription}
+     *                                                                       status ∈ active | trialing | redirect | insufficient | exists
      */
     public function execute(Vendor $vendor, SubscriptionPlan $plan, string $method = 'wallet'): array
     {
@@ -48,21 +49,21 @@ class SubscribeAction
             // Supersede any prior active subscription (upgrade / downgrade / switch).
             if ($current) {
                 $current->update([
-                    'status'       => SubscriptionStatus::Expired,
-                    'auto_renew'   => false,
-                    'ends_at'      => now(),
+                    'status' => SubscriptionStatus::Expired,
+                    'auto_renew' => false,
+                    'ends_at' => now(),
                     'cancelled_at' => $current->cancelled_at ?? now(),
                 ]);
             }
 
             $subscription = $vendor->subscriptions()->create([
-                'user_id'          => $vendor->user_id,
-                'plan_id'          => $plan->id,
-                'price'            => $plan->price,
+                'user_id' => $vendor->user_id,
+                'plan_id' => $plan->id,
+                'price' => $plan->price,
                 'billing_interval' => $plan->billing_interval->value,
-                'status'           => SubscriptionStatus::Pending,
-                'auto_renew'       => $plan->billing_interval->isRecurring(),
-                'starts_at'        => now(),
+                'status' => SubscriptionStatus::Pending,
+                'auto_renew' => $plan->billing_interval->isRecurring(),
+                'starts_at' => now(),
             ]);
 
             $invoice = $this->openInvoice($subscription, $plan->price);
@@ -79,16 +80,16 @@ class SubscribeAction
                 $trialEnds = now()->addDays($plan->trial_days);
 
                 $subscription->update([
-                    'status'        => SubscriptionStatus::Trialing,
+                    'status' => SubscriptionStatus::Trialing,
                     'trial_ends_at' => $trialEnds,
-                    'ends_at'       => $trialEnds,
+                    'ends_at' => $trialEnds,
                 ]);
 
                 $invoice->update([
-                    'status'       => SubscriptionInvoiceStatus::Void,
-                    'method'       => 'trial',
+                    'status' => SubscriptionInvoiceStatus::Void,
+                    'method' => 'trial',
                     'period_start' => now(),
-                    'period_end'   => $trialEnds,
+                    'period_end' => $trialEnds,
                 ]);
 
                 $vendor->update(['plan' => $plan->slug]);
@@ -132,8 +133,8 @@ class SubscribeAction
     {
         return $subscription->invoices()->create([
             'plan_id' => $subscription->plan_id,
-            'amount'  => $amount,
-            'status'  => SubscriptionInvoiceStatus::Pending,
+            'amount' => $amount,
+            'status' => SubscriptionInvoiceStatus::Pending,
         ]);
     }
 }

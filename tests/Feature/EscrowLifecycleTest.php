@@ -6,8 +6,10 @@ use App\Enums\EscrowStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\TransactionType;
+use App\Models\Escrow;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Vendor;
 use App\Models\Wallet;
 use App\Services\Escrow\EscrowService;
 use Database\Factories\VendorFactory;
@@ -23,23 +25,23 @@ class EscrowLifecycleTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @return array{0: Order, 1: User, 2: \App\Models\Vendor} */
+    /** @return array{0: Order, 1: User, 2: Vendor} */
     private function paidOrder(int $total = 200_000): array
     {
-        $buyer  = User::factory()->create();
+        $buyer = User::factory()->create();
         $vendor = VendorFactory::new()->create();
         Wallet::create(['user_id' => $buyer->id, 'balance' => 0, 'escrow_balance' => 0]);
 
-        $fee   = (int) round($total * 0.10);
+        $fee = (int) round($total * 0.10);
         $order = Order::create([
-            'buyer_id'        => $buyer->id,
-            'vendor_id'       => $vendor->id,
-            'status'          => OrderStatus::Paid,
-            'payment_status'  => PaymentStatus::Success,
-            'total_amount'    => $total,
-            'platform_fee'    => $fee,
+            'buyer_id' => $buyer->id,
+            'vendor_id' => $vendor->id,
+            'status' => OrderStatus::Paid,
+            'payment_status' => PaymentStatus::Success,
+            'total_amount' => $total,
+            'platform_fee' => $fee,
             'vendor_earnings' => $total - $fee,
-            'currency'        => 'NGN',
+            'currency' => 'NGN',
         ]);
 
         return [$order, $buyer, $vendor];
@@ -70,11 +72,11 @@ class EscrowLifecycleTest extends TestCase
         [$order] = $this->paidOrder();
 
         $service = app(EscrowService::class);
-        $first   = $service->holdForPayable($order);
-        $second  = $service->holdForPayable($order);
+        $first = $service->holdForPayable($order);
+        $second = $service->holdForPayable($order);
 
         $this->assertSame($first->id, $second->id);
-        $this->assertSame(1, \App\Models\Escrow::count());
+        $this->assertSame(1, Escrow::count());
     }
 
     public function test_release_moves_earnings_into_vendor_spendable_balance_with_ledger_entry(): void
@@ -121,7 +123,7 @@ class EscrowLifecycleTest extends TestCase
     public function test_settled_escrow_cannot_be_released_or_refunded_again(): void
     {
         [$order] = $this->paidOrder();
-        $escrow  = app(EscrowService::class)->holdForPayable($order);
+        $escrow = app(EscrowService::class)->holdForPayable($order);
         app(EscrowService::class)->release($escrow);
 
         $this->assertFalse($escrow->fresh()->canRelease());

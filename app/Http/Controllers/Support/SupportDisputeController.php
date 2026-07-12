@@ -17,7 +17,7 @@ class SupportDisputeController extends Controller
 
     public function index(): View
     {
-        $filters  = request()->only(['status', 'search']);
+        $filters = request()->only(['status', 'search']);
         $disputes = $this->disputeService->allForAdmin(20, $filters);
 
         return view('support.disputes.index', compact('disputes', 'filters'));
@@ -32,9 +32,9 @@ class SupportDisputeController extends Controller
 
     public function resolve(ResolveDisputeRequest $request, Dispute $dispute): RedirectResponse
     {
-        $data       = $request->validated();
+        $data = $request->validated();
         $resolution = DisputeResolution::from($data['resolution']);
-        $share      = isset($data['vendor_share']) ? to_kobo((float) $data['vendor_share']) : null;
+        $share = isset($data['vendor_share']) ? to_kobo((float) $data['vendor_share']) : null;
 
         $this->disputeService->resolve($dispute, auth()->user(), $resolution, $share, $data['note'] ?? null);
 

@@ -20,10 +20,10 @@ class OpenDisputeAction
      * The raiser must be the buyer or the vendor on the escrow.
      */
     public function execute(
-        Escrow        $escrow,
-        User          $raisedBy,
-        string        $reason,
-        string        $description,
+        Escrow $escrow,
+        User $raisedBy,
+        string $reason,
+        string $description,
         ?UploadedFile $attachment = null
     ): Dispute {
         abort_unless($this->isParty($escrow, $raisedBy), 403, 'You are not a party to this transaction.');
@@ -56,13 +56,13 @@ class OpenDisputeAction
 
         return DB::transaction(function () use ($escrow, $raisedBy, $reason, $description, $attachment) {
             $dispute = Dispute::create([
-                'escrow_id'       => $escrow->id,
-                'buyer_id'        => $escrow->buyer_id,
-                'vendor_id'       => $escrow->vendor_id,
-                'raised_by'       => $raisedBy->id,
-                'reason'          => $reason,
-                'description'     => $description,
-                'status'          => DisputeStatus::Open,
+                'escrow_id' => $escrow->id,
+                'buyer_id' => $escrow->buyer_id,
+                'vendor_id' => $escrow->vendor_id,
+                'raised_by' => $raisedBy->id,
+                'reason' => $reason,
+                'description' => $description,
+                'status' => DisputeStatus::Open,
                 'response_due_at' => now()->addHours($this->responseHours()),
             ]);
 
@@ -72,23 +72,23 @@ class OpenDisputeAction
             $path = null;
             $name = null;
             if ($attachment) {
-                $path = $attachment->store('disputes/' . $dispute->id, 'public');
+                $path = $attachment->store('disputes/'.$dispute->id, 'public');
                 $name = $attachment->getClientOriginalName();
             }
 
             // Opening statement.
             DisputeMessage::create([
-                'dispute_id'      => $dispute->id,
-                'sender_id'       => $raisedBy->id,
-                'message'         => $description,
-                'attachment'      => $path,
+                'dispute_id' => $dispute->id,
+                'sender_id' => $raisedBy->id,
+                'message' => $description,
+                'attachment' => $path,
                 'attachment_name' => $name,
             ]);
 
             DisputeMessage::create([
                 'dispute_id' => $dispute->id,
-                'message'    => 'Dispute opened. Funds are now held until this is resolved.',
-                'is_system'  => true,
+                'message' => 'Dispute opened. Funds are now held until this is resolved.',
+                'is_system' => true,
             ]);
 
             return $dispute->fresh();

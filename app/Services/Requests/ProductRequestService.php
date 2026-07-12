@@ -7,6 +7,7 @@ use App\Actions\Requests\CloseRequestAction;
 use App\Actions\Requests\CreateRequestAction;
 use App\Actions\Requests\SubmitQuotationAction;
 use App\Enums\NotificationCategory;
+use App\Enums\QuotationStatus;
 use App\Models\ProductRequest;
 use App\Models\ProductRequestQuotation;
 use App\Models\User;
@@ -17,11 +18,11 @@ use App\Services\Notifications\NotificationService;
 class ProductRequestService extends BaseService
 {
     public function __construct(
-        private CreateRequestAction   $createAction,
+        private CreateRequestAction $createAction,
         private SubmitQuotationAction $submitAction,
         private AcceptQuotationAction $acceptAction,
-        private CloseRequestAction    $closeAction,
-        private NotificationService   $notifications,
+        private CloseRequestAction $closeAction,
+        private NotificationService $notifications,
     ) {}
 
     public function createRequest(User $buyer, array $data): ProductRequest
@@ -64,8 +65,8 @@ class ProductRequestService extends BaseService
         abort_unless($quotation->canBeWithdrawn(), 422, 'This quotation cannot be withdrawn.');
 
         $quotation->update([
-            'status'        => \App\Enums\QuotationStatus::Withdrawn,
-            'withdrawn_at'  => now(),
+            'status' => QuotationStatus::Withdrawn,
+            'withdrawn_at' => now(),
         ]);
 
         $quotation->request->decrement('quotations_count');

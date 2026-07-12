@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TrustTier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -46,25 +47,25 @@ class PageController extends Controller
         $num = fn (string $key, $fallback) => ($v = settings($key)) === null || $v === '' ? $fallback : (int) $v;
 
         return view('pages.buyer-protection', [
-            'intro'          => settings('protection_intro', ''),
-            'escrowSummary'  => settings('protection_escrow_summary', ''),
-            'returnSummary'  => settings('protection_return_summary', ''),
+            'intro' => settings('protection_intro', ''),
+            'escrowSummary' => settings('protection_escrow_summary', ''),
+            'returnSummary' => settings('protection_return_summary', ''),
             'disputeProcess' => settings('protection_dispute_process', ''),
             'chargebackNote' => settings('protection_chargeback_note', ''),
-            'supportEmail'   => settings('protection_support_email', settings('support_email', 'support@volamani.com')),
-            'returnDays'     => (int) config('business_days.return_window_days', 7),
+            'supportEmail' => settings('protection_support_email', settings('support_email', 'support@volamani.com')),
+            'returnDays' => (int) config('business_days.return_window_days', 7),
             'reservePercent' => $num('chargeback_reserve_percent', (int) config('protection.reserve_percent', 0)),
-            'responseHours'  => $num('dispute_response_hours', (int) config('protection.dispute_response_hours', 48)),
-            'escrowDaysMin'  => \App\Enums\TrustTier::TopRated->escrowReleaseDays(),
-            'escrowDaysMax'  => \App\Enums\TrustTier::New->escrowReleaseDays(),
+            'responseHours' => $num('dispute_response_hours', (int) config('protection.dispute_response_hours', 48)),
+            'escrowDaysMin' => TrustTier::TopRated->escrowReleaseDays(),
+            'escrowDaysMax' => TrustTier::New->escrowReleaseDays(),
         ]);
     }
 
     public function contactSubmit(Request $request): RedirectResponse
     {
         $request->validate([
-            'name'    => ['required', 'string', 'max:120'],
-            'email'   => ['required', 'email', 'max:160'],
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:160'],
             'subject' => ['required', 'string', 'max:160'],
             'message' => ['required', 'string', 'min:10', 'max:4000'],
         ]);
@@ -98,11 +99,11 @@ class PageController extends Controller
 
         return [
             'privacy' => [
-                'title'    => 'Privacy Policy',
-                'intro'    => "How {$brand} collects, uses and protects your personal information.",
+                'title' => 'Privacy Policy',
+                'intro' => "How {$brand} collects, uses and protects your personal information.",
                 'sections' => [
                     ['heading' => 'Information we collect', 'body' => [
-                        "We collect the details you provide when you create an account, set up a storefront or complete a transaction — including your name, email address, phone number and, where required for verification, identity documents (NIN, BVN or CAC records).",
+                        'We collect the details you provide when you create an account, set up a storefront or complete a transaction — including your name, email address, phone number and, where required for verification, identity documents (NIN, BVN or CAC records).',
                         'We also collect technical data such as your IP address, device and browser information, and how you interact with the platform.',
                     ]],
                     ['heading' => 'How we use your information', 'body' => [
@@ -121,8 +122,8 @@ class PageController extends Controller
                 ],
             ],
             'terms' => [
-                'title'    => 'Terms of Service',
-                'intro'    => "The rules for using {$brand} as a buyer or seller.",
+                'title' => 'Terms of Service',
+                'intro' => "The rules for using {$brand} as a buyer or seller.",
                 'sections' => [
                     ['heading' => 'Acceptance of terms', 'body' => [
                         "By creating an account or using {$brand}, you agree to these terms. If you do not agree, please do not use the platform.",
@@ -146,8 +147,8 @@ class PageController extends Controller
                 ],
             ],
             'cookies' => [
-                'title'    => 'Cookie Policy',
-                'intro'    => "How {$brand} uses cookies and similar technologies.",
+                'title' => 'Cookie Policy',
+                'intro' => "How {$brand} uses cookies and similar technologies.",
                 'sections' => [
                     ['heading' => 'What cookies are', 'body' => [
                         'Cookies are small text files stored on your device that help websites remember your session and preferences.',
@@ -161,8 +162,8 @@ class PageController extends Controller
                 ],
             ],
             'refunds' => [
-                'title'    => 'Refund Policy',
-                'intro'    => 'When and how buyers can get their money back.',
+                'title' => 'Refund Policy',
+                'intro' => 'When and how buyers can get their money back.',
                 'sections' => [
                     ['heading' => 'Escrow protection', 'body' => [
                         'Every payment is held in escrow until delivery is confirmed. If a seller fails to deliver, your funds remain protected and can be refunded.',
@@ -182,8 +183,8 @@ class PageController extends Controller
                 ],
             ],
             'disputes' => [
-                'title'    => 'Dispute Policy',
-                'intro'    => 'How we resolve disagreements between buyers and sellers.',
+                'title' => 'Dispute Policy',
+                'intro' => 'How we resolve disagreements between buyers and sellers.',
                 'sections' => [
                     ['heading' => 'When to open a dispute', 'body' => [
                         'If you and the other party cannot resolve an issue directly — non-delivery, an item not as described, poor quality or an unresponsive counterparty — you can raise a dispute from the relevant order or escrow.',

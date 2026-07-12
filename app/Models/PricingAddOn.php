@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\PricingCategory;
 use Illuminate\Database\Eloquent\Model;
 
 class PricingAddOn extends Model
@@ -15,14 +14,14 @@ class PricingAddOn extends Model
     {
         return [
             'is_percentage' => 'boolean',
-            'is_active'     => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
     public function displayPrice(): string
     {
         return $this->is_percentage
-            ? ($this->price / 100) . '%'
+            ? ($this->price / 100).'%'
             : money($this->price);
     }
 
@@ -31,6 +30,7 @@ class PricingAddOn extends Model
         if ($this->is_percentage) {
             return (int) round($baseKobo * ($this->price / 10000));
         }
+
         return $this->price;
     }
 }

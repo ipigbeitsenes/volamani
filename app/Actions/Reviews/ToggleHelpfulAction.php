@@ -22,11 +22,13 @@ class ToggleHelpfulAction
             if ($vote) {
                 $vote->delete();
                 $review->decrement('helpful_count');
+
                 return false;
             }
 
             ReviewVote::create(['review_id' => $review->id, 'user_id' => $user->id]);
             $review->increment('helpful_count');
+
             return true;
         });
     }

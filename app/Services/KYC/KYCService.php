@@ -12,10 +12,10 @@ use App\Repositories\KYC\KYCRepository;
 class KYCService
 {
     public function __construct(
-        private SubmitKYCAction  $submitAction,
+        private SubmitKYCAction $submitAction,
         private ApproveKYCAction $approveAction,
-        private RejectKYCAction  $rejectAction,
-        private KYCRepository    $repo,
+        private RejectKYCAction $rejectAction,
+        private KYCRepository $repo,
     ) {}
 
     public function submit(User $user, array $data, array $files): KYCVerification

@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 class VerifyPaymentAction
 {
     public function __construct(
-        private PaymentManager        $manager,
-        private FulfillPaymentAction  $fulfillAction,
+        private PaymentManager $manager,
+        private FulfillPaymentAction $fulfillAction,
     ) {}
 
     public function execute(Payment $payment): Payment
@@ -22,31 +22,41 @@ class VerifyPaymentAction
         }
 
         return DB::transaction(function () use ($payment) {
-            $gateway  = $this->manager->driver($payment->gateway->value);
-            $result   = $gateway->verify($payment->gateway_reference);
+            // The gateway webhook and the browser callback can both verify the
+            // same payment concurrently. Re-read the row under a lock and bail if
+            // another request already settled it — otherwise fulfilment (escrow,
+            // wallet credit, affiliate payout) would run twice for one payment.
+            $payment = Payment::whereKey($payment->getKey())->lockForUpdate()->first() ?? $payment;
+
+            if ($payment->isSuccessful()) {
+                return $payment;
+            }
+
+            $gateway = $this->manager->driver($payment->gateway->value);
+            $result = $gateway->verify($payment->gateway_reference);
 
             PaymentLog::create([
-                'payment_id'        => $payment->id,
-                'event'             => 'payment_verified',
-                'gateway'           => $payment->gateway->value,
+                'payment_id' => $payment->id,
+                'event' => 'payment_verified',
+                'gateway' => $payment->gateway->value,
                 'gateway_reference' => $payment->gateway_reference,
-                'payload'           => $result,
-                'processed'         => true,
-                'created_at'        => now(),
+                'payload' => $result,
+                'processed' => true,
+                'created_at' => now(),
             ]);
 
             $status = match ($result['status']) {
-                'success'   => PaymentStatus::Success,
-                'failed'    => PaymentStatus::Failed,
+                'success' => PaymentStatus::Success,
+                'failed' => PaymentStatus::Failed,
                 'abandoned' => PaymentStatus::Abandoned,
-                'reversed'  => PaymentStatus::Reversed,
-                default     => PaymentStatus::Pending,
+                'reversed' => PaymentStatus::Reversed,
+                default => PaymentStatus::Pending,
             };
 
             $payment->update([
-                'status'   => $status,
+                'status' => $status,
                 'metadata' => array_merge($payment->metadata ?? [], $result['metadata']),
-                'paid_at'  => $status === PaymentStatus::Success ? now() : null,
+                'paid_at' => $status === PaymentStatus::Success ? now() : null,
                 'failed_at' => $status === PaymentStatus::Failed ? now() : null,
             ]);
 

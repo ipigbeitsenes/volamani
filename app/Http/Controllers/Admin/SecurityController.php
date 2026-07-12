@@ -16,9 +16,9 @@ class SecurityController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->only('event', 'search');
-        $logs    = $this->security->recent($filters);
-        $stats   = $this->security->stats();
-        $locked  = $this->security->lockedAccounts();
+        $logs = $this->security->recent($filters);
+        $stats = $this->security->stats();
+        $locked = $this->security->lockedAccounts();
 
         return view('admin.security.index', compact('logs', 'stats', 'locked', 'filters'));
     }

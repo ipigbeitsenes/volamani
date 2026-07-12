@@ -19,11 +19,11 @@ class RegisterUserAction
             }
 
             $user = User::create([
-                'name'        => $data['name'],
-                'email'       => $data['email'],
-                'password'    => $data['password'],
-                'phone'       => $data['phone'] ?? null,
-                'user_type'   => $data['user_type'] ?? 'individual',
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'phone' => $data['phone'] ?? null,
+                'user_type' => $data['user_type'] ?? 'individual',
                 'referred_by' => $referrer?->id,
             ]);
 
@@ -31,8 +31,8 @@ class RegisterUserAction
 
             // Create wallet for every new user
             Wallet::create([
-                'user_id'        => $user->id,
-                'balance'        => 0,
+                'user_id' => $user->id,
+                'balance' => 0,
                 'escrow_balance' => 0,
             ]);
 
@@ -42,7 +42,7 @@ class RegisterUserAction
             }
 
             $user->sendEmailVerificationNotification();
-            $user->notify(new WelcomeNotification());
+            $user->notify(new WelcomeNotification);
 
             return $user;
         });

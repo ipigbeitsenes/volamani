@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\DB;
 class SubmitReviewAction
 {
     public function __construct(
-        private ReviewEligibilityService  $eligibility,
-        private RatingAggregationService  $aggregator,
-        private NotificationService       $notifications,
+        private ReviewEligibilityService $eligibility,
+        private RatingAggregationService $aggregator,
+        private NotificationService $notifications,
     ) {}
 
     public function execute(User $user, Model $reviewable, array $data): Review
@@ -28,13 +28,13 @@ class SubmitReviewAction
 
         $review = DB::transaction(function () use ($user, $reviewable, $data) {
             $review = Review::create(array_merge([
-                'reviewable_type'      => get_class($reviewable),
-                'reviewable_id'        => $reviewable->getKey(),
-                'reviewer_id'          => $user->id,
-                'rating'               => $data['rating'],
-                'title'                => $data['title'] ?? null,
-                'body'                 => $data['body'] ?? null,
-                'is_approved'          => true,
+                'reviewable_type' => get_class($reviewable),
+                'reviewable_id' => $reviewable->getKey(),
+                'reviewer_id' => $user->id,
+                'rating' => $data['rating'],
+                'title' => $data['title'] ?? null,
+                'body' => $data['body'] ?? null,
+                'is_approved' => true,
                 'is_verified_purchase' => true,
             ], $this->eligibility->linkage($user, $reviewable)));
 
@@ -49,7 +49,7 @@ class SubmitReviewAction
                 $vendorUser,
                 NotificationCategory::Reviews,
                 'New review received',
-                $user->name . ' left a ' . $review->rating . '-star review on one of your listings.',
+                $user->name.' left a '.$review->rating.'-star review on one of your listings.',
                 route('vendor.reviews.index'),
                 'View reviews',
             );

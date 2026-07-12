@@ -30,7 +30,7 @@ class SupportTicketOpenedNotification extends VolamaniNotification
             ->subject("Support ticket {$t->reference} opened")
             ->greeting("Hello {$notifiable->name},")
             ->line("A buyer has opened a support ticket regarding purchase {$t->escrow->reference}.")
-            ->line('Reason: ' . $t->reason->label())
+            ->line('Reason: '.$t->reason->label())
             ->line('The funds for this purchase are now held until the ticket is resolved.')
             ->action('Review Ticket', $this->urlFor($notifiable))
             ->line('Please respond promptly so we can resolve this for the buyer.')
@@ -41,11 +41,11 @@ class SupportTicketOpenedNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => "Support ticket {$this->dispute->reference}",
-            'message'  => 'A buyer opened a support ticket regarding purchase '
-                . $this->dispute->escrow->reference . '.',
-            'url'      => $this->urlFor($notifiable),
+            'icon' => $this->category()->icon(),
+            'title' => "Support ticket {$this->dispute->reference}",
+            'message' => 'A buyer opened a support ticket regarding purchase '
+                .$this->dispute->escrow->reference.'.',
+            'url' => $this->urlFor($notifiable),
         ];
     }
 

@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Repositories\Contracts\RepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements RepositoryInterface
 {

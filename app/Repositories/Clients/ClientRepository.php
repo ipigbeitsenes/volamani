@@ -43,10 +43,10 @@ class ClientRepository
         $base = Client::where('vendor_id', $vendor->id);
 
         return [
-            'total'     => (clone $base)->count(),
-            'active'    => (clone $base)->where('status', ClientStatus::Active)->count(),
-            'leads'     => (clone $base)->where('status', ClientStatus::Lead)->count(),
-            'lifetime'  => (int) (clone $base)->sum('total_spent'),
+            'total' => (clone $base)->count(),
+            'active' => (clone $base)->where('status', ClientStatus::Active)->count(),
+            'leads' => (clone $base)->where('status', ClientStatus::Lead)->count(),
+            'lifetime' => (int) (clone $base)->sum('total_spent'),
         ];
     }
 

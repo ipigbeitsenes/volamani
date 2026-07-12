@@ -32,34 +32,34 @@ class UpdateProductAction
                 && (isset($data['price']) || isset($data['name']) || isset($data['files']));
 
             $product->update([
-                'category_id'        => $isPhysical ? null : ($data['category_id'] ?? $product->category_id),
+                'category_id' => $isPhysical ? null : ($data['category_id'] ?? $product->category_id),
                 'physical_category_id' => $isPhysical ? ($data['physical_category_id'] ?? $product->physical_category_id) : null,
-                'name'               => $data['name'] ?? $product->name,
-                'short_description'  => $data['short_description'] ?? $product->short_description,
-                'description'        => $data['description'] ?? $product->description,
-                'type'               => $isPhysical ? $product->type : ($data['type'] ?? $product->type),
-                'price'              => isset($data['price']) ? to_kobo($data['price']) : $product->price,
-                'compare_price'      => isset($data['compare_price']) ? to_kobo($data['compare_price']) : $product->compare_price,
-                'thumbnail'          => $thumbnail,
-                'preview_url'        => $data['preview_url'] ?? $product->preview_url,
-                'download_limit'     => $isPhysical ? null : ($data['download_limit'] ?? $product->download_limit),
+                'name' => $data['name'] ?? $product->name,
+                'short_description' => $data['short_description'] ?? $product->short_description,
+                'description' => $data['description'] ?? $product->description,
+                'type' => $isPhysical ? $product->type : ($data['type'] ?? $product->type),
+                'price' => isset($data['price']) ? to_kobo($data['price']) : $product->price,
+                'compare_price' => isset($data['compare_price']) ? to_kobo($data['compare_price']) : $product->compare_price,
+                'thumbnail' => $thumbnail,
+                'preview_url' => $data['preview_url'] ?? $product->preview_url,
+                'download_limit' => $isPhysical ? null : ($data['download_limit'] ?? $product->download_limit),
                 'download_expiry_hours' => $isPhysical ? ($product->download_expiry_hours ?? 48) : ($data['download_expiry_hours'] ?? $product->download_expiry_hours),
-                'status'             => $needsReview ? ProductStatus::Pending : $product->status,
-                'seo_title'          => $data['seo_title'] ?? $product->seo_title,
-                'seo_description'    => $data['seo_description'] ?? $product->seo_description,
+                'status' => $needsReview ? ProductStatus::Pending : $product->status,
+                'seo_title' => $data['seo_title'] ?? $product->seo_title,
+                'seo_description' => $data['seo_description'] ?? $product->seo_description,
             ]);
 
             if (isset($data['tags'])) {
                 $product->tags()->sync($data['tags']);
             }
 
-            if (!empty($data['gallery'])) {
+            if (! empty($data['gallery'])) {
                 foreach ($data['gallery'] as $index => $image) {
                     if ($image instanceof UploadedFile) {
                         $path = $image->store('products/gallery', 'public');
                         ProductGallery::create([
                             'product_id' => $product->id,
-                            'path'       => $path,
+                            'path' => $path,
                             'sort_order' => $product->gallery()->max('sort_order') + 1,
                         ]);
                     }
@@ -72,18 +72,18 @@ class UpdateProductAction
                 return $product->fresh(['physicalCategory', 'secondaryPhysicalCategories', 'tags', 'gallery', 'physicalDetail', 'variants']);
             }
 
-            if (!empty($data['files'])) {
+            if (! empty($data['files'])) {
                 foreach ($data['files'] as $index => $file) {
                     if ($file instanceof UploadedFile) {
                         $path = $file->store('products/files', 'private');
                         ProductFile::create([
-                            'product_id'    => $product->id,
-                            'label'         => $data['file_labels'][$index] ?? $file->getClientOriginalName(),
-                            'path'          => $path,
+                            'product_id' => $product->id,
+                            'label' => $data['file_labels'][$index] ?? $file->getClientOriginalName(),
+                            'path' => $path,
                             'original_name' => $file->getClientOriginalName(),
-                            'mime_type'     => $file->getMimeType(),
-                            'file_size'     => $file->getSize(),
-                            'sort_order'    => $product->files()->max('sort_order') + 1,
+                            'mime_type' => $file->getMimeType(),
+                            'file_size' => $file->getSize(),
+                            'sort_order' => $product->files()->max('sort_order') + 1,
                         ]);
                     }
                 }

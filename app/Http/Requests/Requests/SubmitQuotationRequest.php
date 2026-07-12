@@ -14,11 +14,11 @@ class SubmitQuotationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price'          => ['required', 'numeric', 'min:500'],
-            'delivery_days'  => ['required', 'integer', 'min:1', 'max:365'],
-            'message'        => ['required', 'string', 'min:50'],
-            'attachments'    => ['nullable', 'array', 'max:3'],
-            'attachments.*'  => ['file', 'max:10240'],
+            'price' => ['required', 'numeric', 'min:500'],
+            'delivery_days' => ['required', 'integer', 'min:1', 'max:365'],
+            'message' => ['required', 'string', 'min:50'],
+            'attachments' => ['nullable', 'array', 'max:3'],
+            'attachments.*' => ['file', 'max:10240'],
         ];
     }
 }

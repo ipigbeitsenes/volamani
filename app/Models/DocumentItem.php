@@ -14,9 +14,9 @@ class DocumentItem extends Model
     protected function casts(): array
     {
         return [
-            'quantity'   => 'decimal:2',
+            'quantity' => 'decimal:2',
             'unit_price' => 'integer',
-            'amount'     => 'integer',
+            'amount' => 'integer',
             'sort_order' => 'integer',
         ];
     }

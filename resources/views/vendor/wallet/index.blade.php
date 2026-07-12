@@ -47,14 +47,14 @@
                     @if($wallet->is_frozen)
                         <div class="alert alert-danger">Your wallet is currently frozen. Contact support.</div>
                     @elseif($wallet->availableBalance() < 100000)
-                        <div class="alert alert-warning">Minimum withdrawal balance is ₦1,000.</div>
+                        <div class="alert alert-warning">Minimum withdrawal balance is {{ currency_symbol() }}1,000.</div>
                     @else
                     <form action="{{ route('vendor.wallet.withdraw') }}" method="POST">
                         @csrf
                         <div class="mb-2">
-                            <label class="form-label">Amount (₦)</label>
+                            <label class="form-label">Amount ({{ currency_symbol() }})</label>
                             <input type="number" name="amount" class="form-control @error('amount') is-invalid @enderror"
-                                   min="1000" step="100" value="{{ old('amount') }}" placeholder="Minimum ₦1,000">
+                                   min="1000" step="100" value="{{ old('amount') }}" placeholder="Minimum {{ currency_symbol() }}1,000">
                             @error('amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-2">

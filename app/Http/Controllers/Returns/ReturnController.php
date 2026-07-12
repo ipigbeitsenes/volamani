@@ -26,7 +26,7 @@ class ReturnController extends Controller
     {
         abort_unless($order->buyer_id === auth()->id(), 403);
 
-        $data           = $request->safe()->only(['reason', 'description']);
+        $data = $request->safe()->only(['reason', 'description']);
         $data['photos'] = $request->file('photos', []);
 
         $this->returns->request($order, $request->user(), $data);

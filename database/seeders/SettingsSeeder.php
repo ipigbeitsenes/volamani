@@ -12,10 +12,11 @@ class SettingsSeeder extends Seeder
         $settings = [
             // General
             ['key' => 'site_name',        'value' => 'Volamani',                   'type' => 'string',  'group' => 'general', 'label' => 'Site Name'],
-            ['key' => 'site_tagline',     'value' => "Africa's Digital Business Ecosystem", 'type' => 'string', 'group' => 'general', 'label' => 'Tagline'],
+            ['key' => 'site_tagline',     'value' => 'Your Digital Business Ecosystem', 'type' => 'string', 'group' => 'general', 'label' => 'Tagline'],
             ['key' => 'support_email',    'value' => 'support@volamani.com',        'type' => 'string',  'group' => 'general', 'label' => 'Support Email'],
-            ['key' => 'support_phone',    'value' => '+234 000 000 0000',           'type' => 'string',  'group' => 'general', 'label' => 'Support Phone'],
-            ['key' => 'currency_symbol',  'value' => '₦',                           'type' => 'string',  'group' => 'general', 'label' => 'Currency Symbol'],
+            ['key' => 'support_phone',    'value' => '+1 000 000 0000',             'type' => 'string',  'group' => 'general', 'label' => 'Support Phone'],
+            ['key' => 'currency_symbol',  'value' => '$',                           'type' => 'string',  'group' => 'general', 'label' => 'Currency Symbol'],
+            ['key' => 'currency_code',    'value' => 'USD',                         'type' => 'string',  'group' => 'general', 'label' => 'Currency Code'],
             ['key' => 'social_facebook',  'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Facebook URL'],
             ['key' => 'social_instagram', 'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Instagram URL'],
             ['key' => 'social_twitter',   'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'X / Twitter URL'],
@@ -47,7 +48,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'affiliate_signup_bonus', 'value' => '0',     'type' => 'integer', 'group' => 'affiliate', 'label' => 'Referral Signup Bonus (kobo)'],
             ['key' => 'affiliate_cookie_days',  'value' => '30',    'type' => 'integer', 'group' => 'affiliate', 'label' => 'Attribution Window (days)'],
             ['key' => 'affiliate_auto_approve', 'value' => '0',     'type' => 'boolean', 'group' => 'affiliate', 'label' => 'Auto-approve Commissions'],
-            ['key' => 'affiliate_min_payout',   'value' => '100000','type' => 'integer', 'group' => 'affiliate', 'label' => 'Minimum Payout (kobo)'],
+            ['key' => 'affiliate_min_payout',   'value' => '100000', 'type' => 'integer', 'group' => 'affiliate', 'label' => 'Minimum Payout (kobo)'],
 
             // Subscriptions
             ['key' => 'subscription_grace_days', 'value' => '3', 'type' => 'integer', 'group' => 'subscription', 'label' => 'Past-due Grace Period (days)'],
@@ -82,7 +83,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'chargeback_reserve_days',      'value' => '30', 'type' => 'integer', 'group' => 'protection', 'label' => 'Reserve Hold Period (days)'],
             ['key' => 'dispute_response_hours',       'value' => '48', 'type' => 'integer', 'group' => 'protection', 'label' => 'Dispute Response Window (hours)'],
             ['key' => 'dispute_admin_sla_hours',      'value' => '72', 'type' => 'integer', 'group' => 'protection', 'label' => 'Staff SLA Before Auto-escalate (hours)'],
-            ['key' => 'dispute_auto_refund_on_breach','value' => '0',  'type' => 'boolean', 'group' => 'protection', 'label' => 'Auto-refund Buyer When Seller Misses SLA'],
+            ['key' => 'dispute_auto_refund_on_breach', 'value' => '0',  'type' => 'boolean', 'group' => 'protection', 'label' => 'Auto-refund Buyer When Seller Misses SLA'],
             ['key' => 'strike_suspend_threshold',     'value' => '3',  'type' => 'integer', 'group' => 'protection', 'label' => 'Strikes Before Auto-suspend'],
             ['key' => 'protection_support_email',     'value' => 'support@volamani.com', 'type' => 'string', 'group' => 'protection', 'label' => 'Protection Contact Email'],
             ['key' => 'protection_intro',             'value' => 'Every purchase on Volamani is protected. Your money is held safely in escrow until you get what you paid for, and our team steps in whenever something goes wrong.', 'type' => 'text', 'group' => 'protection', 'label' => 'Policy: Intro'],
@@ -95,9 +96,9 @@ class SettingsSeeder extends Seeder
         // Feature toggles — one boolean per entry in config/features.php (all ON).
         foreach (config('features', []) as $key => $meta) {
             $settings[] = [
-                'key'   => 'feature_' . $key,
+                'key' => 'feature_'.$key,
                 'value' => '1',
-                'type'  => 'boolean',
+                'type' => 'boolean',
                 'group' => 'features',
                 'label' => $meta[0] ?? ucfirst($key),
             ];

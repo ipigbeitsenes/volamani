@@ -41,16 +41,16 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Min project budget (₦)</label>
+                        <label class="form-label">Min project budget ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="min_budget" class="form-control" value="{{ old('min_budget', isset($profile->min_budget) ? from_kobo($profile->min_budget) : '') }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Max project budget (₦)</label>
+                        <label class="form-label">Max project budget ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="max_budget" class="form-control" value="{{ old('max_budget', isset($profile->max_budget) ? from_kobo($profile->max_budget) : '') }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">On-site locations <span class="text-muted small">(comma-sep)</span></label>
-                        <input type="text" name="locations" class="form-control" value="{{ old('locations', isset($profile->locations) ? implode(', ', $profile->locations) : '') }}" placeholder="Lagos, Abuja">
+                        <input type="text" name="locations" class="form-control" value="{{ old('locations', isset($profile->locations) ? implode(', ', $profile->locations) : '') }}" placeholder="Cities you serve">
                     </div>
                     <div class="col-12 d-flex flex-wrap gap-4">
                         <div class="form-check">

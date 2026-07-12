@@ -15,7 +15,7 @@ class FinancePaymentController extends Controller
 
     public function index(Request $request): View
     {
-        $filters  = $request->only('status', 'gateway', 'search');
+        $filters = $request->only('status', 'gateway', 'search');
         $payments = $this->admin->payments($filters, 20);
 
         return view('finance.payments.index', compact('payments', 'filters'));

@@ -20,7 +20,7 @@ class RecordConversionAction
 {
     public function __construct(
         private ApproveCommissionAction $approveAction,
-        private EnrollAffiliateAction   $enrollAction,
+        private EnrollAffiliateAction $enrollAction,
     ) {}
 
     /**
@@ -31,7 +31,7 @@ class RecordConversionAction
      * Commissions are generated per-transaction (ongoing, not one-off) and paid
      * straight to the referrer's wallet.
      *
-     * @return AffiliateCommission[]  commissions created for this payment (0–2)
+     * @return AffiliateCommission[] commissions created for this payment (0–2)
      */
     public function execute(Payment $payment): array
     {
@@ -90,7 +90,7 @@ class RecordConversionAction
             return null;
         }
 
-        $rate   = $account->effectiveRate();
+        $rate = $account->effectiveRate();
         $amount = (int) round($fee * $rate / 100);
         if ($amount <= 0) {
             return null;
@@ -99,15 +99,15 @@ class RecordConversionAction
         return DB::transaction(function () use ($account, $referral, $payment, $amount, $rate, $role, $referredUserId) {
             $commission = AffiliateCommission::create([
                 'affiliate_account_id' => $account->id,
-                'referral_id'          => $referral->id,
-                'earnable_type'        => Payment::class,
-                'earnable_id'          => $payment->id,
-                'buyer_id'             => $referredUserId,
-                'type'                 => CommissionType::SaleCommission,
-                'amount'               => $amount,
-                'rate_applied'         => $rate,
-                'status'               => CommissionStatus::Pending,
-                'note'                 => ucfirst($role) . " referral — {$rate}% of platform commission on {$payment->reference}",
+                'referral_id' => $referral->id,
+                'earnable_type' => Payment::class,
+                'earnable_id' => $payment->id,
+                'buyer_id' => $referredUserId,
+                'type' => CommissionType::SaleCommission,
+                'amount' => $amount,
+                'rate_applied' => $rate,
+                'status' => CommissionStatus::Pending,
+                'note' => ucfirst($role)." referral — {$rate}% of platform commission on {$payment->reference}",
             ]);
 
             $account->increment('total_earned', $amount);
@@ -115,9 +115,9 @@ class RecordConversionAction
 
             if ($referral->status !== ReferralStatus::Rewarded) {
                 $referral->update([
-                    'status'       => ReferralStatus::Rewarded,
+                    'status' => ReferralStatus::Rewarded,
                     'qualified_at' => $referral->qualified_at ?? now(),
-                    'rewarded_at'  => now(),
+                    'rewarded_at' => now(),
                 ]);
             }
 
@@ -154,10 +154,10 @@ class RecordConversionAction
 
         return Referral::create([
             'affiliate_account_id' => $account->id,
-            'referrer_id'          => $referrer->id,
-            'referred_user_id'     => $user->id,
-            'status'               => ReferralStatus::Pending,
-            'signup_reward'        => 0,
+            'referrer_id' => $referrer->id,
+            'referred_user_id' => $user->id,
+            'status' => ReferralStatus::Pending,
+            'signup_reward' => 0,
         ])->setRelation('account', $account);
     }
 
@@ -169,18 +169,18 @@ class RecordConversionAction
     {
         return match (true) {
             $payable instanceof Order => [
-                'fee'            => (int) $payable->platform_fee,
-                'buyer_id'       => $payable->buyer_id,
+                'fee' => (int) $payable->platform_fee,
+                'buyer_id' => $payable->buyer_id,
                 'vendor_user_id' => $payable->vendor?->user_id,
             ],
             $payable instanceof ServiceOrder => [
-                'fee'            => (int) $payable->platform_fee,
-                'buyer_id'       => $payable->buyer_id,
+                'fee' => (int) $payable->platform_fee,
+                'buyer_id' => $payable->buyer_id,
                 'vendor_user_id' => $payable->vendor?->user_id,
             ],
             $payable instanceof ConsultationSession => [
-                'fee'            => (int) $payable->platform_fee,
-                'buyer_id'       => $payable->buyer_id,
+                'fee' => (int) $payable->platform_fee,
+                'buyer_id' => $payable->buyer_id,
                 'vendor_user_id' => $payable->profile?->vendor?->user_id,
             ],
             default => null,

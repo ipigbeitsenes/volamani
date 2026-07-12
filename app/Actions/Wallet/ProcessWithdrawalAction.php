@@ -17,7 +17,7 @@ class ProcessWithdrawalAction
         abort_unless($withdrawal->canBeProcessed(), 422, 'Withdrawal cannot be approved at this stage.');
 
         $withdrawal->update([
-            'status'       => WithdrawalStatus::Paid,
+            'status' => WithdrawalStatus::Paid,
             'processed_by' => $admin->id,
             'processed_at' => now(),
         ]);
@@ -31,8 +31,8 @@ class ProcessWithdrawalAction
 
         return DB::transaction(function () use ($withdrawal, $admin, $reason) {
             $withdrawal->update([
-                'status'       => WithdrawalStatus::Rejected,
-                'admin_notes'  => $reason,
+                'status' => WithdrawalStatus::Rejected,
+                'admin_notes' => $reason,
                 'processed_by' => $admin->id,
                 'processed_at' => now(),
             ]);

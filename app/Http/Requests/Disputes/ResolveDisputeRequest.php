@@ -16,9 +16,9 @@ class ResolveDisputeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'resolution'   => ['required', new Enum(DisputeResolution::class)],
+            'resolution' => ['required', new Enum(DisputeResolution::class)],
             'vendor_share' => ['nullable', 'required_if:resolution,split', 'numeric', 'min:0'],
-            'note'         => ['nullable', 'string', 'max:2000'],
+            'note' => ['nullable', 'string', 'max:2000'],
         ];
     }
 

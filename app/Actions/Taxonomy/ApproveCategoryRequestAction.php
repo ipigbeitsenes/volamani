@@ -24,15 +24,15 @@ class ApproveCategoryRequestAction
 
             $category = $modelClass::create([
                 'parent_id' => $request->parent_id,
-                'name'      => $request->name,
+                'name' => $request->name,
                 'is_active' => true,
             ]);
 
             $request->update([
-                'status'              => CategoryRequestStatus::Approved,
-                'admin_note'          => $note,
-                'reviewed_by'         => $admin->id,
-                'reviewed_at'         => now(),
+                'status' => CategoryRequestStatus::Approved,
+                'admin_note' => $note,
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
                 'created_category_id' => $category->id,
             ]);
 

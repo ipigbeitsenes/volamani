@@ -7,6 +7,7 @@ use App\Enums\TransactionType;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\Wallet\WalletService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PromoteProductAction
@@ -18,18 +19,18 @@ class PromoteProductAction
      * set number of days. Extends the window if it's already promoted. Returns
      * the new "featured until" timestamp; throws on insufficient balance.
      */
-    public function execute(Product $product, User $vendorUser): \Illuminate\Support\Carbon
+    public function execute(Product $product, User $vendorUser): Carbon
     {
         abort_unless($product->status === ProductStatus::Active, 422, 'Only active products can be promoted.');
 
-        $fee  = (int) config('payment.promotion.fee', 1_000_00);
+        $fee = (int) config('payment.promotion.fee', 1_000_00);
         $days = (int) config('payment.promotion.days', 7);
 
         return DB::transaction(function () use ($product, $vendorUser, $fee, $days) {
             $wallet = $this->walletService->getOrCreate($vendorUser);
 
             abort_unless($wallet->canWithdraw($fee), 422,
-                'Insufficient wallet balance to promote. The promotion fee is ' . money($fee) . '.');
+                'Insufficient wallet balance to promote. The promotion fee is '.money($fee).'.');
 
             $this->walletService->debit(
                 $wallet,
@@ -44,7 +45,7 @@ class PromoteProductAction
             $until = $base->copy()->addDays($days);
 
             $product->update([
-                'is_featured'    => true,
+                'is_featured' => true,
                 'featured_until' => $until,
             ]);
 

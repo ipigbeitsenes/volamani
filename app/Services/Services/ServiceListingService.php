@@ -17,18 +17,17 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Services\BaseService;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class ServiceListingService extends BaseService
 {
     public function __construct(
-        private CreateServiceAction     $createAction,
-        private UpdateServiceAction     $updateAction,
+        private CreateServiceAction $createAction,
+        private UpdateServiceAction $updateAction,
         private PlaceServiceOrderAction $placeOrderAction,
         private SubmitRequirementsAction $requirementsAction,
         private DeliverServiceOrderAction $deliverAction,
-        private RequestRevisionAction   $revisionAction,
-        private AcceptDeliveryAction    $acceptAction,
+        private RequestRevisionAction $revisionAction,
+        private AcceptDeliveryAction $acceptAction,
     ) {}
 
     public function createService(Vendor $vendor, array $data): FreelanceService
@@ -49,9 +48,9 @@ class ServiceListingService extends BaseService
     public function approveService(FreelanceService $service, User $admin): FreelanceService
     {
         $service->update([
-            'status'           => ProductStatus::Active,
-            'approved_at'      => now(),
-            'approved_by'      => $admin->id,
+            'status' => ProductStatus::Active,
+            'approved_at' => now(),
+            'approved_by' => $admin->id,
             'rejection_reason' => null,
         ]);
 
@@ -61,9 +60,9 @@ class ServiceListingService extends BaseService
     public function rejectService(FreelanceService $service, User $admin, string $reason): FreelanceService
     {
         $service->update([
-            'status'           => ProductStatus::Rejected,
+            'status' => ProductStatus::Rejected,
             'rejection_reason' => $reason,
-            'approved_by'      => $admin->id,
+            'approved_by' => $admin->id,
         ]);
 
         return $service;
@@ -99,14 +98,14 @@ class ServiceListingService extends BaseService
         $attachmentPath = null;
         $attachmentName = null;
         if ($attachment) {
-            $attachmentPath = $attachment->store('service-orders/' . $order->id, 'public');
+            $attachmentPath = $attachment->store('service-orders/'.$order->id, 'public');
             $attachmentName = $attachment->getClientOriginalName();
         }
 
         $order->messages()->create([
-            'sender_id'       => $sender->id,
-            'message'         => $message,
-            'attachment'      => $attachmentPath,
+            'sender_id' => $sender->id,
+            'message' => $message,
+            'attachment' => $attachmentPath,
             'attachment_name' => $attachmentName,
         ]);
     }

@@ -12,17 +12,17 @@ class CreateVendorAction
     {
         return DB::transaction(function () use ($user, $data) {
             $vendor = Vendor::create([
-                'user_id'       => $user->id,
+                'user_id' => $user->id,
                 'business_name' => $data['business_name'],
-                'tagline'       => $data['tagline'] ?? null,
-                'description'   => $data['description'] ?? null,
-                'category'      => $data['category'] ?? null,
-                'store_type'    => $data['store_type'] ?? 'individual',
-                'store_focus'   => $data['store_focus'] ?? 'digital',
-                'whatsapp'      => $data['whatsapp'] ?? $user->whatsapp,
-                'city'          => $data['city'] ?? null,
-                'state'         => $data['state'] ?? null,
-                'status'        => 'pending',
+                'tagline' => $data['tagline'] ?? null,
+                'description' => $data['description'] ?? null,
+                'category' => $data['category'] ?? null,
+                'store_type' => $data['store_type'] ?? 'individual',
+                'store_focus' => $data['store_focus'] ?? 'digital',
+                'whatsapp' => $data['whatsapp'] ?? $user->whatsapp,
+                'city' => $data['city'] ?? null,
+                'state' => $data['state'] ?? null,
+                'status' => 'pending',
             ]);
 
             // Assign vendor role (in addition to existing buyer role)

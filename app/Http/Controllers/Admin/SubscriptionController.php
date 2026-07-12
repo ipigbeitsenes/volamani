@@ -16,10 +16,10 @@ class SubscriptionController extends Controller
 
     public function index(Request $request): View
     {
-        $filters       = $request->only('status', 'plan', 'search');
+        $filters = $request->only('status', 'plan', 'search');
         $subscriptions = $this->subscriptionService->forAdmin(20, $filters);
-        $stats         = $this->subscriptionService->stats();
-        $plans         = $this->subscriptionService->allPlans();
+        $stats = $this->subscriptionService->stats();
+        $plans = $this->subscriptionService->allPlans();
 
         return view('admin.subscriptions.index', compact('subscriptions', 'stats', 'plans', 'filters'));
     }
@@ -33,7 +33,7 @@ class SubscriptionController extends Controller
 
     public function createPlan(): View
     {
-        return view('admin.subscriptions.plan-form', ['plan' => new SubscriptionPlan()]);
+        return view('admin.subscriptions.plan-form', ['plan' => new SubscriptionPlan]);
     }
 
     public function storePlan(PlanRequest $request): RedirectResponse
@@ -63,7 +63,7 @@ class SubscriptionController extends Controller
     {
         $plan = $this->subscriptionService->togglePlan($plan);
 
-        $this->flashSuccess("Plan \"{$plan->name}\" " . ($plan->is_active ? 'activated' : 'deactivated') . '.');
+        $this->flashSuccess("Plan \"{$plan->name}\" ".($plan->is_active ? 'activated' : 'deactivated').'.');
 
         return back();
     }

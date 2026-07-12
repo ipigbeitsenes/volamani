@@ -14,45 +14,46 @@ use App\Models\WalletFunding;
 use App\Models\WalletLedger;
 use App\Models\WalletWithdrawal;
 use App\Repositories\Wallet\WalletRepository;
+use Illuminate\Support\Facades\DB;
 
 class WalletService
 {
     public function __construct(
-        private CreditWalletAction      $creditAction,
-        private DebitWalletAction       $debitAction,
-        private FundWalletAction        $fundAction,
+        private CreditWalletAction $creditAction,
+        private DebitWalletAction $debitAction,
+        private FundWalletAction $fundAction,
         private RequestWithdrawalAction $requestWithdrawalAction,
         private ProcessWithdrawalAction $processWithdrawalAction,
-        private WalletRepository        $repo,
+        private WalletRepository $repo,
     ) {}
 
     public function getOrCreate(User $user): Wallet
     {
         return $user->wallet ?? Wallet::create([
-            'user_id'        => $user->id,
-            'balance'        => 0,
+            'user_id' => $user->id,
+            'balance' => 0,
             'escrow_balance' => 0,
         ]);
     }
 
     public function credit(
         Wallet $wallet,
-        int    $amountKobo,
+        int $amountKobo,
         TransactionType $type,
         string $description,
         $ledgerable = null,
-        array  $metadata = []
+        array $metadata = []
     ): WalletLedger {
         return $this->creditAction->execute($wallet, $amountKobo, $type, $description, $ledgerable, $metadata);
     }
 
     public function debit(
         Wallet $wallet,
-        int    $amountKobo,
+        int $amountKobo,
         TransactionType $type,
         string $description,
         $ledgerable = null,
-        array  $metadata = []
+        array $metadata = []
     ): WalletLedger {
         return $this->debitAction->execute($wallet, $amountKobo, $type, $description, $ledgerable, $metadata);
     }
@@ -64,7 +65,7 @@ class WalletService
      */
     public function incrementEscrow(Wallet $wallet, int $amountKobo): void
     {
-        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+        DB::transaction(function () use ($wallet, $amountKobo) {
             $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
             $locked->update(['escrow_balance' => $locked->escrow_balance + $amountKobo]);
         });
@@ -75,7 +76,7 @@ class WalletService
      */
     public function decrementEscrow(Wallet $wallet, int $amountKobo): void
     {
-        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+        DB::transaction(function () use ($wallet, $amountKobo) {
             $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
             $locked->update(['escrow_balance' => max(0, $locked->escrow_balance - $amountKobo)]);
         });
@@ -89,7 +90,7 @@ class WalletService
      */
     public function incrementReserve(Wallet $wallet, int $amountKobo): void
     {
-        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+        DB::transaction(function () use ($wallet, $amountKobo) {
             $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
             $locked->update(['reserve_balance' => ($locked->reserve_balance ?? 0) + $amountKobo]);
         });
@@ -98,7 +99,7 @@ class WalletService
     /** Remove funds from the reserve balance (on payout or chargeback clawback). */
     public function decrementReserve(Wallet $wallet, int $amountKobo): void
     {
-        \Illuminate\Support\Facades\DB::transaction(function () use ($wallet, $amountKobo) {
+        DB::transaction(function () use ($wallet, $amountKobo) {
             $locked = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
             $locked->update(['reserve_balance' => max(0, ($locked->reserve_balance ?? 0) - $amountKobo)]);
         });

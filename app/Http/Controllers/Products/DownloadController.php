@@ -14,7 +14,7 @@ class DownloadController extends Controller
 
     public function download(Request $request, Order $order, ProductFile $productFile)
     {
-        if (!$request->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             abort(403, 'This download link has expired or is invalid.');
         }
 

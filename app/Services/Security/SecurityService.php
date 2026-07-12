@@ -17,12 +17,12 @@ class SecurityService
         $request = request();
 
         return $this->repo->create([
-            'user_id'     => $user?->id,
-            'event'       => $event,
-            'ip_address'  => $request?->ip(),
-            'user_agent'  => $request?->userAgent(),
+            'user_id' => $user?->id,
+            'event' => $event,
+            'ip_address' => $request?->ip(),
+            'user_agent' => $request?->userAgent(),
             'description' => $description,
-            'metadata'    => $metadata ?: null,
+            'metadata' => $metadata ?: null,
         ]);
     }
 
@@ -48,8 +48,8 @@ class SecurityService
 
         if ($user) {
             $attempts = $user->failed_login_attempts + 1;
-            $max      = (int) settings('max_login_attempts', 5);
-            $attrs    = ['failed_login_attempts' => $attempts];
+            $max = (int) settings('max_login_attempts', 5);
+            $attrs = ['failed_login_attempts' => $attempts];
 
             if ($attempts >= $max) {
                 $attrs['locked_until'] = now()->addMinutes((int) settings('lockout_minutes', 15));

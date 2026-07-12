@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use SoftDeletes, Auditable;
+    use Auditable, SoftDeletes;
 
     protected $fillable = [
         'reference', 'user_id', 'payable_type', 'payable_id',
@@ -25,12 +25,12 @@ class Payment extends Model
     protected function casts(): array
     {
         return [
-            'gateway'      => PaymentGateway::class,
-            'status'       => PaymentStatus::class,
-            'metadata'     => 'array',
-            'paid_at'      => 'datetime',
-            'failed_at'    => 'datetime',
-            'refunded_at'  => 'datetime',
+            'gateway' => PaymentGateway::class,
+            'status' => PaymentStatus::class,
+            'metadata' => 'array',
+            'paid_at' => 'datetime',
+            'failed_at' => 'datetime',
+            'refunded_at' => 'datetime',
         ];
     }
 

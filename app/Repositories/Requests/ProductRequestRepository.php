@@ -17,37 +17,37 @@ class ProductRequestRepository extends BaseRepository
     {
         $query = $this->model->with(['buyer', 'category'])->open();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('title', 'like', '%' . $filters['q'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['q'] . '%');
+                $q->where('title', 'like', '%'.$filters['q'].'%')
+                    ->orWhere('description', 'like', '%'.$filters['q'].'%');
             });
         }
 
-        if (!empty($filters['category'])) {
+        if (! empty($filters['category'])) {
             $query->where('category_id', $filters['category']);
         }
 
-        if (!empty($filters['budget_max'])) {
+        if (! empty($filters['budget_max'])) {
             $query->where(function ($q) use ($filters) {
                 $q->whereNull('budget_max')
-                  ->orWhere('budget_max', '<=', to_kobo($filters['budget_max']));
+                    ->orWhere('budget_max', '<=', to_kobo($filters['budget_max']));
             });
         }
 
-        if (!empty($filters['deadline'])) {
+        if (! empty($filters['deadline'])) {
             $query->where(function ($q) use ($filters) {
                 $q->whereNull('deadline_at')
-                  ->orWhere('deadline_at', '>=', now()->addDays((int) $filters['deadline']));
+                    ->orWhere('deadline_at', '>=', now()->addDays((int) $filters['deadline']));
             });
         }
 
         $sort = $filters['sort'] ?? 'latest';
         match ($sort) {
-            'budget_high'  => $query->orderByDesc('budget_max'),
-            'deadline'     => $query->orderBy('deadline_at'),
-            'most_bids'    => $query->orderByDesc('quotations_count'),
-            default        => $query->latest(),
+            'budget_high' => $query->orderByDesc('budget_max'),
+            'deadline' => $query->orderBy('deadline_at'),
+            'most_bids' => $query->orderByDesc('quotations_count'),
+            default => $query->latest(),
         };
 
         return $query->paginate($perPage)->appends($filters);

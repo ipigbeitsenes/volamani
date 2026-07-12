@@ -19,7 +19,7 @@ class VendorStrike extends Model
     protected function casts(): array
     {
         return [
-            'reason'     => StrikeReason::class,
+            'reason' => StrikeReason::class,
             'cleared_at' => 'datetime',
         ];
     }

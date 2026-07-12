@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Document;
 use App\Services\Documents\DocumentService;
 use App\Services\Payment\PaymentService;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
@@ -21,7 +21,7 @@ class PublicDocumentController extends Controller
 {
     public function __construct(
         private DocumentService $documentService,
-        private PaymentService  $paymentService,
+        private PaymentService $paymentService,
     ) {}
 
     public function show(string $token): View
@@ -102,7 +102,7 @@ class PublicDocumentController extends Controller
 
         $data = $request->validate([
             'signed_name' => ['required', 'string', 'max:120'],
-            'agree'       => ['accepted'],
+            'agree' => ['accepted'],
         ]);
 
         $this->documentService->sign($document, $data['signed_name'], $request->ip());

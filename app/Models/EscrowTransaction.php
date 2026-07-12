@@ -18,11 +18,11 @@ class EscrowTransaction extends Model
     protected function casts(): array
     {
         return [
-            'type'          => EscrowTransactionType::class,
-            'amount'        => 'integer',
+            'type' => EscrowTransactionType::class,
+            'amount' => 'integer',
             'balance_after' => 'integer',
-            'metadata'      => 'array',
-            'created_at'    => 'datetime',
+            'metadata' => 'array',
+            'created_at' => 'datetime',
         ];
     }
 

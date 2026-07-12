@@ -46,7 +46,7 @@ class SubscriptionRepository
         if (! empty($filters['search'])) {
             $term = $filters['search'];
             $query->whereHas('vendor', fn ($q) => $q->where('business_name', 'like', "%{$term}%"))
-                  ->orWhere('reference', 'like', "%{$term}%");
+                ->orWhere('reference', 'like', "%{$term}%");
         }
 
         return $query->paginate($perPage);
@@ -72,10 +72,10 @@ class SubscriptionRepository
         $base = Subscription::query();
 
         return [
-            'active'    => (clone $base)->whereIn('status', [SubscriptionStatus::Active, SubscriptionStatus::Trialing])->count(),
-            'past_due'  => (clone $base)->where('status', SubscriptionStatus::PastDue)->count(),
+            'active' => (clone $base)->whereIn('status', [SubscriptionStatus::Active, SubscriptionStatus::Trialing])->count(),
+            'past_due' => (clone $base)->where('status', SubscriptionStatus::PastDue)->count(),
             'cancelled' => (clone $base)->where('status', SubscriptionStatus::Cancelled)->count(),
-            'mrr'       => (int) (clone $base)->where('status', SubscriptionStatus::Active)->sum('price'),
+            'mrr' => (int) (clone $base)->where('status', SubscriptionStatus::Active)->sum('price'),
         ];
     }
 }

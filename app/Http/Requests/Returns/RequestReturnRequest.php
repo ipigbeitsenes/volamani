@@ -16,10 +16,10 @@ class RequestReturnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reason'      => ['required', new Enum(ReturnReason::class)],
+            'reason' => ['required', new Enum(ReturnReason::class)],
             'description' => ['required', 'string', 'min:10', 'max:2000'],
-            'photos'      => ['nullable', 'array', 'max:5'],
-            'photos.*'    => ['image', 'max:5120'],
+            'photos' => ['nullable', 'array', 'max:5'],
+            'photos.*' => ['image', 'max:5120'],
         ];
     }
 }

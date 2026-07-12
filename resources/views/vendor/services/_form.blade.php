@@ -69,9 +69,9 @@
                                     @error('packages.'.$idx.'.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Price (₦) <span class="text-danger">*</span></label>
+                                    <label class="form-label">Price ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text">₦</span>
+                                        <span class="input-group-text">{{ currency_symbol() }}</span>
                                         <input type="number" name="packages[{{ $idx }}][price]" step="0.01" min="500"
                                             class="form-control @error('packages.'.$idx.'.price') is-invalid @enderror"
                                             value="{{ old('packages.'.$idx.'.price', isset($pkg) ? from_kobo($pkg->price) : '') }}">

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubscriptionPlan extends Model
 {
-    use SoftDeletes, HasSlug;
+    use HasSlug, SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'tagline', 'description', 'price', 'billing_interval',
@@ -22,16 +22,16 @@ class SubscriptionPlan extends Model
     {
         return [
             'billing_interval' => BillingInterval::class,
-            'price'            => 'integer',
-            'commission_rate'  => 'decimal:2',
-            'trial_days'       => 'integer',
-            'max_products'     => 'integer',
-            'max_services'     => 'integer',
+            'price' => 'integer',
+            'commission_rate' => 'decimal:2',
+            'trial_days' => 'integer',
+            'max_products' => 'integer',
+            'max_services' => 'integer',
             'featured_listing' => 'boolean',
-            'perks'            => 'array',
-            'is_active'        => 'boolean',
-            'is_popular'       => 'boolean',
-            'sort_order'       => 'integer',
+            'perks' => 'array',
+            'is_active' => 'boolean',
+            'is_popular' => 'boolean',
+            'sort_order' => 'integer',
         ];
     }
 
@@ -71,7 +71,7 @@ class SubscriptionPlan extends Model
             return 'Free';
         }
 
-        return money($this->price) . $this->billing_interval->shortLabel();
+        return money($this->price).$this->billing_interval->shortLabel();
     }
 
     public function productLimitLabel(): string

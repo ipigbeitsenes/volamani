@@ -18,10 +18,10 @@ use Illuminate\Support\Facades\DB;
 class ResolveChargebackAction
 {
     public function __construct(
-        private EscrowService        $escrowService,
-        private WalletService        $walletService,
-        private AddStrikeAction       $addStrike,
-        private AddBuyerStrikeAction  $addBuyerStrike,
+        private EscrowService $escrowService,
+        private WalletService $walletService,
+        private AddStrikeAction $addStrike,
+        private AddBuyerStrikeAction $addBuyerStrike,
     ) {}
 
     /**
@@ -85,10 +85,10 @@ class ResolveChargebackAction
             }
 
             $chargeback->update([
-                'status'          => $outcome,
-                'resolved_by'     => $admin?->id,
+                'status' => $outcome,
+                'resolved_by' => $admin?->id,
                 'resolution_note' => $note,
-                'resolved_at'     => now(),
+                'resolved_at' => now(),
             ]);
 
             return $chargeback->fresh();

@@ -148,7 +148,7 @@
                     <div class="card-body">
                         <form action="{{ route($routeBase . '.payment', $document) }}" method="POST">
                             @csrf
-                            <label class="form-label small">Amount received (₦)</label>
+                            <label class="form-label small">Amount received ({{ currency_symbol() }})</label>
                             <input type="number" step="0.01" min="0.01" name="amount" class="form-control mb-2" value="{{ from_kobo($document->balanceDue()) }}" required>
                             <button class="btn btn-success w-100 btn-sm">Record payment</button>
                         </form>

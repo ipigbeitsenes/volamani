@@ -22,8 +22,8 @@ class FundWalletRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount.min' => 'Minimum funding amount is ₦500.',
-            'amount.max' => 'Maximum single funding is ₦10,000,000.',
+            'amount.min' => 'Minimum funding amount is '.currency_symbol().'500.',
+            'amount.max' => 'Maximum single funding is '.currency_symbol().'10,000,000.',
         ];
     }
 }

@@ -9,7 +9,6 @@ use App\Models\ServicePackage;
 use App\Models\Vendor;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CreateServiceAction
 {
@@ -24,15 +23,15 @@ class CreateServiceAction
             }
 
             $service = FreelanceService::create([
-                'vendor_id'         => $vendor->id,
-                'category_id'       => $data['category_id'] ?? null,
-                'title'             => $data['title'],
+                'vendor_id' => $vendor->id,
+                'category_id' => $data['category_id'] ?? null,
+                'title' => $data['title'],
                 'short_description' => $data['short_description'] ?? null,
-                'description'       => $data['description'],
-                'thumbnail'         => $thumbnail,
-                'status'            => ProductStatus::Pending,
-                'seo_title'         => $data['seo_title'] ?? null,
-                'seo_description'   => $data['seo_description'] ?? null,
+                'description' => $data['description'],
+                'thumbnail' => $thumbnail,
+                'status' => ProductStatus::Pending,
+                'seo_title' => $data['seo_title'] ?? null,
+                'seo_description' => $data['seo_description'] ?? null,
             ]);
 
             $this->syncPackages($service, $data['packages'] ?? []);
@@ -46,7 +45,7 @@ class CreateServiceAction
     private function assertWithinListingLimit(Vendor $vendor): void
     {
         $tier = $vendor->trustTier();
-        $max  = $tier->maxActiveListings();
+        $max = $tier->maxActiveListings();
 
         abort_if($max !== null && $vendor->activeListingCount() >= $max, 422,
             "You've reached the {$tier->label()} limit of {$max} active listings. This cap grows as your store earns trust."
@@ -60,14 +59,14 @@ class CreateServiceAction
                 continue;
             }
             ServicePackage::create([
-                'service_id'    => $service->id,
-                'tier'          => $pkgData['tier'],
-                'name'          => $pkgData['name'],
-                'description'   => $pkgData['description'] ?? '',
-                'price'         => to_kobo($pkgData['price']),
+                'service_id' => $service->id,
+                'tier' => $pkgData['tier'],
+                'name' => $pkgData['name'],
+                'description' => $pkgData['description'] ?? '',
+                'price' => to_kobo($pkgData['price']),
                 'delivery_days' => $pkgData['delivery_days'] ?? 3,
-                'revisions'     => $pkgData['revisions'] ?? 1,
-                'features'      => array_filter(explode("\n", $pkgData['features'] ?? '')),
+                'revisions' => $pkgData['revisions'] ?? 1,
+                'features' => array_filter(explode("\n", $pkgData['features'] ?? '')),
             ]);
         }
     }
@@ -80,8 +79,8 @@ class CreateServiceAction
             }
             ServiceFaq::create([
                 'service_id' => $service->id,
-                'question'   => $faqData['question'],
-                'answer'     => $faqData['answer'] ?? '',
+                'question' => $faqData['question'],
+                'answer' => $faqData['answer'] ?? '',
                 'sort_order' => $index,
             ]);
         }

@@ -9,6 +9,7 @@ use App\Traits\Auditable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, SoftDeletes, HasRoles, Auditable;
+    use Auditable, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -57,19 +58,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'phone_verified_at' => 'datetime',
-            'last_login_at'     => 'datetime',
-            'locked_until'      => 'datetime',
-            'is_active'         => 'boolean',
-            'user_type'         => UserType::class,
-            'kyc_status'        => KYCStatus::class,
-            'password'          => 'hashed',
-            'buyer_strikes'            => 'integer',
+            'last_login_at' => 'datetime',
+            'locked_until' => 'datetime',
+            'is_active' => 'boolean',
+            'user_type' => UserType::class,
+            'kyc_status' => KYCStatus::class,
+            'password' => 'hashed',
+            'buyer_strikes' => 'integer',
             'buyer_strikes_updated_at' => 'datetime',
-            'buyer_flagged'            => 'boolean',
-            'buyer_flagged_at'         => 'datetime',
-            'purchases_suspended'      => 'boolean',
-            'purchases_suspended_at'   => 'datetime',
-            'terms_accepted_at'        => 'datetime',
+            'buyer_flagged' => 'boolean',
+            'buyer_flagged_at' => 'datetime',
+            'purchases_suspended' => 'boolean',
+            'purchases_suspended_at' => 'datetime',
+            'terms_accepted_at' => 'datetime',
         ];
     }
 
@@ -95,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->forceFill([
             'terms_accepted_at' => now(),
-            'terms_version'     => $this->currentTermsVersion(),
+            'terms_version' => $this->currentTermsVersion(),
         ])->save();
     }
 
@@ -143,7 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $username = $base;
         $i = 1;
         while (static::withTrashed()->where('username', $username)->exists()) {
-            $username = $base . $i;
+            $username = $base.$i;
             $i++;
         }
 
@@ -213,7 +214,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /** Vendors this user follows (social commerce). */
-    public function followedVendors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function followedVendors(): BelongsToMany
     {
         return $this->belongsToMany(Vendor::class, 'follows', 'follower_id', 'vendor_id')->withTimestamps();
     }
@@ -268,7 +269,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarUrlAttribute(): string
     {
         return media_url($this->avatar)
-            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=80&background=1a56db&color=fff';
+            ?? 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&size=80&background=1a56db&color=fff';
     }
 
     public function getStorefrontUrlAttribute(): string

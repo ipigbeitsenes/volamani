@@ -198,9 +198,9 @@
 
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">Your Price (₦) <span class="text-danger">*</span></label>
+                                        <label class="form-label">Your Price ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <span class="input-group-text">₦</span>
+                                            <span class="input-group-text">{{ currency_symbol() }}</span>
                                             <input type="number" name="price" step="0.01" min="500"
                                                 class="form-control @error('price') is-invalid @enderror"
                                                 value="{{ old('price') }}" required>

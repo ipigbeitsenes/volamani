@@ -35,7 +35,7 @@ class RatingAggregationService
             ->first();
 
         $reviewable->forceFill([
-            'reviews_count'  => (int) $stats->cnt,
+            'reviews_count' => (int) $stats->cnt,
             'average_rating' => round((float) $stats->avg_rating, 2),
         ])->save();
     }
@@ -47,7 +47,7 @@ class RatingAggregationService
             ->first();
 
         $vendor->update([
-            'reviews_count'  => (int) $stats->cnt,
+            'reviews_count' => (int) $stats->cnt,
             'average_rating' => round((float) $stats->avg_rating, 2),
         ]);
 
@@ -57,10 +57,10 @@ class RatingAggregationService
     private function vendorFor(Model $reviewable): ?Vendor
     {
         return match (true) {
-            $reviewable instanceof Product           => $reviewable->vendor,
-            $reviewable instanceof FreelanceService  => $reviewable->vendor,
+            $reviewable instanceof Product => $reviewable->vendor,
+            $reviewable instanceof FreelanceService => $reviewable->vendor,
             $reviewable instanceof ConsultantProfile => $reviewable->vendor,
-            default                                  => null,
+            default => null,
         };
     }
 }

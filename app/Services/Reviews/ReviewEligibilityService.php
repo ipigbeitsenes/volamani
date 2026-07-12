@@ -7,6 +7,7 @@ use App\Enums\ServiceOrderStatus;
 use App\Models\ConsultantProfile;
 use App\Models\ConsultationSession;
 use App\Models\FreelanceService;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\ServiceOrder;
@@ -48,7 +49,7 @@ class ReviewEligibilityService
     {
         return $user
             && $this->hasPurchased($user, $reviewable)
-            && !$this->hasReviewed($user, $reviewable);
+            && ! $this->hasReviewed($user, $reviewable);
     }
 
     /** The order linkage columns to store on the review, if resolvable. */
@@ -64,8 +65,7 @@ class ReviewEligibilityService
         }
 
         if ($reviewable instanceof Product) {
-            $orderId = \App\Models\OrderItem::whereHas('order', fn ($q) =>
-                    $q->where('buyer_id', $user->id)->where('payment_status', 'success'))
+            $orderId = OrderItem::whereHas('order', fn ($q) => $q->where('buyer_id', $user->id)->where('payment_status', 'success'))
                 ->where('product_id', $reviewable->id)
                 ->value('order_id');
 

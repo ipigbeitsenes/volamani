@@ -95,13 +95,8 @@
                                 <input type="text" name="ship_to_city" class="form-control" value="{{ old('ship_to_city') }}">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small">State</label>
-                                <select name="ship_to_state" class="form-select">
-                                    <option value="">Select state</option>
-                                    @foreach(['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'] as $st)
-                                        <option value="{{ $st }}" {{ old('ship_to_state') === $st ? 'selected' : '' }}>{{ $st }}</option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label small">State / Region</label>
+                                <input type="text" name="ship_to_state" class="form-control" value="{{ old('ship_to_state') }}" placeholder="State / region">
                             </div>
                         </div>
                         @if($vendor->ships_to)
@@ -177,7 +172,7 @@
         const qtyInput   = document.getElementById('qtyInput');
         const sumUnit    = document.getElementById('sumUnit');
         const sumTotal   = document.getElementById('sumTotal');
-        const naira = k => '₦' + (k / 100).toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const fmtMoney = k => @json(currency_symbol()) + (k / 100).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
         function unitPrice() {
             const sel = document.querySelector('input[name=variant_id]:checked');
@@ -188,8 +183,8 @@
             const sub = unitPrice() * qty;
             let ship = shipping;
             if (freeOver !== null && sub >= freeOver) ship = 0;
-            sumUnit.textContent = naira(unitPrice());
-            sumTotal.textContent = naira(sub + ship);
+            sumUnit.textContent = fmtMoney(unitPrice());
+            sumTotal.textContent = fmtMoney(sub + ship);
         }
         document.querySelectorAll('input[name=variant_id]').forEach(el => el.addEventListener('change', recalc));
         qtyInput.addEventListener('input', recalc);

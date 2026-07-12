@@ -28,7 +28,7 @@ class ProductRepository extends BaseRepository
     {
         $query = $this->model->with(['vendor', 'category', 'physicalCategory', 'physicalDetail'])->active();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $query->search($filters['q']);
         }
 
@@ -40,40 +40,40 @@ class ProductRepository extends BaseRepository
 
         // Digital-only filters (ignored when the user has narrowed to physical,
         // so a stale cross-kind param from switching tabs can't zero out results).
-        if (!empty($filters['category']) && $kind !== 'physical') {
+        if (! empty($filters['category']) && $kind !== 'physical') {
             $query->where('category_id', $filters['category']);
         }
-        if (!empty($filters['type']) && $kind !== 'physical') {
+        if (! empty($filters['type']) && $kind !== 'physical') {
             $query->ofType($filters['type']);
         }
 
         // Physical-only filters (ignored when narrowed to digital).
-        if (!empty($filters['physical_category']) && $kind !== 'digital') {
+        if (! empty($filters['physical_category']) && $kind !== 'digital') {
             $query->where('physical_category_id', $filters['physical_category']);
         }
-        if (!empty($filters['in_stock']) && $kind !== 'digital') {
+        if (! empty($filters['in_stock']) && $kind !== 'digital') {
             $query->whereHas('physicalDetail', fn ($q) => $q->where('stock_quantity', '>', 0));
         }
 
-        if (!empty($filters['min_price'])) {
+        if (! empty($filters['min_price'])) {
             $query->where('price', '>=', to_kobo($filters['min_price']));
         }
 
-        if (!empty($filters['max_price'])) {
+        if (! empty($filters['max_price'])) {
             $query->where('price', '<=', to_kobo($filters['max_price']));
         }
 
-        if (!empty($filters['vendor'])) {
-            $query->whereHas('vendor', fn($q) => $q->where('slug', $filters['vendor']));
+        if (! empty($filters['vendor'])) {
+            $query->whereHas('vendor', fn ($q) => $q->where('slug', $filters['vendor']));
         }
 
         $sort = $filters['sort'] ?? 'latest';
         match ($sort) {
-            'price_asc'    => $query->orderBy('price'),
-            'price_desc'   => $query->orderByDesc('price'),
-            'popular'      => $query->orderByDesc('sales_count'),
-            'top_rated'    => $query->orderByDesc('average_rating'),
-            default        => $query->latest(),
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            'popular' => $query->orderByDesc('sales_count'),
+            'top_rated' => $query->orderByDesc('average_rating'),
+            default => $query->latest(),
         };
 
         return $query->paginate($perPage)->appends($filters);

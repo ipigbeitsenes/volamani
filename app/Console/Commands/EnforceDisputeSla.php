@@ -23,11 +23,12 @@ class EnforceDisputeSla extends Command
 
         if (! $systemAdmin) {
             $this->warn('No admin user available to action SLA breaches.');
+
             return self::SUCCESS;
         }
 
         $autoRefund = $this->autoRefund();
-        $actioned   = 0;
+        $actioned = 0;
 
         foreach ($repo->dueForSla() as $dispute) {
             // Flag first so a failure below never re-loops the same breach endlessly.

@@ -29,7 +29,7 @@ class ChatWidgetController extends Controller
 
         $data = $request->validate([
             'token' => ['nullable', 'string', 'max:40'],
-            'name'  => ['nullable', 'string', 'max:80'],
+            'name' => ['nullable', 'string', 'max:80'],
             'email' => ['nullable', 'email', 'max:120'],
         ]);
 
@@ -41,8 +41,8 @@ class ChatWidgetController extends Controller
         $this->chat->markReadByVisitor($conversation);
 
         return response()->json([
-            'token'    => $conversation->token,
-            'status'   => $conversation->status->value,
+            'token' => $conversation->token,
+            'status' => $conversation->status->value,
             'messages' => $this->serialize($conversation->messages()->get()),
         ]);
     }
@@ -68,13 +68,13 @@ class ChatWidgetController extends Controller
 
         $this->chat->maybeBotReply($conversation);
 
-        $after    = (int) $request->query('after', 0);
+        $after = (int) $request->query('after', 0);
         $messages = $this->chat->messagesSince($conversation, $after);
 
         $this->chat->markReadByVisitor($conversation);
 
         return response()->json([
-            'status'   => $conversation->fresh()->status->value,
+            'status' => $conversation->fresh()->status->value,
             'messages' => $this->serialize($messages),
         ]);
     }
@@ -100,7 +100,7 @@ class ChatWidgetController extends Controller
     private function serializeOne(ChatMessage $message): array
     {
         return [
-            'id'   => $message->id,
+            'id' => $message->id,
             'type' => $message->sender_type->value,
             'body' => $message->body,
             'time' => $message->created_at->format('g:i A'),

@@ -21,7 +21,7 @@ class AccountLockoutTest extends TestCase
 
         for ($i = 0; $i < 5; $i++) {
             $this->post(route('login.post'), [
-                'email'    => $user->email,
+                'email' => $user->email,
                 'password' => 'wrong-password',
             ]);
         }
@@ -32,7 +32,7 @@ class AccountLockoutTest extends TestCase
 
         // Correct password while locked must still be rejected.
         $this->post(route('login.post'), [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'Correct-h0rse',
         ])->assertSessionHasErrors();
 
@@ -45,14 +45,14 @@ class AccountLockoutTest extends TestCase
 
         for ($i = 0; $i < 3; $i++) {
             $this->post(route('login.post'), [
-                'email'    => $user->email,
+                'email' => $user->email,
                 'password' => 'wrong-password',
             ]);
         }
         $this->assertSame(3, (int) $user->fresh()->failed_login_attempts);
 
         $this->post(route('login.post'), [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'Correct-h0rse',
         ]);
 
@@ -66,13 +66,13 @@ class AccountLockoutTest extends TestCase
         $user = User::factory()->create();
 
         $this->post(route('login.post'), [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertDatabaseHas('security_logs', [
             'user_id' => $user->id,
-            'event'   => 'login_failed',
+            'event' => 'login_failed',
         ]);
     }
 }

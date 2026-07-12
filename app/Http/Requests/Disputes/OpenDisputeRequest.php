@@ -16,9 +16,9 @@ class OpenDisputeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reason'      => ['required', new Enum(DisputeReason::class)],
+            'reason' => ['required', new Enum(DisputeReason::class)],
             'description' => ['required', 'string', 'min:20', 'max:2000'],
-            'attachment'  => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,zip', 'max:5120'],
+            'attachment' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,zip', 'max:5120'],
         ];
     }
 

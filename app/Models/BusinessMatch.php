@@ -18,13 +18,13 @@ class BusinessMatch extends Model
     protected function casts(): array
     {
         return [
-            'status'               => MatchStatus::class,
-            'score'                => 'integer',
-            'score_breakdown'      => 'array',
+            'status' => MatchStatus::class,
+            'score' => 'integer',
+            'score_breakdown' => 'array',
             'requester_interested' => 'boolean',
-            'vendor_interested'    => 'boolean',
-            'viewed_at'            => 'datetime',
-            'connected_at'         => 'datetime',
+            'vendor_interested' => 'boolean',
+            'viewed_at' => 'datetime',
+            'connected_at' => 'datetime',
         ];
     }
 
@@ -58,7 +58,7 @@ class BusinessMatch extends Model
             $this->score >= 75 => 'success',
             $this->score >= 50 => 'primary',
             $this->score >= 30 => 'warning',
-            default            => 'secondary',
+            default => 'secondary',
         };
     }
 }

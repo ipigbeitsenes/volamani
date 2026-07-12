@@ -10,8 +10,11 @@ use App\Models\EscrowTransaction;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\ServiceOrder;
+use App\Models\Vendor;
 use App\Services\Wallet\WalletService;
+use App\Support\BusinessDayCalculator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HoldEscrowAction
@@ -33,7 +36,7 @@ class HoldEscrowAction
         }
 
         $details = $this->resolve($escrowable);
-        if (!$details || !$details['vendor'] || !$details['vendor']->user) {
+        if (! $details || ! $details['vendor'] || ! $details['vendor']->user) {
             return null;
         }
 
@@ -42,28 +45,28 @@ class HoldEscrowAction
 
             $escrow = Escrow::create([
                 'escrowable_type' => get_class($escrowable),
-                'escrowable_id'   => $escrowable->getKey(),
-                'buyer_id'        => $details['buyer_id'],
-                'vendor_id'       => $details['vendor']->id,
-                'wallet_id'       => $vendorWallet->id,
-                'payment_id'      => $payment?->id,
-                'total_amount'    => $details['total'],
-                'platform_fee'    => $details['fee'],
+                'escrowable_id' => $escrowable->getKey(),
+                'buyer_id' => $details['buyer_id'],
+                'vendor_id' => $details['vendor']->id,
+                'wallet_id' => $vendorWallet->id,
+                'payment_id' => $payment?->id,
+                'total_amount' => $details['total'],
+                'platform_fee' => $details['fee'],
                 'vendor_earnings' => $details['earnings'],
-                'status'          => EscrowStatus::Holding,
+                'status' => EscrowStatus::Holding,
                 'auto_release_at' => $this->autoReleaseAt($escrowable, $details['vendor']),
-                'held_at'         => now(),
+                'held_at' => now(),
             ]);
 
             // Reflect the pending earnings on the vendor's wallet (not spendable yet).
             $this->walletService->incrementEscrow($vendorWallet, $details['earnings']);
 
             EscrowTransaction::create([
-                'escrow_id'     => $escrow->id,
-                'type'          => EscrowTransactionType::Hold,
-                'amount'        => $details['earnings'],
+                'escrow_id' => $escrow->id,
+                'type' => EscrowTransactionType::Hold,
+                'amount' => $details['earnings'],
                 'balance_after' => $details['earnings'],
-                'description'   => "Funds held in escrow for {$escrow->reference}",
+                'description' => "Funds held in escrow for {$escrow->reference}",
             ]);
 
             return $escrow;
@@ -77,24 +80,24 @@ class HoldEscrowAction
     {
         return match (true) {
             $escrowable instanceof Order => [
-                'total'    => (int) $escrowable->total_amount,
-                'fee'      => (int) $escrowable->platform_fee,
+                'total' => (int) $escrowable->total_amount,
+                'fee' => (int) $escrowable->platform_fee,
                 'earnings' => (int) $escrowable->vendor_earnings,
-                'vendor'   => $escrowable->vendor,
+                'vendor' => $escrowable->vendor,
                 'buyer_id' => $escrowable->buyer_id,
             ],
             $escrowable instanceof ServiceOrder => [
-                'total'    => (int) $escrowable->total_amount,
-                'fee'      => (int) $escrowable->platform_fee,
+                'total' => (int) $escrowable->total_amount,
+                'fee' => (int) $escrowable->platform_fee,
                 'earnings' => (int) $escrowable->vendor_earnings,
-                'vendor'   => $escrowable->vendor,
+                'vendor' => $escrowable->vendor,
                 'buyer_id' => $escrowable->buyer_id,
             ],
             $escrowable instanceof ConsultationSession => [
-                'total'    => (int) $escrowable->price,
-                'fee'      => (int) $escrowable->platform_fee,
+                'total' => (int) $escrowable->price,
+                'fee' => (int) $escrowable->platform_fee,
                 'earnings' => (int) $escrowable->consultant_earnings,
-                'vendor'   => $escrowable->profile?->vendor,
+                'vendor' => $escrowable->profile?->vendor,
                 'buyer_id' => $escrowable->buyer_id,
             ],
             default => null,
@@ -110,7 +113,7 @@ class HoldEscrowAction
      * is confirmed (buyer "confirm receipt", or a fallback timer set at delivery
      * time). Service orders and consultations release on explicit completion.
      */
-    private function autoReleaseAt(Model $escrowable, ?\App\Models\Vendor $vendor = null): ?\Illuminate\Support\Carbon
+    private function autoReleaseAt(Model $escrowable, ?Vendor $vendor = null): ?Carbon
     {
         if ($escrowable instanceof Order && ! $escrowable->requires_shipping) {
             // Graduated hold: newer/lower-trust sellers hold longer; trusted ones
@@ -119,7 +122,7 @@ class HoldEscrowAction
                 ? $vendor->trustTier()->escrowReleaseDays()
                 : (int) config('business_days.release_days', 3);
 
-            return app(\App\Support\BusinessDayCalculator::class)
+            return app(BusinessDayCalculator::class)
                 ->addBusinessDays(now(), max(1, $days));
         }
 

@@ -49,7 +49,7 @@
                             <label class="form-label fw-medium small">Tagline <span class="text-muted">(optional)</span></label>
                             <input type="text" name="tagline" value="{{ old('tagline') }}"
                                    class="form-control @error('tagline') is-invalid @enderror"
-                                   placeholder="e.g. Premium web design for African businesses"
+                                   placeholder="e.g. Premium web design for growing businesses"
                                    maxlength="160">
                             @error('tagline')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
@@ -114,16 +114,12 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-medium small">City</label>
                                 <input type="text" name="city" value="{{ old('city') }}"
-                                       class="form-control" placeholder="Lagos">
+                                       class="form-control" placeholder="City">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-medium small">State</label>
-                                <select name="state" class="form-select">
-                                    <option value="">Select state</option>
-                                    @foreach(['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'] as $state)
-                                        <option value="{{ $state }}" {{ old('state') === $state ? 'selected' : '' }}>{{ $state }}</option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label fw-medium small">State / Region</label>
+                                <input type="text" name="state" value="{{ old('state') }}"
+                                       class="form-control" placeholder="State / region">
                             </div>
                         </div>
 

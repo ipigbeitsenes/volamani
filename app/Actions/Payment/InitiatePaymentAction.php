@@ -16,29 +16,29 @@ class InitiatePaymentAction
     public function __construct(private PaymentManager $manager) {}
 
     public function execute(
-        User    $user,
-        int     $amountKobo,
-        Model   $payable,
-        string  $gatewayName = 'paystack',
-        array   $metadata    = [],
-        ?string $email       = null
+        User $user,
+        int $amountKobo,
+        Model $payable,
+        string $gatewayName = 'paystack',
+        array $metadata = [],
+        ?string $email = null
     ): array {
         return DB::transaction(function () use ($user, $amountKobo, $payable, $gatewayName, $metadata, $email) {
             $payment = Payment::create([
-                'user_id'      => $user->id,
+                'user_id' => $user->id,
                 'payable_type' => get_class($payable),
-                'payable_id'   => $payable->getKey(),
-                'gateway'      => $gatewayName,
-                'status'       => PaymentStatus::Pending,
-                'amount'       => $amountKobo,
-                'ip_address'   => request()->ip(),
+                'payable_id' => $payable->getKey(),
+                'gateway' => $gatewayName,
+                'status' => PaymentStatus::Pending,
+                'amount' => $amountKobo,
+                'ip_address' => request()->ip(),
             ]);
 
             PaymentLog::create([
                 'payment_id' => $payment->id,
-                'event'      => 'payment_initiated',
-                'gateway'    => $gatewayName,
-                'payload'    => ['amount' => $amountKobo, 'payable' => get_class($payable)],
+                'event' => 'payment_initiated',
+                'gateway' => $gatewayName,
+                'payload' => ['amount' => $amountKobo, 'payable' => get_class($payable)],
                 'ip_address' => request()->ip(),
                 'created_at' => now(),
             ]);
@@ -47,7 +47,7 @@ class InitiatePaymentAction
                 return ['payment' => $payment, 'redirect' => route('checkout.bank-transfer', $payment)];
             }
 
-            $gateway  = $this->manager->driver($gatewayName);
+            $gateway = $this->manager->driver($gatewayName);
             $response = $gateway->initiate(
                 $amountKobo,
                 $email ?: $user->email,
@@ -57,20 +57,20 @@ class InitiatePaymentAction
 
             $payment->update([
                 'gateway_reference' => $response['reference'],
-                'metadata'          => $response,
+                'metadata' => $response,
             ]);
 
             PaymentLog::create([
-                'payment_id'        => $payment->id,
-                'event'             => 'gateway_initialized',
-                'gateway'           => $gatewayName,
+                'payment_id' => $payment->id,
+                'event' => 'gateway_initialized',
+                'gateway' => $gatewayName,
                 'gateway_reference' => $response['reference'],
-                'payload'           => $response,
-                'created_at'        => now(),
+                'payload' => $response,
+                'created_at' => now(),
             ]);
 
             return [
-                'payment'           => $payment,
+                'payment' => $payment,
                 'authorization_url' => $response['authorization_url'],
                 'gateway_reference' => $response['reference'],
             ];

@@ -25,14 +25,14 @@ class ServiceOrder extends Model
     protected function casts(): array
     {
         return [
-            'status'         => ServiceOrderStatus::class,
+            'status' => ServiceOrderStatus::class,
             'payment_status' => PaymentStatus::class,
-            'due_at'         => 'datetime',
-            'paid_at'        => 'datetime',
-            'started_at'     => 'datetime',
-            'delivered_at'   => 'datetime',
-            'completed_at'   => 'datetime',
-            'cancelled_at'   => 'datetime',
+            'due_at' => 'datetime',
+            'paid_at' => 'datetime',
+            'started_at' => 'datetime',
+            'delivered_at' => 'datetime',
+            'completed_at' => 'datetime',
+            'cancelled_at' => 'datetime',
         ];
     }
 
@@ -97,7 +97,7 @@ class ServiceOrder extends Model
 
     public function hasRequirements(): bool
     {
-        return !empty($this->requirements);
+        return ! empty($this->requirements);
     }
 
     public function remainingRevisions(): int
@@ -109,6 +109,6 @@ class ServiceOrder extends Model
     {
         return $this->due_at
             && $this->due_at->isPast()
-            && !in_array($this->status, [ServiceOrderStatus::Completed, ServiceOrderStatus::Cancelled]);
+            && ! in_array($this->status, [ServiceOrderStatus::Completed, ServiceOrderStatus::Cancelled]);
     }
 }

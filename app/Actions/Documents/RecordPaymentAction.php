@@ -23,9 +23,9 @@ class RecordPaymentAction
 
             $locked->update([
                 'amount_paid' => $newPaid,
-                'status'      => $settled ? DocumentStatus::Paid : DocumentStatus::Partial,
-                'paid_at'     => $settled ? ($locked->paid_at ?? now()) : $locked->paid_at,
-                'payment_id'  => $payment?->id ?? $locked->payment_id,
+                'status' => $settled ? DocumentStatus::Paid : DocumentStatus::Partial,
+                'paid_at' => $settled ? ($locked->paid_at ?? now()) : $locked->paid_at,
+                'payment_id' => $payment?->id ?? $locked->payment_id,
             ]);
 
             return $locked->fresh();

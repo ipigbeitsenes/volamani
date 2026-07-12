@@ -54,7 +54,7 @@ class BookingController extends Controller
     {
         $user = auth()->user();
         $isConsultant = $session->profile->vendor->user_id === $user->id;
-        $isBuyer      = $session->buyer_id === $user->id;
+        $isBuyer = $session->buyer_id === $user->id;
 
         abort_unless($isConsultant || $isBuyer, 403);
 

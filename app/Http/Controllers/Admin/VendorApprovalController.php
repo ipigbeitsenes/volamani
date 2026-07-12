@@ -17,7 +17,7 @@ class VendorApprovalController extends Controller
     {
         $filters = $request->only('status', 'search');
         $vendors = $this->admin->vendors($filters);
-        $counts  = $this->admin->vendorCountsByStatus();
+        $counts = $this->admin->vendorCountsByStatus();
 
         return view('admin.vendors.index', compact('vendors', 'filters', 'counts'));
     }

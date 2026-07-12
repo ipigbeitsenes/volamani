@@ -17,10 +17,10 @@ class PricingTemplate extends Model
     protected function casts(): array
     {
         return [
-            'category'    => PricingCategory::class,
+            'category' => PricingCategory::class,
             'pricing_type' => PricingType::class,
-            'features'    => 'array',
-            'is_active'   => 'boolean',
+            'features' => 'array',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -34,8 +34,10 @@ class PricingTemplate extends Model
         if ($this->pricing_type === PricingType::Hourly && $this->min_hours && $this->max_hours) {
             $min = money($this->hourly_rate * $this->min_hours);
             $max = money($this->hourly_rate * $this->max_hours);
+
             return "{$min} – {$max}";
         }
+
         return money($this->base_price);
     }
 }

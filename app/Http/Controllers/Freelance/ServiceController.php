@@ -18,10 +18,10 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
-        $filters  = $request->only(['q', 'category', 'delivery', 'budget', 'vendor', 'sort']);
-        $services   = $this->serviceRepo->searchServices($filters);
+        $filters = $request->only(['q', 'category', 'delivery', 'budget', 'vendor', 'sort']);
+        $services = $this->serviceRepo->searchServices($filters);
         $categories = $this->categoryRepo->rootCategories();
-        $featured   = $this->serviceRepo->featuredServices(4);
+        $featured = $this->serviceRepo->featuredServices(4);
 
         return view('marketplace.services.index', compact('services', 'categories', 'featured', 'filters'));
     }
@@ -30,13 +30,13 @@ class ServiceController extends Controller
     {
         $service = $this->serviceRepo->findBySlug($slug);
 
-        if (!$service || !$service->isActive()) {
+        if (! $service || ! $service->isActive()) {
             abort(404);
         }
 
         $service->incrementViews();
-        $related      = $this->serviceRepo->relatedServices($service);
-        $reviews      = $service->reviews()->with('reviewer')->latest()->take(10)->get();
+        $related = $this->serviceRepo->relatedServices($service);
+        $reviews = $service->reviews()->with('reviewer')->latest()->take(10)->get();
         $hasPurchased = auth()->check()
             && $service->orders()
                 ->where('buyer_id', auth()->id())

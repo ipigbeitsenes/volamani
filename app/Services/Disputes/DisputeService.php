@@ -17,11 +17,11 @@ use Illuminate\Http\UploadedFile;
 class DisputeService
 {
     public function __construct(
-        private OpenDisputeAction       $openAction,
+        private OpenDisputeAction $openAction,
         private AddDisputeMessageAction $messageAction,
-        private ResolveDisputeAction    $resolveAction,
-        private EscalateDisputeAction   $escalateAction,
-        private DisputeRepository       $repo,
+        private ResolveDisputeAction $resolveAction,
+        private EscalateDisputeAction $escalateAction,
+        private DisputeRepository $repo,
     ) {}
 
     public function open(Escrow $escrow, User $raisedBy, array $data, ?UploadedFile $attachment = null): Dispute

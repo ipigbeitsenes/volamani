@@ -48,11 +48,11 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Budget min (₦)</label>
+                        <label class="form-label">Budget min ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="budget_min" class="form-control" value="{{ old('budget_min') }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Budget max (₦)</label>
+                        <label class="form-label">Budget max ({{ currency_symbol() }})</label>
                         <input type="number" step="0.01" min="0" name="budget_max" class="form-control" value="{{ old('budget_max') }}">
                     </div>
                     <div class="col-md-4">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Preferred location <span class="text-muted small">(optional)</span></label>
-                        <input type="text" name="preferred_location" class="form-control" value="{{ old('preferred_location') }}" placeholder="e.g. Lagos">
+                        <input type="text" name="preferred_location" class="form-control" value="{{ old('preferred_location') }}" placeholder="e.g. your city">
                     </div>
                     <div class="col-md-6 d-flex align-items-end">
                         <div class="form-check">

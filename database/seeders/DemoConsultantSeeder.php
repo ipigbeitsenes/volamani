@@ -15,8 +15,8 @@ class DemoConsultantSeeder extends Seeder
     {
         // vendor slug → [display name, niche, bio, expertise[], years]
         $consultants = [
-            'adeola-consulting' => ['Adeola Adewale', 'Startup Strategy', 'I help founders validate ideas, build MVPs and raise funding.', ['Startup Strategy', 'Fundraising', 'Product'], 8],
-            'emeka-advisory'    => ['Emeka Obi', 'Ecommerce & Pricing', 'Ecommerce setup, pricing strategy and operations for growing brands.', ['Ecommerce', 'Pricing', 'Operations'], 6],
+            'summit-consulting' => ['Alex Turner', 'Startup Strategy', 'I help founders validate ideas, build MVPs and raise funding.', ['Startup Strategy', 'Fundraising', 'Product'], 8],
+            'meridian-advisory' => ['Michael Reed', 'Ecommerce & Pricing', 'Ecommerce setup, pricing strategy and operations for growing brands.', ['Ecommerce', 'Pricing', 'Operations'], 6],
         ];
 
         foreach ($consultants as $vendorSlug => [$display, $niche, $bio, $expertise, $years]) {
@@ -28,13 +28,13 @@ class DemoConsultantSeeder extends Seeder
             $profile = ConsultantProfile::firstOrCreate(
                 ['vendor_id' => $vendor->id],
                 [
-                    'slug'             => Str::slug($display),
-                    'display_name'     => $display,
-                    'bio'              => $bio,
-                    'niche'            => $niche,
-                    'expertise'        => $expertise,
+                    'slug' => Str::slug($display),
+                    'display_name' => $display,
+                    'bio' => $bio,
+                    'niche' => $niche,
+                    'expertise' => $expertise,
                     'experience_years' => $years,
-                    'is_available'     => true,
+                    'is_available' => true,
                 ],
             );
 
@@ -47,12 +47,12 @@ class DemoConsultantSeeder extends Seeder
                 ConsultationPackage::firstOrCreate(
                     ['profile_id' => $profile->id, 'name' => $name],
                     [
-                        'description'      => $desc,
-                        'type'             => 'one_time',
+                        'description' => $desc,
+                        'type' => 'one_time',
                         'duration_minutes' => $minutes,
-                        'price'            => $price,
-                        'is_active'        => true,
-                        'sort_order'       => $order,
+                        'price' => $price,
+                        'is_active' => true,
+                        'sort_order' => $order,
                     ],
                 );
             }

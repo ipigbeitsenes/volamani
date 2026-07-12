@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\DB;
 class ResolveDisputeAction
 {
     public function __construct(
-        private EscrowService        $escrowService,
-        private AddStrikeAction       $addStrike,
-        private AddBuyerStrikeAction  $addBuyerStrike,
+        private EscrowService $escrowService,
+        private AddStrikeAction $addStrike,
+        private AddBuyerStrikeAction $addBuyerStrike,
     ) {}
 
     /**
@@ -28,11 +28,11 @@ class ResolveDisputeAction
      * the remainder is refunded to the buyer.
      */
     public function execute(
-        Dispute           $dispute,
-        User              $admin,
+        Dispute $dispute,
+        User $admin,
         DisputeResolution $resolution,
-        ?int              $vendorShareKobo = null,
-        ?string           $note = null
+        ?int $vendorShareKobo = null,
+        ?string $note = null
     ): Dispute {
         abort_unless($dispute->canBeResolved(), 422, 'This dispute has already been resolved.');
 
@@ -49,20 +49,20 @@ class ResolveDisputeAction
             };
 
             $dispute->update([
-                'status'            => DisputeStatus::Resolved,
-                'resolution'        => $resolution,
+                'status' => DisputeStatus::Resolved,
+                'resolution' => $resolution,
                 'resolution_amount' => $settledAmount,
-                'resolution_note'   => $note,
-                'resolved_by'       => $admin->id,
-                'resolved_at'       => now(),
+                'resolution_note' => $note,
+                'resolved_by' => $admin->id,
+                'resolved_at' => now(),
             ]);
 
             DisputeMessage::create([
                 'dispute_id' => $dispute->id,
-                'sender_id'  => $admin->id,
-                'message'    => "Dispute resolved: {$resolution->label()}." . ($note ? " {$note}" : ''),
-                'is_staff'   => true,
-                'is_system'  => true,
+                'sender_id' => $admin->id,
+                'message' => "Dispute resolved: {$resolution->label()}.".($note ? " {$note}" : ''),
+                'is_staff' => true,
+                'is_system' => true,
             ]);
 
             // A full refund to the buyer means the seller lost — record a strike.
@@ -99,6 +99,7 @@ class ResolveDisputeAction
         if ($escrow && $escrow->canRelease()) {
             $amount = $escrow->releasableAmount();
             $this->escrowService->release($escrow, null, $admin);
+
             return $amount;
         }
 
@@ -110,6 +111,7 @@ class ResolveDisputeAction
         if ($escrow && $escrow->canRefund()) {
             $amount = $escrow->refundableAmount();
             $this->escrowService->refund($escrow, $admin, $note);
+
             return $amount;
         }
 
@@ -118,7 +120,7 @@ class ResolveDisputeAction
 
     private function split($escrow, User $admin, int $vendorShareKobo, ?string $note): int
     {
-        if (!$escrow) {
+        if (! $escrow) {
             return 0;
         }
 

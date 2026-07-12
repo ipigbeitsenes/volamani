@@ -6,6 +6,7 @@ use App\Enums\ChatConversationStatus;
 use App\Models\ChatConversation;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ChatRepository extends BaseRepository
 {
@@ -64,7 +65,7 @@ class ChatRepository extends BaseRepository
      * Open conversations whose last visitor message is older than $threshold seconds
      * with no agent reply since and no bot fallback yet — candidates for the offline bot.
      */
-    public function dueForBotReply(int $thresholdSeconds): \Illuminate\Support\Collection
+    public function dueForBotReply(int $thresholdSeconds): Collection
     {
         return ChatConversation::query()
             ->where('status', ChatConversationStatus::Open->value)

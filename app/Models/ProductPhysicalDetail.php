@@ -16,14 +16,14 @@ class ProductPhysicalDetail extends Model
     protected function casts(): array
     {
         return [
-            'stock_quantity'  => 'integer',
+            'stock_quantity' => 'integer',
             'track_inventory' => 'boolean',
             'allow_backorder' => 'boolean',
-            'condition'       => ProductCondition::class,
-            'weight_grams'    => 'integer',
-            'length_mm'       => 'integer',
-            'width_mm'        => 'integer',
-            'height_mm'       => 'integer',
+            'condition' => ProductCondition::class,
+            'weight_grams' => 'integer',
+            'length_mm' => 'integer',
+            'width_mm' => 'integer',
+            'height_mm' => 'integer',
         ];
     }
 
@@ -39,8 +39,8 @@ class ProductPhysicalDetail extends Model
         }
 
         return $this->weight_grams >= 1000
-            ? number_format($this->weight_grams / 1000, 2) . ' kg'
-            : $this->weight_grams . ' g';
+            ? number_format($this->weight_grams / 1000, 2).' kg'
+            : $this->weight_grams.' g';
     }
 
     public function dimensionsLabel(): ?string

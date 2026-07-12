@@ -16,7 +16,7 @@ class ChatMessage extends Model
     {
         return [
             'sender_type' => ChatSenderType::class,
-            'read_at'     => 'datetime',
+            'read_at' => 'datetime',
         ];
     }
 

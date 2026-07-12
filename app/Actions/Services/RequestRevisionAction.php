@@ -19,15 +19,15 @@ class RequestRevisionAction
 
             ServiceOrderMessage::create([
                 'service_order_id' => $order->id,
-                'sender_id'        => $order->buyer_id,
-                'message'          => $feedback,
+                'sender_id' => $order->buyer_id,
+                'message' => $feedback,
             ]);
 
             ServiceOrderMessage::create([
                 'service_order_id' => $order->id,
-                'sender_id'        => $order->buyer_id,
-                'message'          => "Revision #{$order->revisions_used} requested. Revisions remaining: {$order->remainingRevisions()}.",
-                'is_system'        => true,
+                'sender_id' => $order->buyer_id,
+                'message' => "Revision #{$order->revisions_used} requested. Revisions remaining: {$order->remainingRevisions()}.",
+                'is_system' => true,
             ]);
 
             return $order->fresh();

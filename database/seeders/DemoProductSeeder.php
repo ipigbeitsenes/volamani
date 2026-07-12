@@ -20,10 +20,10 @@ class DemoProductSeeder extends Seeder
         $catalog = [
             'pixel-forge-studio' => [
                 ['Modern SaaS Dashboard UI Kit', 'ui_kit', 15_000_00, 'A complete Figma + HTML dashboard UI kit with 60+ components.'],
-                ['Africa Startup Pitch Deck Template', 'template', 8_000_00, '30-slide investor-ready pitch deck in PowerPoint & Keynote.'],
+                ['Startup Pitch Deck Template', 'template', 8_000_00, '30-slide investor-ready pitch deck in PowerPoint & Keynote.'],
                 ['E-commerce Landing Page Pack', 'template', 12_000_00, '10 conversion-focused, responsive landing pages.'],
             ],
-            'naijadev-studio' => [
+            'northwind-studio' => [
                 ['Laravel SaaS Starter Kit', 'software', 35_000_00, 'Auth, billing, teams and multi-tenancy boilerplate.'],
                 ['WhatsApp Order Bot Script', 'software', 20_000_00, 'Automate customer orders directly through WhatsApp.'],
             ],
@@ -33,7 +33,7 @@ class DemoProductSeeder extends Seeder
             ],
             'growthlab' => [
                 ['90-Day Social Media Content Calendar', 'template', 5_000_00, 'A done-for-you content calendar with captions.'],
-                ['Digital Marketing Playbook', 'ebook', 7_000_00, 'Growth tactics tailored to African SMEs.'],
+                ['Digital Marketing Playbook', 'ebook', 7_000_00, 'Growth tactics tailored to modern SMEs.'],
             ],
         ];
 
@@ -48,18 +48,18 @@ class DemoProductSeeder extends Seeder
                 $product = Product::firstOrCreate(
                     ['slug' => Str::slug($name)],
                     [
-                        'vendor_id'         => $vendor->id,
-                        'category_id'       => $catIds ? $catIds[$i % count($catIds)] : null,
-                        'name'              => $name,
+                        'vendor_id' => $vendor->id,
+                        'category_id' => $catIds ? $catIds[$i % count($catIds)] : null,
+                        'name' => $name,
                         'short_description' => $short,
-                        'description'       => $short . ' ' . str_repeat('This premium digital product is delivered instantly after purchase, with lifetime updates and friendly support. ', 3),
-                        'type'              => $type,
-                        'price'             => $price,
-                        'compare_price'     => (int) round($price * 1.4),
-                        'status'            => 'active',
-                        'is_featured'       => $idx === 0,
-                        'is_downloadable'   => true,
-                        'approved_at'       => now(),
+                        'description' => $short.' '.str_repeat('This premium digital product is delivered instantly after purchase, with lifetime updates and friendly support. ', 3),
+                        'type' => $type,
+                        'price' => $price,
+                        'compare_price' => (int) round($price * 1.4),
+                        'status' => 'active',
+                        'is_featured' => $idx === 0,
+                        'is_downloadable' => true,
+                        'approved_at' => now(),
                     ],
                 );
 
@@ -78,13 +78,13 @@ class DemoProductSeeder extends Seeder
      */
     private function seedDownloadFile(Product $product, string $short): void
     {
-        $original = $product->name . ' - Download.txt';
-        $path     = 'product-files/' . $product->id . '/' . Str::slug($product->name) . '.txt';
+        $original = $product->name.' - Download.txt';
+        $path = 'product-files/'.$product->id.'/'.Str::slug($product->name).'.txt';
 
         $contents = "Thank you for purchasing \"{$product->name}\" on Volamani!\n\n"
-            . $short . "\n\n"
-            . "This is a demo download file. In a live store this would be your\n"
-            . "actual product (ZIP, PDF, design files, source code, etc.).\n";
+            .$short."\n\n"
+            ."This is a demo download file. In a live store this would be your\n"
+            ."actual product (ZIP, PDF, design files, source code, etc.).\n";
 
         if (! Storage::disk('private')->exists($path)) {
             Storage::disk('private')->put($path, $contents);
@@ -93,11 +93,11 @@ class DemoProductSeeder extends Seeder
         ProductFile::firstOrCreate(
             ['product_id' => $product->id, 'path' => $path],
             [
-                'label'         => 'Main File',
+                'label' => 'Main File',
                 'original_name' => $original,
-                'mime_type'     => 'text/plain',
-                'file_size'     => strlen($contents),
-                'sort_order'    => 0,
+                'mime_type' => 'text/plain',
+                'file_size' => strlen($contents),
+                'sort_order' => 0,
             ],
         );
     }

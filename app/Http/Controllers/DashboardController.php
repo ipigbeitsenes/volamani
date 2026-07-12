@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -33,7 +34,7 @@ class DashboardController extends Controller
             return redirect()->route('vendor.dashboard');
         }
 
-        $recentOrders = \Illuminate\Support\Facades\Schema::hasTable('orders')
+        $recentOrders = Schema::hasTable('orders')
             ? $user->orders()->latest()->limit(5)->get()
             : collect();
 

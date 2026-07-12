@@ -42,7 +42,7 @@ class SyncClientsAction
 
             $client = Client::withTrashed()->firstOrNew([
                 'vendor_id' => $vendor->id,
-                'user_id'   => $userId,
+                'user_id' => $userId,
             ]);
 
             if ($client->trashed()) {
@@ -53,9 +53,9 @@ class SyncClientsAction
 
             if ($isNew) {
                 $client->fill([
-                    'name'   => $user->name,
-                    'email'  => $user->email,
-                    'phone'  => $user->phone,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
                     'source' => ClientSource::Order,
                     'status' => ClientStatus::Active,
                 ]);
@@ -78,8 +78,8 @@ class SyncClientsAction
         foreach ($externalDocs as $doc) {
             $client = Client::withTrashed()->firstOrNew([
                 'vendor_id' => $vendor->id,
-                'user_id'   => null,
-                'email'     => $doc->client_email,
+                'user_id' => null,
+                'email' => $doc->client_email,
             ]);
 
             if ($client->trashed()) {
@@ -90,14 +90,14 @@ class SyncClientsAction
 
             if ($isNew) {
                 $client->fill([
-                    'name'   => $doc->client_name,
-                    'phone'  => $doc->client_phone,
+                    'name' => $doc->client_name,
+                    'phone' => $doc->client_phone,
                     'source' => ClientSource::Invoice,
                     'status' => ClientStatus::Active,
                 ]);
             }
 
-            $client->total_spent  = (int) Document::where('vendor_id', $vendor->id)
+            $client->total_spent = (int) Document::where('vendor_id', $vendor->id)
                 ->where('client_email', $doc->client_email)
                 ->where('type', DocumentType::Invoice)
                 ->sum('amount_paid');
@@ -137,7 +137,7 @@ class SyncClientsAction
             ->where('type', DocumentType::Invoice)
             ->sum('amount_paid');
 
-        $client->total_spent  = $orderSpend + $serviceSpend + $invoiceSpend;
+        $client->total_spent = $orderSpend + $serviceSpend + $invoiceSpend;
         $client->orders_count = $orderCount + $serviceCount;
     }
 }

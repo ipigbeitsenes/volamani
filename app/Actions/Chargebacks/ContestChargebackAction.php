@@ -6,7 +6,6 @@ use App\Enums\ChargebackStatus;
 use App\Models\Chargeback;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class ContestChargebackAction
 {
@@ -28,12 +27,12 @@ class ContestChargebackAction
         }
 
         $evidence = $chargeback->evidence ?? [];
-        $evidence['note']       = $note ?: ($evidence['note'] ?? null);
-        $evidence['files']      = array_merge($evidence['files'] ?? [], $stored);
+        $evidence['note'] = $note ?: ($evidence['note'] ?? null);
+        $evidence['files'] = array_merge($evidence['files'] ?? [], $stored);
         $evidence['contested_by'] = $actor->id;
 
         $chargeback->update([
-            'status'   => ChargebackStatus::Contested,
+            'status' => ChargebackStatus::Contested,
             'evidence' => $evidence,
         ]);
 

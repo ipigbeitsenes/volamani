@@ -78,17 +78,17 @@ class ServiceCategorySeeder extends Seeder
 
         foreach ($categories as $sort => $cat) {
             $parent = ServiceCategory::create([
-                'name'       => $cat['name'],
-                'icon'       => $cat['icon'],
-                'is_active'  => true,
+                'name' => $cat['name'],
+                'icon' => $cat['icon'],
+                'is_active' => true,
                 'sort_order' => $sort + 1,
             ]);
 
             foreach ($cat['children'] as $childSort => $childName) {
                 ServiceCategory::create([
-                    'parent_id'  => $parent->id,
-                    'name'       => $childName,
-                    'is_active'  => true,
+                    'parent_id' => $parent->id,
+                    'name' => $childName,
+                    'is_active' => true,
                     'sort_order' => $childSort + 1,
                 ]);
             }

@@ -51,7 +51,7 @@
         <div class="accordion" id="faqAccordion">
             @php $faqs = [
                 ['How does escrow protect me?', 'When you pay, your money is held in escrow — not sent straight to the seller. It is only released once you confirm delivery or the protection window passes, so you are covered if a seller does not deliver.'],
-                ['How do I get paid as a seller?', 'Completed sales credit your platform wallet. Once you complete KYC verification you can withdraw your wallet balance to your Nigerian bank account.'],
+                ['How do I get paid as a seller?', 'Completed sales credit your platform wallet. Once you complete KYC verification you can withdraw your wallet balance to your bank account.'],
                 ['What payment methods are supported?', 'You can pay with a card or bank transfer through Paystack, or by direct manual bank transfer. All payments stay within the platform so escrow protection applies.'],
                 ['What happens if there is a problem with my order?', 'Try to resolve it with the other party first. If you cannot, open a dispute from the order or escrow — this freezes the funds and our team mediates a fair outcome.'],
                 ['Is there a fee to sell?', 'Creating an account and a storefront is free. We charge a commission on completed transactions, and optional subscription plans lower your commission and add features.'],

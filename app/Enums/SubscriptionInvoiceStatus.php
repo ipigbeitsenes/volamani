@@ -5,17 +5,17 @@ namespace App\Enums;
 enum SubscriptionInvoiceStatus: string
 {
     case Pending = 'pending';
-    case Paid    = 'paid';
-    case Failed  = 'failed';
-    case Void    = 'void';
+    case Paid = 'paid';
+    case Failed = 'failed';
+    case Void = 'void';
 
     public function label(): string
     {
         return match ($this) {
             self::Pending => 'Pending',
-            self::Paid    => 'Paid',
-            self::Failed  => 'Failed',
-            self::Void    => 'Void',
+            self::Paid => 'Paid',
+            self::Failed => 'Failed',
+            self::Void => 'Void',
         };
     }
 
@@ -23,9 +23,9 @@ enum SubscriptionInvoiceStatus: string
     {
         return match ($this) {
             self::Pending => 'warning',
-            self::Paid    => 'success',
-            self::Failed  => 'danger',
-            self::Void    => 'secondary',
+            self::Paid => 'success',
+            self::Failed => 'danger',
+            self::Void => 'secondary',
         };
     }
 }

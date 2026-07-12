@@ -5,6 +5,7 @@ namespace App\Repositories\Vendors;
 use App\Models\Vendor;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class VendorRepository extends BaseRepository
 {
@@ -26,7 +27,7 @@ class VendorRepository extends BaseRepository
             ->first();
     }
 
-    public function featuredVendors(int $limit = 8): \Illuminate\Database\Eloquent\Collection
+    public function featuredVendors(int $limit = 8): Collection
     {
         return $this->model
             ->where('status', 'active')
@@ -52,7 +53,7 @@ class VendorRepository extends BaseRepository
      * carries an active_products_count for the card. Avoids DB-specific SQL so
      * it runs identically on MySQL and SQLite (tests).
      *
-     * @param array{q?:string|null, category?:string|null, sort?:string|null} $filters
+     * @param  array{q?:string|null, category?:string|null, sort?:string|null}  $filters
      */
     public function directory(array $filters = [], int $perPage = 12): LengthAwarePaginator
     {
@@ -76,13 +77,13 @@ class VendorRepository extends BaseRepository
         match ($filters['sort'] ?? 'popular') {
             'newest' => $query->latest(),
             'rating' => $query->orderByDesc('average_rating')->orderByDesc('followers_count'),
-            default  => $query->orderByDesc('followers_count')->orderByDesc('average_rating'),
+            default => $query->orderByDesc('followers_count')->orderByDesc('average_rating'),
         };
 
         return $query->paginate($perPage)->withQueryString();
     }
 
-    public function pendingVendors(): \Illuminate\Database\Eloquent\Collection
+    public function pendingVendors(): Collection
     {
         return $this->model
             ->where('status', 'pending')

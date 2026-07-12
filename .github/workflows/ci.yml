@@ -6,9 +6,9 @@ on:
   pull_request:
 
 jobs:
-  tests:
+  # ── Fast quality gates: style + dependency CVEs ──────────────────────────
+  quality:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -22,10 +22,77 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Check code style (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Audit dependencies for known CVEs
+        run: composer audit --no-interaction
+
+  # ── Test suite on SQLite (fast) and MySQL (matches production) ───────────
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [sqlite, mysql]
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: volamani
+          MYSQL_USER: volamani
+          MYSQL_PASSWORD: volamani
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, pdo_mysql, gd, intl, bcmath
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
       - name: Prepare environment
         run: |
           cp .env.example .env
           php artisan key:generate
 
-      - name: Run test suite
+      - name: Run test suite (${{ matrix.db }})
+        env:
+          DB_CONNECTION: ${{ matrix.db == 'mysql' && 'mysql' || 'sqlite' }}
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: volamani
+          DB_USERNAME: volamani
+          DB_PASSWORD: volamani
         run: php artisan test
+
+  # ── Static analysis (Larastan level 5; pre-existing findings baselined) ──
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, gd, intl, bcmath
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G

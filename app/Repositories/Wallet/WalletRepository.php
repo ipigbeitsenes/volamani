@@ -37,14 +37,14 @@ class WalletRepository
         $query = WalletWithdrawal::with(['user', 'processedBy'])
             ->latest();
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->whereHas('user', function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('email', 'like', '%'.$filters['search'].'%');
             });
         }
 

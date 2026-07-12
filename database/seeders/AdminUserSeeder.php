@@ -7,6 +7,7 @@ use App\Models\Wallet;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class AdminUserSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // ── Roles ─────────────────────────────────────────────────────────────
         // super-admin holds every permission. admin is created by
@@ -39,11 +40,11 @@ class AdminUserSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $email],
                 [
-                    'name'              => $name,
-                    'username'          => $username,
-                    'password'          => $password, // hashed via the model cast
-                    'user_type'         => 'individual',
-                    'is_active'         => true,
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password, // hashed via the model cast
+                    'user_type' => 'individual',
+                    'is_active' => true,
                     'email_verified_at' => now(),
                 ],
             );

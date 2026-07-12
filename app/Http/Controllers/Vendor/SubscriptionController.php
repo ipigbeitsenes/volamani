@@ -14,16 +14,16 @@ class SubscriptionController extends Controller
 {
     public function __construct(
         private SubscriptionService $subscriptionService,
-        private WalletService       $walletService,
+        private WalletService $walletService,
     ) {}
 
     public function index(): View
     {
-        $vendor       = auth()->user()->vendor;
-        $current      = $vendor->activeSubscription();
-        $plans        = $this->subscriptionService->activePlans();
-        $wallet       = $this->walletService->getOrCreate(auth()->user());
-        $invoices     = $current
+        $vendor = auth()->user()->vendor;
+        $current = $vendor->activeSubscription();
+        $plans = $this->subscriptionService->activePlans();
+        $wallet = $this->walletService->getOrCreate(auth()->user());
+        $invoices = $current
             ? $current->invoices()->limit(10)->get()
             : collect();
 
@@ -40,18 +40,18 @@ class SubscriptionController extends Controller
         $result = $this->subscriptionService->subscribe($vendor, $plan, $method);
 
         return match ($result['status']) {
-            'redirect'     => redirect()->away($result['url']),
-            'active'       => $this->done("You're now on the {$plan->name} plan."),
-            'trialing'     => $this->done("Your {$plan->trial_days}-day free trial of {$plan->name} has started."),
-            'exists'       => $this->info("You're already subscribed to the {$plan->name} plan."),
+            'redirect' => redirect()->away($result['url']),
+            'active' => $this->done("You're now on the {$plan->name} plan."),
+            'trialing' => $this->done("Your {$plan->trial_days}-day free trial of {$plan->name} has started."),
+            'exists' => $this->info("You're already subscribed to the {$plan->name} plan."),
             'insufficient' => $this->fail('Insufficient wallet balance. Fund your wallet or pay with Paystack.'),
-            default        => $this->fail('Could not start the subscription. Please try again.'),
+            default => $this->fail('Could not start the subscription. Please try again.'),
         };
     }
 
     public function cancel(): RedirectResponse
     {
-        $vendor  = auth()->user()->vendor;
+        $vendor = auth()->user()->vendor;
         $current = $vendor->activeSubscription();
 
         if (! $current || $current->isCancelled()) {

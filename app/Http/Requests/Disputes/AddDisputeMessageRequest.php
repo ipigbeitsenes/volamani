@@ -14,7 +14,7 @@ class AddDisputeMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message'    => ['required', 'string', 'max:2000'],
+            'message' => ['required', 'string', 'max:2000'],
             'attachment' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,zip', 'max:5120'],
         ];
     }

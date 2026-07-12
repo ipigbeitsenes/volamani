@@ -17,12 +17,12 @@ class CloseRequestAction
             $request->quotations()
                 ->where('status', QuotationStatus::Pending)
                 ->update([
-                    'status'      => QuotationStatus::Rejected,
+                    'status' => QuotationStatus::Rejected,
                     'rejected_at' => now(),
                 ]);
 
             $request->update([
-                'status'    => RequestStatus::Cancelled,
+                'status' => RequestStatus::Cancelled,
                 'closed_at' => now(),
             ]);
 

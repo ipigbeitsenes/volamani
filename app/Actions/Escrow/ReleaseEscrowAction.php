@@ -25,17 +25,17 @@ class ReleaseEscrowAction
         abort_unless($escrow->canRelease(), 422, 'This escrow cannot be released at this stage.');
 
         $releasable = $escrow->releasableAmount();
-        $amount     = $amountKobo === null ? $releasable : min($amountKobo, $releasable);
+        $amount = $amountKobo === null ? $releasable : min($amountKobo, $releasable);
 
         abort_if($amount <= 0, 422, 'There is nothing left to release in this escrow.');
 
-        return DB::transaction(function () use ($escrow, $amount, $actor, $releasable) {
+        return DB::transaction(function () use ($escrow, $amount, $actor) {
             $locked = Escrow::where('id', $escrow->id)->lockForUpdate()->first();
 
             $vendorWallet = $locked->wallet ?? $this->walletService->getOrCreate($locked->vendor->user);
 
             // Split off a rolling chargeback reserve (opt-in, config/settings driven).
-            $reserve   = $this->reserveFor($amount);
+            $reserve = $this->reserveFor($amount);
             $spendable = $amount - $reserve;
 
             // Move the whole released amount out of pending escrow balance...
@@ -47,7 +47,7 @@ class ReleaseEscrowAction
                     $vendorWallet,
                     $spendable,
                     TransactionType::EscrowRelease,
-                    "Escrow release for {$locked->reference}" . ($reserve > 0 ? ' (net of reserve)' : ''),
+                    "Escrow release for {$locked->reference}".($reserve > 0 ? ' (net of reserve)' : ''),
                     $locked,
                     ['escrow_reference' => $locked->reference, 'reserve_held' => $reserve]
                 );
@@ -57,11 +57,11 @@ class ReleaseEscrowAction
             if ($reserve > 0) {
                 $this->walletService->incrementReserve($vendorWallet, $reserve);
                 WalletReserve::create([
-                    'wallet_id'  => $vendorWallet->id,
-                    'vendor_id'  => $locked->vendor_id,
-                    'escrow_id'  => $locked->id,
-                    'amount'     => $reserve,
-                    'status'     => 'held',
+                    'wallet_id' => $vendorWallet->id,
+                    'vendor_id' => $locked->vendor_id,
+                    'escrow_id' => $locked->id,
+                    'amount' => $reserve,
+                    'status' => 'held',
                     'release_at' => now()->addDays($this->reserveDays()),
                 ]);
             }
@@ -71,18 +71,18 @@ class ReleaseEscrowAction
 
             $locked->update([
                 'released_amount' => $newReleased,
-                'status'          => $fullyReleased ? EscrowStatus::Released : EscrowStatus::PartiallyReleased,
-                'released_at'     => $fullyReleased ? now() : $locked->released_at,
+                'status' => $fullyReleased ? EscrowStatus::Released : EscrowStatus::PartiallyReleased,
+                'released_at' => $fullyReleased ? now() : $locked->released_at,
                 'auto_release_at' => null,
             ]);
 
             EscrowTransaction::create([
-                'escrow_id'     => $locked->id,
-                'type'          => EscrowTransactionType::Release,
-                'amount'        => $amount,
+                'escrow_id' => $locked->id,
+                'type' => EscrowTransactionType::Release,
+                'amount' => $amount,
                 'balance_after' => $locked->fresh()->heldAmount(),
-                'description'   => "Released " . money($amount) . " to vendor for {$locked->reference}",
-                'actor_id'      => $actor?->id,
+                'description' => 'Released '.money($amount)." to vendor for {$locked->reference}",
+                'actor_id' => $actor?->id,
             ]);
 
             return $locked->fresh();

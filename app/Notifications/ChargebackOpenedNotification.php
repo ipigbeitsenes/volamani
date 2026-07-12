@@ -27,7 +27,7 @@ class ChargebackOpenedNotification extends VolamaniNotification
         return (new MailMessage)
             ->subject("Chargeback {$c->reference} opened")
             ->greeting("Hello {$notifiable->name},")
-            ->line('A chargeback of ' . money($c->amount) . ' has been opened on a payment.')
+            ->line('A chargeback of '.money($c->amount).' has been opened on a payment.')
             ->when($c->reason, fn ($m) => $m->line("Reason given: {$c->reason}"))
             ->line('The disputed funds have been held or recovered while this is resolved. If you can prove the order was legitimate, submit your evidence promptly.')
             ->action('Review Chargeback', $this->urlFor($notifiable))
@@ -38,10 +38,10 @@ class ChargebackOpenedNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => "Chargeback {$this->chargeback->reference}",
-            'message'  => 'A chargeback of ' . money($this->chargeback->amount) . ' was opened on a payment.',
-            'url'      => $this->urlFor($notifiable),
+            'icon' => $this->category()->icon(),
+            'title' => "Chargeback {$this->chargeback->reference}",
+            'message' => 'A chargeback of '.money($this->chargeback->amount).' was opened on a payment.',
+            'url' => $this->urlFor($notifiable),
         ];
     }
 

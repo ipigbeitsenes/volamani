@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\DB;
 class AddDisputeMessageAction
 {
     public function execute(
-        Dispute       $dispute,
-        User          $sender,
-        string        $message,
+        Dispute $dispute,
+        User $sender,
+        string $message,
         ?UploadedFile $attachment = null,
-        bool          $isStaff = false
+        bool $isStaff = false
     ): DisputeMessage {
         abort_unless($dispute->isOpen(), 422, 'This dispute is closed; no further messages can be added.');
 
@@ -24,26 +24,26 @@ class AddDisputeMessageAction
             $path = null;
             $name = null;
             if ($attachment) {
-                $path = $attachment->store('disputes/' . $dispute->id, 'public');
+                $path = $attachment->store('disputes/'.$dispute->id, 'public');
                 $name = $attachment->getClientOriginalName();
             }
 
             $entry = DisputeMessage::create([
-                'dispute_id'      => $dispute->id,
-                'sender_id'       => $sender->id,
-                'message'         => $message,
-                'attachment'      => $path,
+                'dispute_id' => $dispute->id,
+                'sender_id' => $sender->id,
+                'message' => $message,
+                'attachment' => $path,
                 'attachment_name' => $name,
-                'is_staff'        => $isStaff,
+                'is_staff' => $isStaff,
             ]);
 
             // Staff reply puts the ball in the parties' court (party response window);
             // a party reply flags it for staff review (admin SLA window). Either way
             // the SLA clock restarts, so a prior breach is cleared for the new cycle.
             $dispute->update([
-                'status'          => $isStaff ? DisputeStatus::AwaitingResponse : DisputeStatus::UnderReview,
+                'status' => $isStaff ? DisputeStatus::AwaitingResponse : DisputeStatus::UnderReview,
                 'response_due_at' => now()->addHours($isStaff ? $this->responseHours() : $this->adminHours()),
-                'sla_breached'    => false,
+                'sla_breached' => false,
             ]);
 
             return $entry;

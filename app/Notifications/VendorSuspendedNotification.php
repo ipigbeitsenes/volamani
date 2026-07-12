@@ -34,10 +34,10 @@ class VendorSuspendedNotification extends VolamaniNotification
     {
         return [
             'category' => $this->category()->value,
-            'icon'     => $this->category()->icon(),
-            'title'    => 'Store suspended',
-            'message'  => "Your store “{$this->vendor->business_name}” has been suspended for repeated strikes.",
-            'url'      => route('vendor.dashboard'),
+            'icon' => $this->category()->icon(),
+            'title' => 'Store suspended',
+            'message' => "Your store “{$this->vendor->business_name}” has been suspended for repeated strikes.",
+            'url' => route('vendor.dashboard'),
         ];
     }
 }

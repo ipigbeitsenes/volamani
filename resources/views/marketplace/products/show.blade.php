@@ -32,7 +32,7 @@
     'offers'   => [
         '@type'         => 'Offer',
         'url'           => route('marketplace.products.show', $product->slug),
-        'priceCurrency' => 'NGN',
+        'priceCurrency' => currency_code(),
         'price'         => number_format($product->price / 100, 2, '.', ''),
         'availability'  => 'https://schema.org/' . ($seoAvailable ? 'InStock' : 'OutOfStock'),
         'seller'        => $product->vendor ? ['@type' => 'Organization', 'name' => $product->vendor->business_name] : null,

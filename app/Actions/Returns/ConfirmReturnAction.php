@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\DB;
 class ConfirmReturnAction
 {
     public function __construct(
-        private EscrowService       $escrow,
-        private RestockOrderAction  $restock,
+        private EscrowService $escrow,
+        private RestockOrderAction $restock,
         private NotificationService $notifications,
     ) {}
 
@@ -31,7 +31,7 @@ class ConfirmReturnAction
         $order = $return->order;
 
         DB::transaction(function () use ($return, $order, $actor) {
-            $escrow   = $this->escrow->forPayable($order);
+            $escrow = $this->escrow->forPayable($order);
             $refunded = 0;
 
             if ($escrow && $escrow->canRefund()) {
@@ -44,10 +44,10 @@ class ConfirmReturnAction
             $order->update(['status' => OrderStatus::Refunded]);
 
             $return->update([
-                'status'          => ReturnStatus::Refunded,
-                'refunded_at'     => now(),
+                'status' => ReturnStatus::Refunded,
+                'refunded_at' => now(),
                 'refunded_amount' => $refunded,
-                'decided_by'      => $actor->id,
+                'decided_by' => $actor->id,
             ]);
         });
 

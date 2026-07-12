@@ -19,7 +19,7 @@ class NotificationPreference extends Model
     {
         return [
             'category' => NotificationCategory::class,
-            'email'    => 'boolean',
+            'email' => 'boolean',
             'database' => 'boolean',
         ];
     }

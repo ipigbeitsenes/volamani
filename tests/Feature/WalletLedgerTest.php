@@ -17,8 +17,8 @@ class WalletLedgerTest extends TestCase
     private function wallet(int $balance = 0): Wallet
     {
         return Wallet::create([
-            'user_id'        => User::factory()->create()->id,
-            'balance'        => $balance,
+            'user_id' => User::factory()->create()->id,
+            'balance' => $balance,
             'escrow_balance' => 0,
         ]);
     }
@@ -67,7 +67,7 @@ class WalletLedgerTest extends TestCase
 
     public function test_escrow_increment_and_decrement_never_touch_spendable_balance(): void
     {
-        $wallet  = $this->wallet(40_000);
+        $wallet = $this->wallet(40_000);
         $service = app(WalletService::class);
 
         $service->incrementEscrow($wallet, 25_000);

@@ -12,8 +12,8 @@ class CancelSessionAction
         abort_unless($session->canBeCancelled(), 422, 'Session cannot be cancelled at this stage.');
 
         $session->update([
-            'status'              => ConsultationSessionStatus::Cancelled,
-            'cancelled_at'        => now(),
+            'status' => ConsultationSessionStatus::Cancelled,
+            'cancelled_at' => now(),
             'cancellation_reason' => $reason,
         ]);
 

@@ -64,7 +64,7 @@
                         <span class="brand-mark"><i class="bi bi-send-fill" style="transform:rotate(45deg)"></i></span>
                         <span class="auth-brand text-white">Volamani</span>
                     </a>
-                    <p class="text-white-50 mt-2 mb-0">Africa's Digital Business Ecosystem</p>
+                    <p class="text-white-50 mt-2 mb-0">{{ settings('site_tagline', 'Your Digital Business Ecosystem') }}</p>
                 </div>
 
                 <div class="card auth-card">

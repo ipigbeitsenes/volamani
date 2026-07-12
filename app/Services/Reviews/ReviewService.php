@@ -18,18 +18,18 @@ class ReviewService
 {
     /** Client-safe aliases → reviewable model classes. */
     private const REVIEWABLES = [
-        'product'    => Product::class,
-        'service'    => FreelanceService::class,
+        'product' => Product::class,
+        'service' => FreelanceService::class,
         'consultant' => ConsultantProfile::class,
     ];
 
     public function __construct(
-        private SubmitReviewAction       $submitAction,
-        private RespondToReviewAction    $respondAction,
-        private ToggleHelpfulAction      $helpfulAction,
-        private ModerateReviewAction     $moderateAction,
+        private SubmitReviewAction $submitAction,
+        private RespondToReviewAction $respondAction,
+        private ToggleHelpfulAction $helpfulAction,
+        private ModerateReviewAction $moderateAction,
         private ReviewEligibilityService $eligibility,
-        private ReviewRepository         $repo,
+        private ReviewRepository $repo,
     ) {}
 
     public function resolveReviewable(string $type, int|string $id): Model

@@ -12,6 +12,8 @@ use App\Models\ProductGallery;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\BaseService;
+use App\Services\Social\FollowService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class ProductService extends BaseService
@@ -22,7 +24,7 @@ class ProductService extends BaseService
         private PromoteProductAction $promoteAction,
     ) {}
 
-    public function promoteProduct(Product $product, \App\Models\User $vendorUser): \Illuminate\Support\Carbon
+    public function promoteProduct(Product $product, User $vendorUser): Carbon
     {
         return $this->promoteAction->execute($product, $vendorUser);
     }
@@ -56,7 +58,7 @@ class ProductService extends BaseService
         $firstApproval = $product->approved_at === null;
 
         $product->update([
-            'status'      => ProductStatus::Active,
+            'status' => ProductStatus::Active,
             'approved_at' => now(),
             'approved_by' => $admin->id,
             'rejection_reason' => null,
@@ -64,7 +66,7 @@ class ProductService extends BaseService
 
         if ($firstApproval) {
             // Resolved lazily to avoid a constructor dependency cycle.
-            app(\App\Services\Social\FollowService::class)->announceNewProduct($product);
+            app(FollowService::class)->announceNewProduct($product);
         }
 
         return $product;
@@ -73,9 +75,9 @@ class ProductService extends BaseService
     public function rejectProduct(Product $product, User $admin, string $reason): Product
     {
         $product->update([
-            'status'           => ProductStatus::Rejected,
+            'status' => ProductStatus::Rejected,
             'rejection_reason' => $reason,
-            'approved_by'      => $admin->id,
+            'approved_by' => $admin->id,
         ]);
 
         return $product;

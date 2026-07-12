@@ -16,10 +16,10 @@ class SubmitCategoryRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'domain'    => ['required', new Enum(CategoryDomain::class)],
-            'name'      => ['required', 'string', 'max:120'],
+            'domain' => ['required', new Enum(CategoryDomain::class)],
+            'name' => ['required', 'string', 'max:120'],
             'parent_id' => ['nullable', 'integer'],
-            'reason'    => ['nullable', 'string', 'max:500'],
+            'reason' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

@@ -10,8 +10,8 @@ use App\Models\BuyerStrike;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\View\View;
 
 class BuyerStrikeController extends Controller
 {
@@ -32,7 +32,7 @@ class BuyerStrikeController extends Controller
             ->withQueryString();
 
         $stats = [
-            'flagged'   => User::where('buyer_flagged', true)->count(),
+            'flagged' => User::where('buyer_flagged', true)->count(),
             'suspended' => User::where('purchases_suspended', true)->count(),
         ];
 
@@ -50,7 +50,7 @@ class BuyerStrikeController extends Controller
     {
         $data = $request->validate([
             'reason' => ['required', new Enum(BuyerStrikeReason::class)],
-            'note'   => ['nullable', 'string', 'max:500'],
+            'note' => ['nullable', 'string', 'max:500'],
         ]);
 
         $addStrike->execute(

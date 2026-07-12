@@ -14,10 +14,10 @@ class VendorWalletController extends Controller
 
     public function index(): View
     {
-        $user         = auth()->user();
-        $wallet       = $this->walletService->getOrCreate($user);
+        $user = auth()->user();
+        $wallet = $this->walletService->getOrCreate($user);
         $transactions = $this->walletService->getTransactions($wallet, 10);
-        $withdrawals  = $this->walletService->getUserWithdrawals($user, 5);
+        $withdrawals = $this->walletService->getUserWithdrawals($user, 5);
 
         return view('vendor.wallet.index', compact('wallet', 'transactions', 'withdrawals'));
     }
@@ -32,8 +32,8 @@ class VendorWalletController extends Controller
 
     public function transactions(): View
     {
-        $user         = auth()->user();
-        $wallet       = $this->walletService->getOrCreate($user);
+        $user = auth()->user();
+        $wallet = $this->walletService->getOrCreate($user);
         $transactions = $this->walletService->getTransactions($wallet, 20);
 
         return view('vendor.wallet.transactions', compact('wallet', 'transactions'));

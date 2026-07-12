@@ -30,7 +30,7 @@
     'offers'   => [
         '@type'         => 'Offer',
         'url'           => route('marketplace.services.show', $service->slug),
-        'priceCurrency' => 'NGN',
+        'priceCurrency' => currency_code(),
         'price'         => number_format($service->lowestPrice() / 100, 2, '.', ''),
         'availability'  => 'https://schema.org/InStock',
         'seller'        => $service->vendor ? ['@type' => 'Organization', 'name' => $service->vendor->business_name] : null,

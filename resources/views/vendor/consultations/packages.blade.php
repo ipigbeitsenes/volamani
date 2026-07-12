@@ -84,7 +84,7 @@
                                 @error('duration_minutes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col">
-                                <label for="price" class="form-label">Price (₦) <span class="text-danger">*</span></label>
+                                <label for="price" class="form-label">Price ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
                                 <input type="number" name="price" id="price" value="{{ old('price') }}"
                                     class="form-control form-control-sm @error('price') is-invalid @enderror"
                                     min="100" step="100" required>

@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Enums\NotificationCategory;
 use App\Enums\Status;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
@@ -20,11 +21,11 @@ use Illuminate\Support\Facades\Storage;
 class AdminService
 {
     public function __construct(
-        private AdminRepository     $repo,
+        private AdminRepository $repo,
         private NotificationService $notifications,
-        private WalletService       $wallet,
-        private ProductService      $products,
-        private PaymentService      $payments,
+        private WalletService $wallet,
+        private ProductService $products,
+        private PaymentService $payments,
     ) {}
 
     // ─── Dashboard / reads ──────────────────────────────────────────────────────
@@ -106,9 +107,9 @@ class AdminService
     public function approveVendor(Vendor $vendor, User $admin): void
     {
         $vendor->update([
-            'status'           => Status::Active,
-            'approved_at'      => now(),
-            'approved_by'      => $admin->id,
+            'status' => Status::Active,
+            'approved_at' => now(),
+            'approved_by' => $admin->id,
             'rejection_reason' => null,
         ]);
 
@@ -119,7 +120,7 @@ class AdminService
                 $vendor->user,
                 NotificationCategory::Verification,
                 'Your store is approved',
-                'Congratulations — your vendor store "' . $vendor->business_name . '" is now live on Volamani.',
+                'Congratulations — your vendor store "'.$vendor->business_name.'" is now live on Volamani.',
                 route('vendor.dashboard'),
                 'Go to dashboard',
             );
@@ -129,8 +130,8 @@ class AdminService
     public function rejectVendor(Vendor $vendor, User $admin, string $reason): void
     {
         $vendor->update([
-            'status'           => Status::Inactive,
-            'approved_by'      => $admin->id,
+            'status' => Status::Inactive,
+            'approved_by' => $admin->id,
             'rejection_reason' => $reason,
         ]);
 
@@ -139,7 +140,7 @@ class AdminService
                 $vendor->user,
                 NotificationCategory::Verification,
                 'Store application declined',
-                'Your vendor application was not approved: ' . $reason,
+                'Your vendor application was not approved: '.$reason,
                 route('vendor.dashboard'),
             );
         }
@@ -148,8 +149,8 @@ class AdminService
     public function suspendVendor(Vendor $vendor, User $admin, string $reason): void
     {
         $vendor->update([
-            'status'           => Status::Suspended,
-            'approved_by'      => $admin->id,
+            'status' => Status::Suspended,
+            'approved_by' => $admin->id,
             'rejection_reason' => $reason,
         ]);
 
@@ -158,7 +159,7 @@ class AdminService
                 $vendor->user,
                 NotificationCategory::Verification,
                 'Store suspended',
-                'Your vendor store has been suspended: ' . $reason . ' Contact support for details.',
+                'Your vendor store has been suspended: '.$reason.' Contact support for details.',
                 route('vendor.dashboard'),
             );
         }
@@ -174,7 +175,7 @@ class AdminService
             $withdrawal->user,
             NotificationCategory::Payments,
             'Withdrawal approved',
-            'Your withdrawal of ' . money($withdrawal->amount) . ' has been approved and is being paid out.',
+            'Your withdrawal of '.money($withdrawal->amount).' has been approved and is being paid out.',
             route('wallet.index'),
         );
     }
@@ -187,7 +188,7 @@ class AdminService
             $withdrawal->user,
             NotificationCategory::Payments,
             'Withdrawal declined',
-            'Your withdrawal of ' . money($withdrawal->amount) . ' was declined: ' . $reason . ' The funds have been returned to your wallet.',
+            'Your withdrawal of '.money($withdrawal->amount).' was declined: '.$reason.' The funds have been returned to your wallet.',
             route('wallet.index'),
         );
     }
@@ -203,7 +204,7 @@ class AdminService
                 $product->vendor->user,
                 NotificationCategory::Account,
                 'Product approved',
-                'Your product "' . $product->name . '" is now live in the marketplace.',
+                'Your product "'.$product->name.'" is now live in the marketplace.',
                 route('vendor.products.index'),
             );
         }
@@ -218,7 +219,7 @@ class AdminService
                 $product->vendor->user,
                 NotificationCategory::Account,
                 'Product needs changes',
-                'Your product "' . $product->name . '" was not approved: ' . $reason,
+                'Your product "'.$product->name.'" was not approved: '.$reason,
                 route('vendor.products.index'),
             );
         }
@@ -231,7 +232,7 @@ class AdminService
 
     // ─── Payments ────────────────────────────────────────────────────────────────────
 
-    public function approveOfflinePayment(\App\Models\Payment $payment, User $admin): bool
+    public function approveOfflinePayment(Payment $payment, User $admin): bool
     {
         $proof = $payment->bankTransferProof()->where('status', 'pending')->latest()->first();
 
@@ -256,7 +257,7 @@ class AdminService
             $value = match ($setting->type) {
                 'boolean' => (bool) ((int) $input[$setting->key]),
                 'integer' => (int) $input[$setting->key],
-                default   => $input[$setting->key],
+                default => $input[$setting->key],
             };
 
             Setting::set($setting->key, $value, $setting->type);

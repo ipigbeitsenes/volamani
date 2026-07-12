@@ -12,7 +12,7 @@ class FinanceDashboardController extends Controller
 
     public function index(): View
     {
-        $stats   = $this->admin->financeStats();
+        $stats = $this->admin->financeStats();
         $revenue = $this->admin->revenueByDay(14);
 
         return view('finance.dashboard', compact('stats', 'revenue'));

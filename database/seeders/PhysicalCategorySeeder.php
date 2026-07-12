@@ -87,17 +87,17 @@ class PhysicalCategorySeeder extends Seeder
 
         foreach ($categories as $sort => $cat) {
             $parent = PhysicalCategory::create([
-                'name'       => $cat['name'],
-                'icon'       => $cat['icon'],
-                'is_active'  => true,
+                'name' => $cat['name'],
+                'icon' => $cat['icon'],
+                'is_active' => true,
                 'sort_order' => $sort + 1,
             ]);
 
             foreach ($cat['children'] as $childSort => $childName) {
                 PhysicalCategory::create([
-                    'parent_id'  => $parent->id,
-                    'name'       => $childName,
-                    'is_active'  => true,
+                    'parent_id' => $parent->id,
+                    'name' => $childName,
+                    'is_active' => true,
                     'sort_order' => $childSort + 1,
                 ]);
             }

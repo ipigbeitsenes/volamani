@@ -14,8 +14,8 @@ class CancelSubscriptionAction
     public function execute(Subscription $subscription): Subscription
     {
         $subscription->update([
-            'status'       => SubscriptionStatus::Cancelled,
-            'auto_renew'   => false,
+            'status' => SubscriptionStatus::Cancelled,
+            'auto_renew' => false,
             'cancelled_at' => now(),
         ]);
 

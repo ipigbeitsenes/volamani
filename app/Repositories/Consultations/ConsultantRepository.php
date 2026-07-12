@@ -5,6 +5,7 @@ namespace App\Repositories\Consultations;
 use App\Models\ConsultantProfile;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class ConsultantRepository
 {
@@ -14,24 +15,24 @@ class ConsultantRepository
             ->whereHas('vendor', fn (Builder $q) => $q->where('status', 'active'))
             ->where('is_available', true);
 
-        if (!empty($filters['q'])) {
-            $term = '%' . $filters['q'] . '%';
+        if (! empty($filters['q'])) {
+            $term = '%'.$filters['q'].'%';
             $query->where(function (Builder $q) use ($term) {
                 $q->where('display_name', 'like', $term)
-                  ->orWhere('niche', 'like', $term)
-                  ->orWhere('bio', 'like', $term);
+                    ->orWhere('niche', 'like', $term)
+                    ->orWhere('bio', 'like', $term);
             });
         }
 
-        if (!empty($filters['niche'])) {
-            $query->where('niche', 'like', '%' . $filters['niche'] . '%');
+        if (! empty($filters['niche'])) {
+            $query->where('niche', 'like', '%'.$filters['niche'].'%');
         }
 
-        if (!empty($filters['min_experience'])) {
+        if (! empty($filters['min_experience'])) {
             $query->where('experience_years', '>=', (int) $filters['min_experience']);
         }
 
-        if (!empty($filters['max_price'])) {
+        if (! empty($filters['max_price'])) {
             $maxKobo = to_kobo((float) $filters['max_price']);
             $query->whereHas('packages', fn (Builder $q) => $q->where('is_active', true)->where('price', '<=', $maxKobo));
         }
@@ -39,14 +40,14 @@ class ConsultantRepository
         $sort = $filters['sort'] ?? 'rating';
         match ($sort) {
             'sessions' => $query->orderByDesc('total_sessions'),
-            'newest'   => $query->latest(),
-            default    => $query->orderByDesc('average_rating'),
+            'newest' => $query->latest(),
+            default => $query->orderByDesc('average_rating'),
         };
 
         return $query->paginate($perPage)->withQueryString();
     }
 
-    public function featuredConsultants(int $limit = 6): \Illuminate\Database\Eloquent\Collection
+    public function featuredConsultants(int $limit = 6): Collection
     {
         return ConsultantProfile::with(['vendor', 'packages'])
             ->whereHas('vendor', fn (Builder $q) => $q->where('status', 'active'))

@@ -49,12 +49,12 @@ class SecurityLogRepository
     public function stats(): array
     {
         return [
-            'events_today'   => SecurityLog::whereDate('created_at', today())->count(),
-            'failed_24h'     => SecurityLog::where('event', SecurityEvent::LoginFailed)
-                                    ->where('created_at', '>=', now()->subDay())->count(),
-            'locked'         => User::whereNotNull('locked_until')->where('locked_until', '>', now())->count(),
-            'logins_24h'     => SecurityLog::where('event', SecurityEvent::Login)
-                                    ->where('created_at', '>=', now()->subDay())->count(),
+            'events_today' => SecurityLog::whereDate('created_at', today())->count(),
+            'failed_24h' => SecurityLog::where('event', SecurityEvent::LoginFailed)
+                ->where('created_at', '>=', now()->subDay())->count(),
+            'locked' => User::whereNotNull('locked_until')->where('locked_until', '>', now())->count(),
+            'logins_24h' => SecurityLog::where('event', SecurityEvent::Login)
+                ->where('created_at', '>=', now()->subDay())->count(),
         ];
     }
 }

@@ -17,12 +17,12 @@ use App\Repositories\Matching\MatchingRepository;
 class MatchingService
 {
     public function __construct(
-        private CreateMatchRequestAction    $createAction,
-        private RespondToMatchAction        $respondAction,
+        private CreateMatchRequestAction $createAction,
+        private RespondToMatchAction $respondAction,
         private UpsertMatchingProfileAction $profileAction,
-        private CloseMatchRequestAction     $closeAction,
-        private MatchingEngine              $engine,
-        private MatchingRepository          $repo,
+        private CloseMatchRequestAction $closeAction,
+        private MatchingEngine $engine,
+        private MatchingRepository $repo,
     ) {}
 
     public function createRequest(User $user, array $data): MatchRequest
