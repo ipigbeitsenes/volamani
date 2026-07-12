@@ -92,9 +92,45 @@ class AdminService
 
     // ─── User management ──────────────────────────────────────────────────────────
 
+    /** Roles an admin may assign from the user console (never admin / super-admin). */
+    public const ASSIGNABLE_ROLES = ['buyer', 'vendor', 'consultant', 'support', 'finance'];
+
     public function setUserActive(User $user, bool $active): void
     {
         $user->update(['is_active' => $active]);
+    }
+
+    /** Replace a user's roles with the given (assignable-only) set. */
+    public function syncUserRoles(User $user, array $roles): void
+    {
+        $roles = array_values(array_intersect($roles, self::ASSIGNABLE_ROLES));
+        $user->syncRoles($roles);
+
+        $this->notifications->send(
+            $user,
+            NotificationCategory::Account,
+            'Your account access changed',
+            'An administrator updated your account roles: '.($roles ? implode(', ', $roles) : 'none').'.',
+            route('dashboard'),
+        );
+    }
+
+    /** Manually mark a user's email as verified (bypasses the email link). */
+    public function verifyUser(User $user): void
+    {
+        if ($user->email_verified_at) {
+            return;
+        }
+
+        $user->forceFill(['email_verified_at' => now()])->save();
+
+        $this->notifications->send(
+            $user,
+            NotificationCategory::Verification,
+            'Your account is verified',
+            'Your Volamani account has been verified by our team — you now have full access.',
+            route('dashboard'),
+        );
     }
 
     public function deleteUser(User $user): void

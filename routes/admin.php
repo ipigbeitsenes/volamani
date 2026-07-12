@@ -34,6 +34,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/', [UserManagementController::class, 'index'])->name('index');
         Route::get('/{user}', [UserManagementController::class, 'show'])->name('show');
         Route::put('/{user}/status', [UserManagementController::class, 'updateStatus'])->name('status');
+        Route::put('/{user}/roles', [UserManagementController::class, 'updateRoles'])->name('roles');
+        Route::put('/{user}/verify', [UserManagementController::class, 'verify'])->name('verify');
         Route::delete('/{user}', [UserManagementController::class, 'destroy'])->name('destroy');
     });
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\Admin\AdminService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UserManagementController extends Controller
@@ -24,8 +25,42 @@ class UserManagementController extends Controller
     public function show(User $user): View
     {
         $user->load(['roles', 'vendor', 'wallet']);
+        $assignableRoles = AdminService::ASSIGNABLE_ROLES;
 
-        return view('admin.users.show', compact('user'));
+        return view('admin.users.show', compact('user', 'assignableRoles'));
+    }
+
+    public function updateRoles(Request $request, User $user): RedirectResponse
+    {
+        if ($this->isProtected($user)) {
+            $this->flashError('You cannot change the roles of this account.');
+
+            return back();
+        }
+
+        $validated = $request->validate([
+            'roles' => ['array'],
+            'roles.*' => ['string', Rule::in(AdminService::ASSIGNABLE_ROLES)],
+        ]);
+
+        $this->admin->syncUserRoles($user, $validated['roles'] ?? []);
+        $this->flashSuccess('User roles updated.');
+
+        return back();
+    }
+
+    public function verify(User $user): RedirectResponse
+    {
+        if ($this->isProtected($user)) {
+            $this->flashError('You cannot modify this account.');
+
+            return back();
+        }
+
+        $this->admin->verifyUser($user);
+        $this->flashSuccess('User verified.');
+
+        return back();
     }
 
     public function updateStatus(Request $request, User $user): RedirectResponse

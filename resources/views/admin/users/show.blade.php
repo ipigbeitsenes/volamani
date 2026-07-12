@@ -47,6 +47,49 @@
                 </div>
             </div>
 
+            @unless($user->id === auth()->id() || $user->hasRole('admin'))
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-white fw-semibold">Roles &amp; verification</div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('admin.users.roles', $user) }}" class="mb-3">
+                            @csrf @method('PUT')
+                            <label class="form-label small text-muted">Assign roles</label>
+                            <div class="d-flex flex-wrap gap-3 mb-2">
+                                @foreach($assignableRoles as $role)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role }}"
+                                               id="role_{{ $role }}" {{ $user->hasRole($role) ? 'checked' : '' }}>
+                                        <label class="form-check-label text-capitalize" for="role_{{ $role }}">{{ $role }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button class="btn btn-sm btn-primary">Save roles</button>
+                        </form>
+
+                        <hr>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div>
+                                <div class="small text-muted">Account verification</div>
+                                @if($user->email_verified_at)
+                                    <span class="badge bg-success-subtle text-success">
+                                        <i class="bi bi-patch-check me-1"></i>Verified {{ $user->email_verified_at->format('d M Y') }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-warning-subtle text-warning">Not verified</span>
+                                @endif
+                            </div>
+                            @unless($user->email_verified_at)
+                                <form method="POST" action="{{ route('admin.users.verify', $user) }}">
+                                    @csrf @method('PUT')
+                                    <button class="btn btn-sm btn-success"><i class="bi bi-patch-check me-1"></i>Verify user</button>
+                                </form>
+                            @endunless
+                        </div>
+                    </div>
+                </div>
+            @endunless
+
             <div class="card shadow-sm border-danger-subtle">
                 <div class="card-header bg-white fw-semibold text-danger">Account actions</div>
                 <div class="card-body d-flex flex-wrap gap-2">
