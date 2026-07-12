@@ -7,6 +7,7 @@ use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\ProductFile;
 use App\Models\ProductGallery;
+use App\Models\Vendor;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,9 @@ class UpdateProductAction
     {
         return DB::transaction(function () use ($product, $data) {
             $isPhysical = $product->isPhysical();
-            $currency = $product->vendor->currencyCode();   // prices are entered in the vendor's currency
+            $vendor = $product->vendor;
+            // prices are entered in the vendor's currency, stored as the base equivalent
+            $currency = $vendor instanceof Vendor ? $vendor->currencyCode() : currency()->base();
 
             $thumbnail = $product->thumbnail;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {

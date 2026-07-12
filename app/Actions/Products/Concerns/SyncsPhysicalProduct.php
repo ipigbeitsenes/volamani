@@ -3,6 +3,7 @@
 namespace App\Actions\Products\Concerns;
 
 use App\Models\Product;
+use App\Models\Vendor;
 
 trait SyncsPhysicalProduct
 {
@@ -34,7 +35,8 @@ trait SyncsPhysicalProduct
         // name are skipped (empty trailing form rows).
         if (array_key_exists('variant_names', $data)) {
             $product->variants()->delete();
-            $currency = $product->vendor->currencyCode();   // variant prices are in the vendor's currency
+            $vendor = $product->vendor;                       // variant prices are in the vendor's currency
+            $currency = $vendor instanceof Vendor ? $vendor->currencyCode() : currency()->base();
 
             foreach (($data['variant_names'] ?? []) as $i => $name) {
                 $name = trim((string) $name);
