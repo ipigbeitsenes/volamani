@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Vendor\UpdateStorefrontRequest;
+use App\Models\Vendor;
 use App\Services\Vendors\VendorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class StorefrontSettingsController extends Controller
 
         // Shipping amounts are entered in the vendor's currency; persist as the
         // base equivalent (in minor units), like product prices.
-        $currency = $data['currency'] ?? $vendor->currencyCode();
+        $currency = $data['currency'] ?? ($vendor instanceof Vendor ? $vendor->currencyCode() : currency()->base());
         $data['shipping_fee'] = isset($data['shipping_fee']) ? currency()->toBase(to_kobo($data['shipping_fee']), $currency) : 0;
         $data['free_shipping_threshold'] = (isset($data['free_shipping_threshold']) && $data['free_shipping_threshold'] !== null && $data['free_shipping_threshold'] !== '')
             ? currency()->toBase(to_kobo($data['free_shipping_threshold']), $currency)
