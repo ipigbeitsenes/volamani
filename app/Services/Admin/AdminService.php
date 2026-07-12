@@ -123,7 +123,7 @@ class AdminService
     /** Keep the Vendor store in step with the vendor role granted from the console. */
     private function syncVendorRecord(User $user, bool $isVendor): void
     {
-        $vendor = $user->vendor()->first();
+        $vendor = Vendor::where('user_id', $user->id)->first();
 
         if ($isVendor) {
             if (! $vendor) {
