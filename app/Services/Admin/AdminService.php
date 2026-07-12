@@ -136,7 +136,7 @@ class AdminService
                     'approved_at' => now(),
                     'verified_at' => now(),
                 ]);
-            } elseif ($vendor->status !== Status::Active) {
+            } elseif (! $vendor->isActive()) {
                 $vendor->update(['status' => Status::Active, 'approved_at' => now()]);
             }
 
@@ -144,7 +144,7 @@ class AdminService
         }
 
         // Vendor role removed → take an active storefront offline (data is kept).
-        if ($vendor && $vendor->status === Status::Active) {
+        if ($vendor && $vendor->isActive()) {
             $vendor->update(['status' => Status::Inactive]);
         }
     }
