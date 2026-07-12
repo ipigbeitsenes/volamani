@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Services\Currency\CurrencyService;
 use App\Support\BusinessDayCalculator;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -20,6 +21,14 @@ if (! function_exists('currency_code')) {
     function currency_code(): string
     {
         return (string) settings('currency_code', 'USD');
+    }
+}
+
+if (! function_exists('currency')) {
+    /** The multi-currency conversion service (vendor currency ⇄ base currency). */
+    function currency(): CurrencyService
+    {
+        return app(CurrencyService::class);
     }
 }
 
