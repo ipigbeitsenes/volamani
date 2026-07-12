@@ -94,6 +94,17 @@
                             </select>
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label fw-medium small">Pricing Currency</label>
+                            <select name="currency" class="form-select">
+                                @foreach(\App\Models\Currency::active()->orderBy('code')->get() as $cur)
+                                    <option value="{{ $cur->code }}" {{ old('currency', $vendor->currencyCode()) === $cur->code ? 'selected' : '' }}>
+                                        {{ $cur->code }} — {{ $cur->name }} ({{ $cur->symbol }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="form-text">Enter your prices in this currency; buyers are charged the {{ currency()->base() }} equivalent.</div>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label fw-medium small">Category</label>
                             <select name="category" class="form-select">
                                 <option value="">Select category</option>

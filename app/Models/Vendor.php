@@ -36,6 +36,7 @@ class Vendor extends Model
         'category',
         'store_type',
         'store_focus',
+        'currency',
         'status',
         'is_featured',
         'views_count',
@@ -207,6 +208,12 @@ class Vendor extends Model
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /** The currency this vendor prices their listings in (falls back to base). */
+    public function currencyCode(): string
+    {
+        return $this->currency ?: currency()->base();
+    }
 
     public function isActive(): bool
     {

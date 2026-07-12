@@ -5,6 +5,7 @@ namespace App\Http\Requests\Vendor;
 use App\Enums\StoreFocus;
 use App\Enums\StoreType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class UpdateStorefrontRequest extends FormRequest
@@ -23,6 +24,7 @@ class UpdateStorefrontRequest extends FormRequest
             'category' => ['nullable', 'string', 'max:80'],
             'store_type' => ['required', new Enum(StoreType::class)],
             'store_focus' => ['required', new Enum(StoreFocus::class)],
+            'currency' => ['nullable', 'string', 'size:3', Rule::exists('currencies', 'code')->where('is_active', true)],
             'shipping_fee' => ['nullable', 'numeric', 'min:0'],
             'free_shipping_threshold' => ['nullable', 'numeric', 'min:0'],
             'ships_to' => ['nullable', 'string', 'max:255'],

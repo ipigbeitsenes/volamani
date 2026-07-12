@@ -22,6 +22,7 @@ class CreateProductAction
 
         return DB::transaction(function () use ($vendor, $data) {
             $isPhysical = ($data['kind'] ?? 'digital') === ProductKind::Physical->value;
+            $currency = $vendor->currencyCode();   // prices are entered in the vendor's currency
 
             $thumbnail = null;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {
@@ -38,8 +39,8 @@ class CreateProductAction
                 'description' => $data['description'],
                 // `type` is the digital sub-type; physical products park on 'other'.
                 'type' => $isPhysical ? 'other' : $data['type'],
-                'price' => to_kobo($data['price']),
-                'compare_price' => isset($data['compare_price']) ? to_kobo($data['compare_price']) : null,
+                'price' => currency()->toBase(to_kobo($data['price']), $currency),
+                'compare_price' => isset($data['compare_price']) ? currency()->toBase(to_kobo($data['compare_price']), $currency) : null,
                 'thumbnail' => $thumbnail,
                 'preview_url' => $data['preview_url'] ?? null,
                 'is_downloadable' => ! $isPhysical,

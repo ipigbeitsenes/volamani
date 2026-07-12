@@ -4,6 +4,11 @@
     $detail       = $isEdit ? $product->physicalDetail : null;
     $secondaryIds = $isEdit ? $product->secondaryPhysicalCategories->pluck('id')->all() : (array) old('secondary_categories', []);
     $existingVariants = $isEdit ? $product->variants : collect();
+
+    // Vendors price in their own currency; stored prices are the base equivalent.
+    $vendorCurrency = auth()->user()->vendor?->currencyCode() ?? currency()->base();
+    $curSym         = currency()->symbol($vendorCurrency);
+    $toVendor       = fn ($baseMinor) => $baseMinor ? number_format(currency()->fromBase((int) $baseMinor, $vendorCurrency) / 100, 2, '.', '') : '';
 @endphp
 
 {{-- Product Kind --}}
@@ -182,8 +187,8 @@
                             <input type="text" name="variant_skus[]" class="form-control form-control-sm" value="{{ $v->sku }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label small">Price ({{ currency_symbol() }})</label>
-                            <input type="number" step="0.01" min="0" name="variant_prices[]" class="form-control form-control-sm" value="{{ $v->price_override ? from_kobo($v->price_override) : '' }}" placeholder="base">
+                            <label class="form-label small">Price ({{ $curSym }})</label>
+                            <input type="number" step="0.01" min="0" name="variant_prices[]" class="form-control form-control-sm" value="{{ $v->price_override ? $toVendor($v->price_override) : '' }}" placeholder="base">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label small">Stock</label>
@@ -211,22 +216,25 @@
             <div class="card-header bg-white fw-semibold">Pricing</div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Price ({{ currency_symbol() }}) <span class="text-danger">*</span></label>
+                    <label class="form-label">Price ({{ $curSym }}) <span class="text-danger">*</span></label>
                     <div class="input-group">
-                        <span class="input-group-text">{{ currency_symbol() }}</span>
+                        <span class="input-group-text">{{ $curSym }}</span>
                         <input type="number" name="price" step="0.01" min="0"
                             class="form-control @error('price') is-invalid @enderror"
-                            value="{{ old('price', isset($product) ? from_kobo($product->price) : '') }}" required>
+                            value="{{ old('price', isset($product) ? $toVendor($product->price) : '') }}" required>
                     </div>
                     @error('price') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    @if($vendorCurrency !== currency()->base())
+                        <div class="form-text">Priced in {{ $vendorCurrency }}; buyers are charged the {{ currency()->base() }} equivalent.</div>
+                    @endif
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Compare-at Price ({{ currency_symbol() }}) <small class="text-muted">(strikethrough)</small></label>
+                    <label class="form-label">Compare-at Price ({{ $curSym }}) <small class="text-muted">(strikethrough)</small></label>
                     <div class="input-group">
-                        <span class="input-group-text">{{ currency_symbol() }}</span>
+                        <span class="input-group-text">{{ $curSym }}</span>
                         <input type="number" name="compare_price" step="0.01" min="0"
                             class="form-control @error('compare_price') is-invalid @enderror"
-                            value="{{ old('compare_price', isset($product) && $product->compare_price ? from_kobo($product->compare_price) : '') }}">
+                            value="{{ old('compare_price', isset($product) && $product->compare_price ? $toVendor($product->compare_price) : '') }}">
                     </div>
                     @error('compare_price') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
@@ -403,7 +411,7 @@ function addVariantRow() {
             <input type="text" name="variant_names[]" class="form-control form-control-sm" placeholder="e.g. Large / Black"></div>
         <div class="col-md-3"><label class="form-label small">SKU</label>
             <input type="text" name="variant_skus[]" class="form-control form-control-sm"></div>
-        <div class="col-md-2"><label class="form-label small">Price ({{ currency_symbol() }})</label>
+        <div class="col-md-2"><label class="form-label small">Price ({{ $curSym }})</label>
             <input type="number" step="0.01" min="0" name="variant_prices[]" class="form-control form-control-sm" placeholder="base"></div>
         <div class="col-md-2"><label class="form-label small">Stock</label>
             <input type="number" min="0" name="variant_stocks[]" class="form-control form-control-sm"></div>

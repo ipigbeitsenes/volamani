@@ -34,6 +34,7 @@ trait SyncsPhysicalProduct
         // name are skipped (empty trailing form rows).
         if (array_key_exists('variant_names', $data)) {
             $product->variants()->delete();
+            $currency = $product->vendor->currencyCode();   // variant prices are in the vendor's currency
 
             foreach (($data['variant_names'] ?? []) as $i => $name) {
                 $name = trim((string) $name);
@@ -46,7 +47,7 @@ trait SyncsPhysicalProduct
                 $product->variants()->create([
                     'name' => $name,
                     'sku' => $data['variant_skus'][$i] ?? null,
-                    'price_override' => ($price === null || $price === '') ? null : to_kobo($price),
+                    'price_override' => ($price === null || $price === '') ? null : currency()->toBase(to_kobo($price), $currency),
                     'stock_quantity' => (int) ($data['variant_stocks'][$i] ?? 0),
                     'is_active' => true,
                     'sort_order' => $i,

@@ -19,6 +19,7 @@ class UpdateProductAction
     {
         return DB::transaction(function () use ($product, $data) {
             $isPhysical = $product->isPhysical();
+            $currency = $product->vendor->currencyCode();   // prices are entered in the vendor's currency
 
             $thumbnail = $product->thumbnail;
             if (isset($data['thumbnail']) && $data['thumbnail'] instanceof UploadedFile) {
@@ -38,8 +39,8 @@ class UpdateProductAction
                 'short_description' => $data['short_description'] ?? $product->short_description,
                 'description' => $data['description'] ?? $product->description,
                 'type' => $isPhysical ? $product->type : ($data['type'] ?? $product->type),
-                'price' => isset($data['price']) ? to_kobo($data['price']) : $product->price,
-                'compare_price' => isset($data['compare_price']) ? to_kobo($data['compare_price']) : $product->compare_price,
+                'price' => isset($data['price']) ? currency()->toBase(to_kobo($data['price']), $currency) : $product->price,
+                'compare_price' => isset($data['compare_price']) ? currency()->toBase(to_kobo($data['compare_price']), $currency) : $product->compare_price,
                 'thumbnail' => $thumbnail,
                 'preview_url' => $data['preview_url'] ?? $product->preview_url,
                 'download_limit' => $isPhysical ? null : ($data['download_limit'] ?? $product->download_limit),
