@@ -51,13 +51,13 @@ return [
 
         'public' => [
             'driver' => 'local',
-            // Write public files straight into the web root's /storage folder. On
-            // hosts that won't serve through a symlinked public/storage (e.g.
-            // LiteSpeed on shared cPanel), make public/storage a REAL directory and
-            // files are served directly — no symlink hop. Locally, public/storage
-            // is the usual `artisan storage:link` symlink, which resolves to the
-            // same place, so this works in both environments.
-            'root' => public_path('storage'),
+            // Public files must live under the folder the web server actually
+            // serves. On shared cPanel the real docroot can be a separate
+            // public_html copy (not this app's public/), and LiteSpeed won't follow
+            // the storage symlink — so point PUBLIC_DISK_ROOT at the docroot's real
+            // /storage folder there. Locally, leave it unset and the usual
+            // public/storage (storage:link) symlink is used.
+            'root' => env('PUBLIC_DISK_ROOT') ?: public_path('storage'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
