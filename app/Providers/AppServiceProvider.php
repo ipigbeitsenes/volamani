@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\AuthEventSubscriber;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -32,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Event::subscribe(AuthEventSubscriber::class);
+
+        // An already-signed-in user who opens /login or /register (the guest-only
+        // routes) is sent straight to their dashboard instead of the guest form.
+        // DashboardController then routes them to their role-specific dashboard.
+        RedirectIfAuthenticated::redirectUsing(fn () => route('dashboard'));
 
         // Super-admin bypasses every authorization check (@can / Gate / policies).
         // Returning null lets normal checks run for everyone else.
