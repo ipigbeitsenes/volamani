@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Older MySQL/MariaDB (common on shared hosting) cap index keys at ~1000
+        // bytes, so a utf8mb4 VARCHAR(255) index (1020 bytes) fails to migrate.
+        // Cap the default indexed string length so those keys fit.
+        Schema::defaultStringLength(191);
+
         Event::subscribe(AuthEventSubscriber::class);
 
         // Super-admin bypasses every authorization check (@can / Gate / policies).
