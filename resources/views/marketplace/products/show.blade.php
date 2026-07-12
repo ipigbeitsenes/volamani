@@ -211,7 +211,27 @@
                         <li><i class="bi bi-bag-check me-2"></i>{{ number_format($product->sales_count) }} sales</li>
                     </ul>
 
-                    @if($product->isPhysical())
+                    @if($product->isComingSoon())
+                        <div class="alert alert-dark py-2 mb-3">
+                            <i class="bi bi-hourglass-split me-1"></i>
+                            <strong>Coming soon.</strong> Reserve this build now with a deposit; pay the balance when it's delivered.
+                        </div>
+                        <ul class="list-unstyled small mb-3">
+                            <li class="d-flex justify-content-between py-1"><span class="text-muted">Total price</span><span class="fw-semibold">{{ money($product->price) }}</span></li>
+                            <li class="d-flex justify-content-between py-1"><span class="text-muted">Deposit to reserve ({{ settings('preorder_deposit_percent', 50) }}%)</span><span class="fw-bold text-primary">{{ money($product->depositAmount()) }}</span></li>
+                            <li class="d-flex justify-content-between py-1 border-top"><span class="text-muted">Balance on delivery</span><span class="fw-semibold">{{ money($product->balanceAmount()) }}</span></li>
+                        </ul>
+                        @auth
+                            <a href="{{ route('pages.contact') }}" class="btn btn-primary w-100 btn-lg mb-2">
+                                <i class="bi bi-send-check me-1"></i>Request this Website
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}?redirect={{ urlencode(request()->url()) }}" class="btn btn-primary w-100 btn-lg mb-2">
+                                <i class="bi bi-send-check me-1"></i>Login to Request
+                            </a>
+                        @endauth
+                        <div class="form-text mb-2"><i class="bi bi-shield-check me-1"></i>Pay only the deposit to reserve — the balance is due when your build is delivered.</div>
+                    @elseif($product->isPhysical())
                         @if($product->inStock())
                             <form method="POST" action="{{ route('cart.physical.add', $product->id) }}">
                                 @csrf

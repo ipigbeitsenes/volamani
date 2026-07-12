@@ -24,6 +24,12 @@
         </span>
     @endif
 
+    @if($product->isComingSoon())
+        <span class="badge bg-dark position-absolute top-0 start-0 m-2">
+            <i class="bi bi-hourglass-split me-1"></i>Coming Soon
+        </span>
+    @endif
+
     <div class="card-body d-flex flex-column">
         <p class="text-muted small mb-1">
             <a href="{{ route('storefront.show', $product->vendor->user->username) }}"
@@ -69,7 +75,11 @@
             <a href="{{ route('marketplace.products.show', $product->slug) }}" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-eye me-1"></i>View Details
             </a>
-            @if($product->isDigital())
+            @if($product->isComingSoon())
+                <a href="{{ route('marketplace.products.show', $product->slug) }}" class="btn btn-sm btn-primary w-100">
+                    <i class="bi bi-send-check me-1"></i>Request this Website
+                </a>
+            @elseif($product->isDigital())
                 <form method="POST" action="{{ route('cart.products.add', $product->id) }}">
                     @csrf
                     <button type="submit" class="btn btn-sm btn-primary w-100">

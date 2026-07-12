@@ -24,7 +24,7 @@ class Product extends Model
         'vendor_id', 'kind', 'category_id', 'physical_category_id', 'name', 'slug', 'short_description',
         'description', 'type', 'price', 'compare_price', 'thumbnail',
         'preview_url', 'is_downloadable', 'download_limit', 'download_expiry_hours',
-        'status', 'is_featured', 'featured_until', 'seo_title', 'seo_description',
+        'status', 'availability', 'is_featured', 'featured_until', 'seo_title', 'seo_description',
         'approved_at', 'approved_by', 'rejection_reason',
     ];
 
@@ -158,6 +158,26 @@ class Product extends Model
     public function isActive(): bool
     {
         return $this->status === ProductStatus::Active;
+    }
+
+    /** A pre-sold product with no downloadable file yet — bought via deposit. */
+    public function isComingSoon(): bool
+    {
+        return $this->availability === 'coming_soon';
+    }
+
+    /** Up-front deposit (kobo) required to reserve a coming-soon product. */
+    public function depositAmount(): int
+    {
+        $percent = (int) settings('preorder_deposit_percent', 50);
+
+        return (int) round($this->price * min(100, max(0, $percent)) / 100);
+    }
+
+    /** Balance (kobo) due when a reserved product is delivered. */
+    public function balanceAmount(): int
+    {
+        return (int) $this->price - $this->depositAmount();
     }
 
     /** A currently-running paid promotion. */

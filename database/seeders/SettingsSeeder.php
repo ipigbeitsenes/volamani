@@ -15,8 +15,8 @@ class SettingsSeeder extends Seeder
             ['key' => 'site_tagline',     'value' => 'Your Digital Business Ecosystem', 'type' => 'string', 'group' => 'general', 'label' => 'Tagline'],
             ['key' => 'support_email',    'value' => 'support@volamani.com',        'type' => 'string',  'group' => 'general', 'label' => 'Support Email'],
             ['key' => 'support_phone',    'value' => '+1 000 000 0000',             'type' => 'string',  'group' => 'general', 'label' => 'Support Phone'],
-            ['key' => 'currency_symbol',  'value' => '$',                           'type' => 'string',  'group' => 'general', 'label' => 'Currency Symbol'],
-            ['key' => 'currency_code',    'value' => 'USD',                         'type' => 'string',  'group' => 'general', 'label' => 'Currency Code'],
+            ['key' => 'currency_symbol',  'value' => '₦',                           'type' => 'string',  'group' => 'general', 'label' => 'Currency Symbol'],
+            ['key' => 'currency_code',    'value' => 'NGN',                         'type' => 'string',  'group' => 'general', 'label' => 'Currency Code'],
             ['key' => 'social_facebook',  'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Facebook URL'],
             ['key' => 'social_instagram', 'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'Instagram URL'],
             ['key' => 'social_twitter',   'value' => '',                            'type' => 'string',  'group' => 'general', 'label' => 'X / Twitter URL'],
@@ -49,6 +49,9 @@ class SettingsSeeder extends Seeder
             ['key' => 'affiliate_cookie_days',  'value' => '30',    'type' => 'integer', 'group' => 'affiliate', 'label' => 'Attribution Window (days)'],
             ['key' => 'affiliate_auto_approve', 'value' => '0',     'type' => 'boolean', 'group' => 'affiliate', 'label' => 'Auto-approve Commissions'],
             ['key' => 'affiliate_min_payout',   'value' => '100000', 'type' => 'integer', 'group' => 'affiliate', 'label' => 'Minimum Payout (kobo)'],
+
+            // Pre-orders (coming-soon products bought with a deposit)
+            ['key' => 'preorder_deposit_percent', 'value' => '50', 'type' => 'integer', 'group' => 'marketplace', 'label' => 'Pre-order Deposit (% of price)'],
 
             // Subscriptions
             ['key' => 'subscription_grace_days', 'value' => '3', 'type' => 'integer', 'group' => 'subscription', 'label' => 'Past-due Grace Period (days)'],
