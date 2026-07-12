@@ -8,11 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Allow platform-issued documents (no vendor): drop the FK, make the
-        // column nullable, then re-add the FK as null-on-delete.
-        Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['vendor_id']);
-        });
+        // Allow platform-issued documents (no vendor): drop the vendor FK, make
+        // the column nullable, then re-add it as null-on-delete. The drop is
+        // guarded because some MySQL/MariaDB builds never created the original
+        // constrained() FK under the conventional name, which makes an
+        // unconditional dropForeign() fail with "check that it exists".
+        $this->dropVendorForeignIfExists();
+
         Schema::table('documents', function (Blueprint $table) {
             $table->unsignedBigInteger('vendor_id')->nullable()->change();
             $table->foreign('vendor_id')->references('id')->on('vendors')->nullOnDelete();
@@ -35,12 +37,23 @@ return new class extends Migration
             $table->dropColumn(['issuer', 'signed_name', 'signed_ip']);
         });
 
-        Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['vendor_id']);
-        });
+        $this->dropVendorForeignIfExists();
+
         Schema::table('documents', function (Blueprint $table) {
             $table->unsignedBigInteger('vendor_id')->nullable(false)->change();
             $table->foreign('vendor_id')->references('id')->on('vendors')->cascadeOnDelete();
         });
+    }
+
+    /** Drop the documents.vendor_id foreign key only if it actually exists. */
+    private function dropVendorForeignIfExists(): void
+    {
+        try {
+            Schema::table('documents', function (Blueprint $table) {
+                $table->dropForeign(['vendor_id']);
+            });
+        } catch (\Throwable $e) {
+            // The FK was never created on this server — nothing to drop.
+        }
     }
 };
