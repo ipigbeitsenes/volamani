@@ -2,19 +2,19 @@
 
 namespace App\Services\Orders;
 
+use App\Actions\Commission\SettlePlatformCommissionAction;
 use App\Actions\Products\RestockOrderAction;
 use App\Enums\EscrowStatus;
 use App\Enums\NotificationCategory;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
-use App\Enums\TransactionType;
+use App\Jobs\SettlePlatformCommissionJob;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Repositories\Orders\OrderRepository;
 use App\Services\Escrow\EscrowService;
 use App\Services\Notifications\NotificationService;
-use App\Services\Wallet\WalletService;
 use App\Support\BusinessDayCalculator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
@@ -27,7 +27,6 @@ class OrderService
         private EscrowService $escrow,
         private NotificationService $notifications,
         private RestockOrderAction $restock,
-        private WalletService $wallet,
     ) {}
 
     public function forBuyer(User $user, int $perPage = 15): LengthAwarePaginator
@@ -52,15 +51,17 @@ class OrderService
         }
 
         // POD orders hold no escrow: the buyer paid the seller cash on delivery,
-        // so completion just settles the platform's commission from the seller.
+        // so completion flips the order to paid and queues commission settlement.
         if ($order->isPod()) {
             DB::transaction(function () use ($order) {
-                $this->settlePodCommission($order);
+                $this->markPodPaid($order);
                 $order->update([
                     'status' => OrderStatus::Completed,
                     'completed_at' => now(),
                 ]);
             });
+
+            $this->queuePodCommission($order);
 
             return true;
         }
@@ -82,89 +83,34 @@ class OrderService
     }
 
     /**
-     * Settle the platform commission on a delivered Pay-on-Delivery order by
-     * debiting the seller's wallet — but ONLY when the wallet subsystem is enabled.
-     *
-     * When BOTH wallet and escrow are toggled off, the platform runs on seller
-     * subscriptions alone, so POD takes no commission at all (not even recorded as
-     * owed) until one of those features is turned back on. When wallet is off but
-     * escrow is on, or the seller can't cover the debit, the commission is recorded
-     * as owed for finance to reconcile out of band. Idempotent: payment_status
-     * flips to Success on first settlement and short-circuits any repeat.
+     * Flip a POD order to paid (cash was collected on delivery). Idempotent — a
+     * no-op once already paid. The platform's commission is settled separately and
+     * asynchronously via {@see queuePodCommission()}.
      */
-    private function settlePodCommission(Order $order): void
+    private function markPodPaid(Order $order): void
     {
         if ($order->isPaid()) {
-            return; // already settled
+            return;
         }
 
         $order->update([
             'payment_status' => PaymentStatus::Success,
             'paid_at' => $order->paid_at ?? now(),
         ]);
-
-        // Subscription-only mode: no commission on POD while both wallet and escrow
-        // are disabled — sellers already pay to be on the platform.
-        if (! feature('wallet') && ! feature('escrow')) {
-            return;
-        }
-
-        $commission = (int) $order->platform_fee;
-        $vendor = $order->vendor;
-        $owner = $vendor instanceof Vendor ? $vendor->user : null;
-
-        if ($commission <= 0 || ! $owner instanceof User) {
-            return;
-        }
-
-        // Collect via the wallet only when that subsystem is on and can cover it;
-        // otherwise POD stays wallet-independent and the debt is logged.
-        if (feature('wallet')) {
-            $wallet = $this->wallet->getOrCreate($owner);
-
-            if ($wallet->canWithdraw($commission)) {
-                $this->wallet->debit(
-                    $wallet,
-                    $commission,
-                    TransactionType::Commission,
-                    "Platform commission — cash-on-delivery order {$order->reference}",
-                    $order,
-                );
-
-                return;
-            }
-        }
-
-        $this->recordCommissionOwed($order, $owner, $commission);
     }
 
     /**
-     * Record an uncollected POD commission as owed (note on the order + seller
-     * notification) instead of debiting a wallet. Used when the wallet feature is
-     * off, or when the seller's balance can't cover the debit.
+     * Queue settlement of the platform commission for a POD order onto the
+     * platform_commissions ledger (idempotent + retryable). The job itself decides
+     * whether to debit the wallet, record it as owed, or waive it (subscription-only
+     * mode) — see {@see SettlePlatformCommissionAction}.
+     *
+     * Called only after the surrounding DB transaction has committed, so a plain
+     * dispatch is safe (and avoids the afterCommit/RefreshDatabase gotcha).
      */
-    private function recordCommissionOwed(Order $order, User $owner, int $commission): void
+    private function queuePodCommission(Order $order): void
     {
-        $walletOn = feature('wallet');
-
-        $reason = $walletOn ? ' (insufficient wallet balance)' : '';
-        $note = '['.now()->format('d M Y H:i').'] Platform commission of '.money($commission).' due on this pay-on-delivery order'.$reason.'.';
-        $order->update([
-            'notes' => trim(($order->notes ? $order->notes."\n" : '').$note),
-        ]);
-
-        [$closing, $url, $label] = $walletOn
-            ? ['Please top up your wallet to clear it.', route('vendor.wallet.index'), 'Top up wallet']
-            : ['Our team will reconcile it with you.', route('vendor.dashboard'), 'View dashboard'];
-
-        $this->notifications->send(
-            $owner,
-            NotificationCategory::Payments,
-            'Commission due',
-            'A platform commission of '.money($commission).' is due on your delivered pay-on-delivery order '.$order->reference.'. '.$closing,
-            $url,
-            $label,
-        );
+        SettlePlatformCommissionJob::dispatch($order->id);
     }
 
     // ─── Vendor side ──────────────────────────────────────────────────────────────
@@ -221,9 +167,10 @@ class OrderService
                 'delivered_at' => now(),
             ]);
 
-            // POD: cash was collected on delivery — take the platform's cut now.
+            // POD: cash was collected on delivery — mark it paid now; the platform's
+            // commission is settled asynchronously after this transaction commits.
             if ($order->isPod()) {
-                $this->settlePodCommission($order);
+                $this->markPodPaid($order);
 
                 return;
             }
@@ -238,6 +185,10 @@ class OrderService
                 }
             }
         });
+
+        if ($order->isPod()) {
+            $this->queuePodCommission($order);
+        }
 
         $this->notifyBuyer(
             $order,

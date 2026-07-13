@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\PlatformCommissionStatus;
 use App\Enums\TransactionType;
+use App\Models\PlatformCommission;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
@@ -124,6 +126,11 @@ class PhysicalPodCheckoutTest extends TestCase
             'type' => TransactionType::Commission->value,
             'amount' => $commission,
         ]);
+        // The commission ledger records the collection.
+        $entry = PlatformCommission::where('order_id', $order->id)->first();
+        $this->assertNotNull($entry);
+        $this->assertSame(PlatformCommissionStatus::Settled, $entry->status);
+        $this->assertSame($commission, $entry->amount);
 
         // Buyer confirming receipt afterwards completes the order without re-charging.
         app(OrderService::class)->markComplete($order->fresh(), $buyer);
@@ -154,11 +161,15 @@ class PhysicalPodCheckoutTest extends TestCase
         $order->refresh();
         $this->assertSame(PaymentStatus::Success, $order->payment_status);
         $this->assertSame(100_000, $sellerWallet->fresh()->balance);
-        $this->assertStringContainsString('commission', strtolower((string) $order->notes));
         $this->assertDatabaseMissing('wallet_ledgers', [
             'wallet_id' => $sellerWallet->id,
             'type' => TransactionType::Commission->value,
         ]);
+        // Commission is tracked as owed (wallet off, escrow still on).
+        $this->assertSame(
+            PlatformCommissionStatus::Owed,
+            PlatformCommission::where('order_id', $order->id)->first()?->status,
+        );
     }
 
     public function test_pod_takes_no_commission_when_wallet_and_escrow_are_both_off(): void
@@ -184,13 +195,16 @@ class PhysicalPodCheckoutTest extends TestCase
 
         $order->refresh();
         $this->assertSame(PaymentStatus::Success, $order->payment_status);
-        // No commission at all: wallet untouched, nothing owed, no commission note.
+        // No commission collected or owed: wallet untouched, ledger entry waived.
         $this->assertSame(100_000, $sellerWallet->fresh()->balance);
-        $this->assertStringNotContainsString('commission', strtolower((string) $order->notes));
         $this->assertDatabaseMissing('wallet_ledgers', [
             'wallet_id' => $sellerWallet->id,
             'type' => TransactionType::Commission->value,
         ]);
+        $this->assertSame(
+            PlatformCommissionStatus::Waived,
+            PlatformCommission::where('order_id', $order->id)->first()?->status,
+        );
     }
 
     public function test_commission_is_recorded_as_owed_when_the_seller_wallet_is_empty(): void
@@ -206,9 +220,12 @@ class PhysicalPodCheckoutTest extends TestCase
 
         $order->refresh();
         $this->assertSame(PaymentStatus::Success, $order->payment_status);
-        // No balance to debit — stays at zero, debt noted, seller notified.
+        // No balance to debit — stays at zero, debt recorded as owed, seller notified.
         $this->assertSame(0, app(WalletService::class)->getOrCreate($vendor->user)->balance);
-        $this->assertStringContainsString('commission', strtolower((string) $order->notes));
+        $this->assertSame(
+            PlatformCommissionStatus::Owed,
+            PlatformCommission::where('order_id', $order->id)->first()?->status,
+        );
         $this->assertNotNull($vendor->user->notifications()->first());
     }
 }
