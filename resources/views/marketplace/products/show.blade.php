@@ -303,6 +303,20 @@
                         </form>
                     @endif
 
+                    @feature('messaging')
+                        @auth
+                            @if($product->vendor->user_id !== auth()->id())
+                                <a href="{{ route('messages.compose', ['product' => $product->id]) }}" class="btn btn-outline-primary w-100 mt-2">
+                                    <i class="bi bi-chat-dots me-1"></i>Message Seller
+                                </a>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}?redirect={{ urlencode(route('messages.compose', ['product' => $product->id])) }}" class="btn btn-outline-primary w-100 mt-2">
+                                <i class="bi bi-chat-dots me-1"></i>Message Seller
+                            </a>
+                        @endauth
+                    @endfeature
+
                     <div class="border-top pt-3 mt-3 d-flex align-items-center gap-2">
                         <a href="{{ route('storefront.show', $product->vendor->user->username) }}"
                            class="d-flex align-items-center gap-2 text-decoration-none text-dark">

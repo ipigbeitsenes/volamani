@@ -26,4 +26,5 @@ return [
     'promoted_listings' => ['Promoted listings', 'Paid promotion of products & services.'],
     'pricing_calculator' => ['Pricing calculator', 'The project pricing estimator tool.'],
     'returns' => ['Returns / RMA', 'The physical-order returns flow.'],
+    'messaging' => ['Buyer ↔ seller messaging', 'In-app direct messages between buyers and sellers.'],
 ];

@@ -16,6 +16,7 @@ enum NotificationCategory: string
     case Matching = 'matching';       // business matches & leads
     case Invoices = 'invoices';       // invoices & quotations received
     case Social = 'social';         // new listings from sellers you follow
+    case Messages = 'messages';       // buyer ↔ seller direct messages
     case Marketing = 'marketing';      // promotions, tips, product updates
 
     public function label(): string
@@ -33,6 +34,7 @@ enum NotificationCategory: string
             self::Matching => 'Business matching',
             self::Invoices => 'Invoices & quotations',
             self::Social => 'Sellers you follow',
+            self::Messages => 'Messages',
             self::Marketing => 'Promotions & updates',
         };
     }
@@ -52,6 +54,7 @@ enum NotificationCategory: string
             self::Matching => 'New matches, leads and connections.',
             self::Invoices => 'Invoices and quotations sent to you.',
             self::Social => 'New products and updates from stores you follow.',
+            self::Messages => 'New direct messages from buyers or sellers.',
             self::Marketing => 'Offers, tips and platform announcements.',
         };
     }
@@ -71,6 +74,7 @@ enum NotificationCategory: string
             self::Matching => 'bi-diagram-3',
             self::Invoices => 'bi-receipt',
             self::Social => 'bi-person-heart',
+            self::Messages => 'bi-chat-dots',
             self::Marketing => 'bi-megaphone',
         };
     }
@@ -90,6 +94,7 @@ enum NotificationCategory: string
             self::Matching => 'primary',
             self::Invoices => 'secondary',
             self::Social => 'danger',
+            self::Messages => 'primary',
             self::Marketing => 'secondary',
         };
     }

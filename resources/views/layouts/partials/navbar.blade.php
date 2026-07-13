@@ -174,6 +174,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 260px;">
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard</a></li>
+                            @feature('messaging')<li><a class="dropdown-item" href="{{ route('messages.index') }}"><i class="bi bi-chat-dots me-2"></i>Messages</a></li>@endfeature
 
                             <li><h6 class="dropdown-header text-uppercase small text-muted">Purchases</h6></li>
                             <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag-check me-2"></i>My Orders &amp; Downloads</a></li>

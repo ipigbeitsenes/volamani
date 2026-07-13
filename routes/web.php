@@ -5,6 +5,7 @@ use App\Http\Controllers\Chat\ChatWidgetController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Invoices\PublicDocumentController;
+use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,15 @@ Route::middleware('feature:invoices')->prefix('i')->name('public.documents.')->g
     Route::post('/{token}/accept', [PublicDocumentController::class, 'accept'])->name('accept');
     Route::post('/{token}/decline', [PublicDocumentController::class, 'decline'])->name('decline');
     Route::post('/{token}/sign', [PublicDocumentController::class, 'sign'])->middleware('throttle:15,1')->name('sign');
+});
+
+// In-app buyer ↔ seller messaging (one unified inbox for both roles).
+Route::middleware(['auth', 'feature:messaging'])->prefix('messages')->name('messages.')->group(function () {
+    Route::get('/', [MessagingController::class, 'index'])->name('index');
+    Route::get('/compose', [MessagingController::class, 'compose'])->name('compose');
+    Route::post('/start', [MessagingController::class, 'start'])->middleware('throttle:30,1')->name('start');
+    Route::get('/{conversation}', [MessagingController::class, 'show'])->name('show');
+    Route::post('/{conversation}', [MessagingController::class, 'reply'])->middleware('throttle:60,1')->name('reply');
 });
 
 require __DIR__.'/auth.php';
