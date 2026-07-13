@@ -83,9 +83,11 @@ class OrderService
 
     /**
      * Settle the platform commission on a delivered Pay-on-Delivery order by
-     * debiting the seller's wallet. Idempotent: the order's payment_status flips
-     * to Success on first settlement and short-circuits any repeat. If the seller
-     * lacks the balance, the commission is recorded as owed and they're notified.
+     * debiting the seller's wallet — but ONLY when the wallet subsystem is enabled.
+     * If wallet is toggled off (POD is the wallet/escrow-independent path) or the
+     * seller lacks the balance, the commission is recorded as owed for finance to
+     * reconcile out of band. Idempotent: payment_status flips to Success on first
+     * settlement and short-circuits any repeat.
      */
     private function settlePodCommission(Order $order): void
     {
@@ -106,33 +108,53 @@ class OrderService
             return;
         }
 
-        $wallet = $this->wallet->getOrCreate($owner);
+        // Collect via the wallet only when that subsystem is on and can cover it;
+        // otherwise POD stays wallet-independent and the debt is logged.
+        if (feature('wallet')) {
+            $wallet = $this->wallet->getOrCreate($owner);
 
-        if ($wallet->canWithdraw($commission)) {
-            $this->wallet->debit(
-                $wallet,
-                $commission,
-                TransactionType::Commission,
-                "Platform commission — cash-on-delivery order {$order->reference}",
-                $order,
-            );
+            if ($wallet->canWithdraw($commission)) {
+                $this->wallet->debit(
+                    $wallet,
+                    $commission,
+                    TransactionType::Commission,
+                    "Platform commission — cash-on-delivery order {$order->reference}",
+                    $order,
+                );
 
-            return;
+                return;
+            }
         }
 
-        // Not enough balance — log the debt on the order and nudge the seller.
-        $note = '['.now()->format('d M Y H:i').'] Platform commission of '.money($commission).' due (insufficient wallet balance).';
+        $this->recordCommissionOwed($order, $owner, $commission);
+    }
+
+    /**
+     * Record an uncollected POD commission as owed (note on the order + seller
+     * notification) instead of debiting a wallet. Used when the wallet feature is
+     * off, or when the seller's balance can't cover the debit.
+     */
+    private function recordCommissionOwed(Order $order, User $owner, int $commission): void
+    {
+        $walletOn = feature('wallet');
+
+        $reason = $walletOn ? ' (insufficient wallet balance)' : '';
+        $note = '['.now()->format('d M Y H:i').'] Platform commission of '.money($commission).' due on this pay-on-delivery order'.$reason.'.';
         $order->update([
             'notes' => trim(($order->notes ? $order->notes."\n" : '').$note),
         ]);
+
+        [$closing, $url, $label] = $walletOn
+            ? ['Please top up your wallet to clear it.', route('vendor.wallet.index'), 'Top up wallet']
+            : ['Our team will reconcile it with you.', route('vendor.dashboard'), 'View dashboard'];
 
         $this->notifications->send(
             $owner,
             NotificationCategory::Payments,
             'Commission due',
-            'A platform commission of '.money($commission).' is due on your delivered pay-on-delivery order '.$order->reference.'. Please top up your wallet to clear it.',
-            route('vendor.wallet.index'),
-            'Top up wallet',
+            'A platform commission of '.money($commission).' is due on your delivered pay-on-delivery order '.$order->reference.'. '.$closing,
+            $url,
+            $label,
         );
     }
 

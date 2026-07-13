@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\TransactionType;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\Checkout\PhysicalCheckoutService;
@@ -128,6 +129,36 @@ class PhysicalPodCheckoutTest extends TestCase
         app(OrderService::class)->markComplete($order->fresh(), $buyer);
         $this->assertSame(OrderStatus::Completed, $order->fresh()->status);
         $this->assertSame(100_000 - $commission, $sellerWallet->fresh()->balance);
+    }
+
+    public function test_pod_stays_wallet_free_when_the_wallet_feature_is_off(): void
+    {
+        // Turn the wallet subsystem off — POD is meant to keep working without it.
+        Setting::create(['key' => 'feature_wallet', 'value' => '0', 'type' => 'boolean', 'group' => 'features']);
+        cache()->forget('settings.feature_wallet');
+
+        $vendor = $this->verifiedVendor();
+        $buyer = User::factory()->create();
+        $product = $this->physicalProduct($vendor, 5);
+
+        // Even with a funded wallet, the commission must NOT be debited.
+        $wallets = app(WalletService::class);
+        $sellerWallet = $wallets->getOrCreate($vendor->user);
+        $wallets->credit($sellerWallet, 100_000, TransactionType::WalletFunding, 'test top-up');
+
+        $order = app(PhysicalCheckoutService::class)
+            ->place($buyer, $product, null, 1, $this->address(), 'pod')['order'];
+
+        app(OrderService::class)->markDelivered($order);
+
+        $order->refresh();
+        $this->assertSame(PaymentStatus::Success, $order->payment_status);
+        $this->assertSame(100_000, $sellerWallet->fresh()->balance);
+        $this->assertStringContainsString('commission', strtolower((string) $order->notes));
+        $this->assertDatabaseMissing('wallet_ledgers', [
+            'wallet_id' => $sellerWallet->id,
+            'type' => TransactionType::Commission->value,
+        ]);
     }
 
     public function test_commission_is_recorded_as_owed_when_the_seller_wallet_is_empty(): void
