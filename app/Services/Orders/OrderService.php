@@ -84,10 +84,13 @@ class OrderService
     /**
      * Settle the platform commission on a delivered Pay-on-Delivery order by
      * debiting the seller's wallet — but ONLY when the wallet subsystem is enabled.
-     * If wallet is toggled off (POD is the wallet/escrow-independent path) or the
-     * seller lacks the balance, the commission is recorded as owed for finance to
-     * reconcile out of band. Idempotent: payment_status flips to Success on first
-     * settlement and short-circuits any repeat.
+     *
+     * When BOTH wallet and escrow are toggled off, the platform runs on seller
+     * subscriptions alone, so POD takes no commission at all (not even recorded as
+     * owed) until one of those features is turned back on. When wallet is off but
+     * escrow is on, or the seller can't cover the debit, the commission is recorded
+     * as owed for finance to reconcile out of band. Idempotent: payment_status
+     * flips to Success on first settlement and short-circuits any repeat.
      */
     private function settlePodCommission(Order $order): void
     {
@@ -99,6 +102,12 @@ class OrderService
             'payment_status' => PaymentStatus::Success,
             'paid_at' => $order->paid_at ?? now(),
         ]);
+
+        // Subscription-only mode: no commission on POD while both wallet and escrow
+        // are disabled — sellers already pay to be on the platform.
+        if (! feature('wallet') && ! feature('escrow')) {
+            return;
+        }
 
         $commission = (int) $order->platform_fee;
         $vendor = $order->vendor;

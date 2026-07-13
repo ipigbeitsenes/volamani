@@ -161,6 +161,38 @@ class PhysicalPodCheckoutTest extends TestCase
         ]);
     }
 
+    public function test_pod_takes_no_commission_when_wallet_and_escrow_are_both_off(): void
+    {
+        // Subscription-only mode: both money subsystems disabled.
+        Setting::create(['key' => 'feature_wallet', 'value' => '0', 'type' => 'boolean', 'group' => 'features']);
+        Setting::create(['key' => 'feature_escrow', 'value' => '0', 'type' => 'boolean', 'group' => 'features']);
+        cache()->forget('settings.feature_wallet');
+        cache()->forget('settings.feature_escrow');
+
+        $vendor = $this->verifiedVendor();
+        $buyer = User::factory()->create();
+        $product = $this->physicalProduct($vendor, 5);
+
+        $wallets = app(WalletService::class);
+        $sellerWallet = $wallets->getOrCreate($vendor->user);
+        $wallets->credit($sellerWallet, 100_000, TransactionType::WalletFunding, 'test top-up');
+
+        $order = app(PhysicalCheckoutService::class)
+            ->place($buyer, $product, null, 1, $this->address(), 'pod')['order'];
+
+        app(OrderService::class)->markDelivered($order);
+
+        $order->refresh();
+        $this->assertSame(PaymentStatus::Success, $order->payment_status);
+        // No commission at all: wallet untouched, nothing owed, no commission note.
+        $this->assertSame(100_000, $sellerWallet->fresh()->balance);
+        $this->assertStringNotContainsString('commission', strtolower((string) $order->notes));
+        $this->assertDatabaseMissing('wallet_ledgers', [
+            'wallet_id' => $sellerWallet->id,
+            'type' => TransactionType::Commission->value,
+        ]);
+    }
+
     public function test_commission_is_recorded_as_owed_when_the_seller_wallet_is_empty(): void
     {
         $vendor = $this->verifiedVendor();
