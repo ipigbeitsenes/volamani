@@ -59,7 +59,7 @@
         <div class="alert alert-secondary">
             <div class="fw-semibold"><i class="bi bi-x-circle me-1"></i>Order cancelled{{ $order->cancelled_at ? ' on ' . $order->cancelled_at->format('d M Y') : '' }}</div>
             @if($order->cancellation_reason)<div class="small mt-1">Reason: {{ $order->cancellation_reason }}</div>@endif
-            <div class="small text-muted mt-1">The buyer was refunded to their wallet.</div>
+            <div class="small text-muted mt-1">@feature('wallet')The buyer was refunded to their wallet.@else Any payment the buyer made was refunded.@endfeature</div>
         </div>
     @endif
 
@@ -126,7 +126,7 @@
             <div class="card-body">
                 <p class="small text-muted mb-2">
                     If you're unable to deliver — wrong or undeliverable address, out of stock, or a technical issue —
-                    you can cancel this order. <strong>The buyer is fully refunded to their wallet</strong> and the
+                    you can cancel this order. <strong>The buyer is fully refunded@feature('wallet') to their wallet@endfeature</strong> and the
                     item is restocked. This can't be undone.
                 </p>
                 <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#cancelForm">

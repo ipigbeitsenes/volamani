@@ -95,6 +95,7 @@
                             {{ $payableCount }} order(s) across {{ count($summary['groups']) }} seller(s).
                         </p>
 
+                        @feature('wallet')
                         {{-- Wallet (pays everything at once) --}}
                         <div class="border rounded p-3 mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -113,6 +114,7 @@
                                 <a href="{{ route('wallet.index') }}" class="btn btn-outline-primary btn-sm w-100">Fund Wallet</a>
                             @endif
                         </div>
+                        @endfeature
 
                         {{-- Card / bank (single seller only) --}}
                         <div class="border rounded p-3">
@@ -123,7 +125,7 @@
                             @else
                                 <p class="text-muted small mb-0">
                                     Your cart has items from multiple sellers. Card/bank checkout covers one seller at a time —
-                                    use your <strong>wallet</strong> to pay for everything at once, or buy items individually.
+                                    @feature('wallet')use your <strong>wallet</strong> to pay for everything at once, or @endfeature buy items individually.
                                 </p>
                             @endif
                         </div>

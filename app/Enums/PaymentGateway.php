@@ -35,13 +35,18 @@ enum PaymentGateway: string
         return in_array($this, [self::Paystack, self::Flutterwave], true);
     }
 
-    /** Gateways offered at checkout — card gateways only appear when configured. */
+    /**
+     * Gateways offered at checkout — card gateways only appear when configured,
+     * and the wallet only when the wallet feature is enabled (it is hidden from
+     * the storefront entirely when the admin runs in no-wallet mode).
+     */
     public static function enabled(): array
     {
         return array_values(array_filter(self::cases(), fn (self $g) => match ($g) {
             self::Paystack => config('payment.paystack.secret_key') !== '',
             self::Flutterwave => config('payment.flutterwave.secret_key') !== '',
-            default => true,   // bank transfer & wallet are always available
+            self::Wallet => feature('wallet'),
+            default => true,   // bank transfer is always available
         }));
     }
 }

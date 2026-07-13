@@ -79,7 +79,7 @@
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body">
-                        <p class="text-muted small mb-1">Paid to wallet</p>
+                        <p class="text-muted small mb-1">Total paid</p>
                         <h4 class="fw-bold mb-0 text-success">{{ money($account->total_paid) }}</h4>
                     </div>
                 </div>

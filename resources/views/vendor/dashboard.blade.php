@@ -61,9 +61,9 @@
         <span class="badge bg-{{ $tier->badge() }} fs-6"><i class="bi {{ $tier->icon() }} me-1"></i>{{ $tier->label() }}</span>
         <div class="small"><span class="text-muted">Trust score</span> <span class="fw-semibold">{{ $vendor->trust_score }}/100</span></div>
         <div class="small"><span class="text-muted">Strikes</span> <span class="fw-semibold {{ $vendor->strikes > 0 ? 'text-danger' : '' }}">{{ $vendor->strikes }}</span></div>
-        <div class="small"><span class="text-muted">Daily payout limit</span> <span class="fw-semibold">{{ $tier->withdrawalCapDaily() === null ? 'Unlimited' : money($tier->withdrawalCapDaily()) }}</span></div>
+        @feature('wallet')<div class="small"><span class="text-muted">Daily payout limit</span> <span class="fw-semibold">{{ $tier->withdrawalCapDaily() === null ? 'Unlimited' : money($tier->withdrawalCapDaily()) }}</span></div>@endfeature
         <div class="small"><span class="text-muted">Active listings</span> <span class="fw-semibold">{{ $vendor->activeListingCount() }}@if($tier->maxActiveListings() !== null) / {{ $tier->maxActiveListings() }}@endif</span></div>
-        <div class="small"><span class="text-muted">Escrow hold</span> <span class="fw-semibold">{{ $tier->escrowReleaseDays() }} business days</span></div>
+        @feature('escrow')<div class="small"><span class="text-muted">Escrow hold</span> <span class="fw-semibold">{{ $tier->escrowReleaseDays() }} business days</span></div>@endfeature
         <a href="{{ route('buyer-protection') }}" class="btn btn-sm btn-outline-secondary ms-auto">Buyer protection</a>
     </div>
 </div>
@@ -120,6 +120,7 @@
 
 {{-- Secondary stats strip --}}
 <div class="row g-3 mb-4">
+    @feature('escrow')
     <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100 p-3 d-flex flex-row align-items-center gap-3"
              style="background:linear-gradient(120deg, rgba(245,158,11,.08), transparent);">
@@ -133,6 +134,7 @@
             <a href="{{ route('vendor.wallet.index') }}" class="btn btn-sm btn-outline-warning">View</a>
         </div>
     </div>
+    @endfeature
     <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100 p-3">
             <div class="row text-center g-0">
@@ -269,10 +271,12 @@
                 <a href="{{ route('vendor.contracts.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-file-earmark-check text-primary"></i>Create Contract of Sale
                 </a>
+                @feature('wallet')
                 <a href="{{ route('vendor.wallet.withdraw') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between gap-2">
                     <span><i class="bi bi-arrow-up-circle text-success me-2"></i>Request Withdrawal</span>
                     <small class="text-muted">{{ rtrim(rtrim(number_format(config('payment.withdrawal_fee_percent'), 1), '0'), '.') }}% fee</small>
                 </a>
+                @endfeature
                 @if($vendor->sellsPhysical())
                 <a href="{{ route('vendor.storefront') }}#shipping" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-truck text-primary"></i>Shipping &amp; Delivery Zones

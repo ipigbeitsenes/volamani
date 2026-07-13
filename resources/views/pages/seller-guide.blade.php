@@ -21,10 +21,10 @@
             @foreach([
                 ['Create your free account','Sign up in under a minute. No upfront fees — you only pay a commission when you make a sale.'],
                 ['Set up your branded storefront','Add your business name, logo, banner and WhatsApp number. Your store gets its own shareable link.'],
-                ['Get verified (KYC)','Complete identity and business verification to earn a verified badge and unlock withdrawals.'],
+                ['Get verified (KYC)','Complete identity and business verification to earn a verified badge and build buyer trust.'],
                 ['List products, services or consultations','Add digital downloads, freelance service packages, bookable consultations or physical goods — with prices, images and details.'],
-                ['Receive escrow-protected orders','Buyers pay through the platform. Funds are held in escrow until delivery is confirmed, building trust on both sides.'],
-                ['Get paid','Completed sales credit your wallet. Withdraw to your bank account whenever you like.'],
+                ['Receive orders','Buyers order and pay by card, bank transfer or on delivery — building trust on both sides.'],
+                ['Get paid','You get paid for every completed sale.'],
             ] as $i => $step)
             <div class="d-flex gap-3 gap-md-4">
                 <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white"

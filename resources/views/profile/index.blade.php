@@ -54,9 +54,11 @@
                     <a href="{{ route('profile.index') }}" class="list-group-item list-group-item-action active">
                         <i class="bi bi-person me-2"></i>Profile Info
                     </a>
+                    @feature('wallet')
                     <a href="{{ route('wallet.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-wallet2 me-2"></i>Wallet
                     </a>
+                    @endfeature
                     <a href="{{ route('orders.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-bag me-2"></i>Orders
                     </a>

@@ -166,7 +166,8 @@
                             <i class="bi bi-lock-fill me-1"></i>Place Order
                         </button>
                         <div class="form-text text-center mt-2">
-                            Prepaid orders are held in escrow and released to the seller only after you confirm delivery. With Pay on Delivery you pay nothing now.
+                            @feature('escrow')Prepaid orders are held in escrow and released to the seller only after you confirm delivery. @endfeature
+                            @if($podAvailable)With Pay on Delivery you pay nothing now.@endif
                         </div>
                     </div>
                 </div>

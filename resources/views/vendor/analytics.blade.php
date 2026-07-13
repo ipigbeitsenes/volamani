@@ -13,7 +13,7 @@
         @php
             $cards = [
                 ['Gross sales', money($stats['gross_sales']), 'bi-cash-stack', 'success'],
-                ['Net earnings', money($stats['net_earnings']), 'bi-wallet2', 'primary'],
+                ['Net earnings', money($stats['net_earnings']), 'bi-cash-coin', 'primary'],
                 ['Paid orders', $stats['paid_orders'] . ' / ' . $stats['total_orders'], 'bi-bag-check', 'info'],
                 ['Avg rating', $stats['avg_rating'] . ' (' . $stats['reviews'] . ')', 'bi-star', 'warning'],
             ];

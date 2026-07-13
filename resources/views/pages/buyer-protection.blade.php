@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Buyer Protection')
-@section('meta_description', 'How Volamani protects every purchase — escrow, returns, disputes and chargebacks.')
+@section('meta_description', 'How Volamani protects every purchase — verified sellers, returns, disputes and chargebacks.')
 
 @section('content')
 
@@ -26,16 +26,28 @@
         <div class="row g-3">
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-3">
-                    <i class="bi bi-lock fs-3 text-primary mb-2"></i>
-                    <div class="fw-bold">Escrow held</div>
-                    <div class="small text-muted">Until you receive your order</div>
+                    @feature('escrow')
+                        <i class="bi bi-lock fs-3 text-primary mb-2"></i>
+                        <div class="fw-bold">Escrow held</div>
+                        <div class="small text-muted">Until you receive your order</div>
+                    @else
+                        <i class="bi bi-patch-check fs-3 text-primary mb-2"></i>
+                        <div class="fw-bold">Verified sellers</div>
+                        <div class="small text-muted">KYC-checked before they sell</div>
+                    @endfeature
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-3">
-                    <i class="bi bi-hourglass-split fs-3 text-primary mb-2"></i>
-                    <div class="fw-bold">{{ $escrowDaysMin }}–{{ $escrowDaysMax }} business days</div>
-                    <div class="small text-muted">Protection window before payout</div>
+                    @feature('escrow')
+                        <i class="bi bi-hourglass-split fs-3 text-primary mb-2"></i>
+                        <div class="fw-bold">{{ $escrowDaysMin }}–{{ $escrowDaysMax }} business days</div>
+                        <div class="small text-muted">Protection window before payout</div>
+                    @else
+                        <i class="bi bi-truck fs-3 text-primary mb-2"></i>
+                        <div class="fw-bold">Pay on delivery</div>
+                        <div class="small text-muted">Available from verified sellers</div>
+                    @endfeature
                 </div>
             </div>
             <div class="col-6 col-md-3">
@@ -60,12 +72,13 @@
 <section class="section bg-white">
     <div class="container" style="max-width: 820px;">
         @php
-            $sections = [
-                ['bi-lock',              'Your money is held in escrow', $escrowSummary],
-                ['bi-arrow-return-left', 'Returns & refunds',            $returnSummary],
-                ['bi-life-preserver',    'Disputes & support',           $disputeProcess],
-                ['bi-credit-card-2-front', 'Card chargebacks',           $chargebackNote],
-            ];
+            $sections = [];
+            if (feature('escrow')) {
+                $sections[] = ['bi-lock', 'Your money is held in escrow', $escrowSummary];
+            }
+            $sections[] = ['bi-arrow-return-left', 'Returns & refunds', $returnSummary];
+            $sections[] = ['bi-life-preserver', 'Disputes & support', $disputeProcess];
+            $sections[] = ['bi-credit-card-2-front', 'Card chargebacks', $chargebackNote];
         @endphp
 
         @foreach($sections as [$icon, $heading, $body])

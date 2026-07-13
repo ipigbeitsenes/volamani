@@ -10,12 +10,12 @@
     $points = $isSeller
         ? [
             'List honestly — describe items accurately and price transparently.',
-            'Fulfil fast — ship or deliver promptly; funds release from escrow once the buyer receives the item.',
+            'Fulfil fast — ship or deliver promptly so buyers receive their items on time.',
             'Deliver as described — lost disputes and chargebacks add strikes; enough strikes suspend your store.',
-            'Keep deals on-platform — off-platform sales aren\'t protected by escrow.',
+            'Keep deals on-platform — off-platform sales aren\'t covered by buyer protection.',
         ]
         : [
-            'Only pay through Volamani — escrow protects payments made on-platform.',
+            'Only pay through Volamani — on-platform payments are covered by buyer protection.',
             'Raise disputes for genuine issues only — you have 24 hours after a digital purchase to open a ticket.',
             'Abuse has consequences — rejected disputes and reversed chargebacks add strikes and can restrict your account.',
             'Confirm receipt honestly so sellers are paid fairly.',

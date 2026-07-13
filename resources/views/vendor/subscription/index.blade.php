@@ -45,7 +45,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-bold mb-0">{{ $current ? 'Switch plan' : 'Choose a plan' }}</h6>
-        <span class="small text-muted">Wallet balance: <strong>{{ money($wallet->availableBalance()) }}</strong></span>
+        @feature('wallet')<span class="small text-muted">Wallet balance: <strong>{{ money($wallet->availableBalance()) }}</strong></span>@endfeature
     </div>
 
     {{-- Plans --}}
@@ -79,7 +79,7 @@
                                 @csrf
                                 @unless($plan->isFree() || $plan->hasTrial())
                                     <select name="method" class="form-select form-select-sm mb-2">
-                                        <option value="wallet">Pay from wallet</option>
+                                        @feature('wallet')<option value="wallet">Pay from wallet</option>@endfeature
                                         <option value="paystack">Pay with Paystack</option>
                                     </select>
                                 @endunless

@@ -2,7 +2,7 @@
 
 {{-- No @section('title') on purpose: the home page uses the branded default
      "Volamani — Your Digital Business Ecosystem" from layouts.partials.seo. --}}
-@section('meta_description', "Volamani helps individuals, startups, companies and agencies grow their online presence — a branded storefront to sell digital products, services and physical goods, with escrow-protected payments that bring buyers and sellers together.")
+@section('meta_description', "Volamani helps individuals, startups, companies and agencies grow their online presence — a branded storefront to sell digital products, services and physical goods, with flexible, secure payments and verified sellers that bring buyers and sellers together.")
 
 @push('styles')
 <style>
@@ -157,7 +157,7 @@
                 </h1>
                 <p class="fs-5 mb-4" style="color:rgba(255,255,255,.74);max-width:540px;">
                     Volamani gives individuals, startups, companies and agencies a branded storefront to sell
-                    digital products, services and physical goods — with escrow-protected payments on every deal.
+                    digital products, services and physical goods — with flexible, secure payments and verified sellers on every deal.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
                     <a href="{{ route('register') }}" class="btn btn-warning btn-lg fw-bold px-4">
@@ -171,7 +171,7 @@
                     @foreach([
                         [$stats['vendors'], '+', 'Verified Vendors'],
                         [$stats['buyers'], '+', 'Happy Buyers'],
-                        [100, '%', 'Escrow Protected'],
+                        [100, '%', 'Buyer Protection'],
                     ] as $s)
                     <div class="text-white">
                         <div class="fw-bold fs-3 vl-counter" data-count="{{ $s[0] }}" data-suffix="{{ $s[1] }}">0{{ $s[1] }}</div>
@@ -192,7 +192,7 @@
                             ['bi-box-seam','Digital Products','Sell eBooks, templates & code'],
                             ['bi-briefcase','Freelance Services','Hire & deliver with revisions'],
                             ['bi-calendar2-check','Consultations','Book expert sessions'],
-                            ['bi-shield-check','Escrow Wallet','Funds released on delivery'],
+                            ['bi-shield-check','Buyer Protection','Pay on delivery & verified sellers'],
                         ] as $f)
                         <div class="col-6">
                             <div class="vl-mini-tile p-3 rounded-3 h-100" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);">
@@ -205,10 +205,10 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-between mt-3 p-3 rounded-3" style="background:rgba(255,255,255,.95)">
                         <div>
-                            <div class="text-muted" style="font-size:.7rem">Available balance</div>
+                            <div class="text-muted" style="font-size:.7rem">Total sales</div>
                             <div class="fw-bold fs-5 text-dark">{{ currency_symbol() }}248,500</div>
                         </div>
-                        <span class="btn btn-primary btn-sm">Withdraw <i class="bi bi-arrow-right ms-1"></i></span>
+                        <span class="btn btn-primary btn-sm">View orders <i class="bi bi-arrow-right ms-1"></i></span>
                     </div>
                 </div>
             </div>
@@ -223,9 +223,9 @@
                     ['bi-credit-card-2-front','Paystack & Bank Transfer'],
                     ['bi-shield-lock','BVN / NIN Verification'],
                     ['bi-whatsapp','WhatsApp Commerce'],
-                    ['bi-cash-stack','Same-day Withdrawals'],
+                    ['bi-truck','Pay on Delivery'],
                     ['bi-patch-check','KYC-Verified Vendors'],
-                    ['bi-lock','Escrow on Every Deal'],
+                    ['bi-life-preserver','Disputes & Support'],
                     ['bi-truck','Physical & Digital Goods'],
                 ]; @endphp
                 @foreach(array_merge($trust, $trust) as $t)
@@ -311,7 +311,7 @@
         <div class="row g-4 reveal reveal-stagger">
             @foreach([
                 ['bi-person','Individuals','primary','Freelancers, creators and independent sellers — launch a storefront in minutes and start earning.'],
-                ['bi-rocket-takeoff','Startups','success','Validate, sell and collect payments fast, with escrow building buyer trust from day one.'],
+                ['bi-rocket-takeoff','Startups','success','Validate, sell and collect payments fast, with verified profiles building buyer trust from day one.'],
                 ['bi-building','Companies','info','Give your business a professional online presence and a second sales channel that runs itself.'],
                 ['bi-diagram-3','Agencies','warning','Showcase services, manage clients and take bookings — all under your own branded store.'],
             ] as $a)
@@ -341,8 +341,8 @@
             <span class="eyebrow"><i class="bi bi-signpost-2"></i> How it works</span>
             <h2 class="fw-bold mt-2">Buy and sell with confidence</h2>
             <p class="lead-muted mx-auto" style="max-width:660px;">
-                Volamani sits in the middle of every deal. Your payment is held safely in escrow
-                until the work is delivered — so buyers never lose money and sellers always get paid.
+                Volamani keeps every deal safe — buy from verified sellers, pay the way that suits you,
+                and lean on a support team that steps in whenever something isn't right.
             </p>
         </div>
 
@@ -359,8 +359,8 @@
                     </div>
                     @foreach([
                         ['Find what you need','Browse digital products, freelance services and consultations — or post a request and let sellers come to you.'],
-                        ['Pay into escrow','Check out with Paystack or bank transfer. Your money is held safely by Volamani — it does not go straight to the seller.'],
-                        ['Receive & confirm','Get your delivery and confirm it to release the funds. Not as described? Open a dispute and our team steps in.'],
+                        ['Pay your way','Check out with card, bank transfer or pay-on-delivery — whatever suits you.'],
+                        ['Receive & confirm','Get your delivery and confirm it. Not as described? Open a dispute and our team steps in.'],
                     ] as $i => $s)
                     <div class="d-flex gap-3 {{ $i < 2 ? 'mb-3 pb-3 border-bottom' : '' }}">
                         <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white"
@@ -386,8 +386,8 @@
                     </div>
                     @foreach([
                         ['Open your free store','Create a branded storefront and list products, services or bookable consultations in minutes.'],
-                        ['Make a sale','Buyers order and pay upfront. The money is secured in escrow, so you know it is really there before you start.'],
-                        ['Deliver & get paid','Deliver the work, the escrow releases to your wallet, and you withdraw straight to your bank account.'],
+                        ['Make a sale','Buyers order and pay by card, bank transfer or on delivery.'],
+                        ['Deliver & get paid','Deliver the work and get paid for every sale.'],
                     ] as $i => $s)
                     <div class="d-flex gap-3 {{ $i < 2 ? 'mb-3 pb-3 border-bottom' : '' }}">
                         <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white"
@@ -402,13 +402,13 @@
             </div>
         </div>
 
-        {{-- escrow / trust explainer strip --}}
+        {{-- trust explainer strip --}}
         <div class="row g-3 mt-4 reveal reveal-stagger">
             @foreach([
-                ['bi-shield-lock','Escrow on every deal','Funds are only released once delivery is confirmed.'],
+                ['bi-truck','Pay on delivery','Pay when your order arrives — available from verified sellers.'],
                 ['bi-patch-check','Verified vendors','KYC, BVN/NIN and CAC checks keep bad actors out.'],
                 ['bi-life-preserver','Disputes & support','A real team mediates fairly when something goes wrong.'],
-                ['bi-cash-coin','Fast withdrawals','Move your earnings to your bank account on your schedule.'],
+                ['bi-chat-dots','Direct messaging','Chat and negotiate with sellers before you buy.'],
             ] as $e)
             <div class="col-6 col-lg-3">
                 <div class="d-flex flex-column align-items-center text-center gap-2 p-3 h-100 rounded-3" style="background:var(--vl-gradient-soft);">
@@ -437,7 +437,7 @@
                 ['bi-people','Reverse Requests','Post what you need and qualified sellers send you proposals.','5,150,105', route('marketplace.requests.index')],
                 ['bi-calendar2-week','Consultations','Book paid one-on-one sessions with calendar and meeting links.','217,119,6', route('marketplace.consultants.index')],
                 ['bi-calculator','Pricing Assistant','Estimate fair project pricing in seconds before you buy or sell.','220,38,38', route('pricing-calculator.index')],
-                ['bi-patch-check','Trust, Escrow & KYC','Verified badges, real reviews, escrow on every deal and admin-mediated support.','2,132,199', route('register')],
+                ['bi-patch-check','Trust & Verification','Verified badges, real reviews and admin-mediated support on every deal.','2,132,199', route('register')],
             ] as $p)
             <div class="col-md-6 col-lg-4">
                 <a href="{{ $p[4] }}" class="card vl-tile-card hover-lift h-100 p-2 text-decoration-none text-dark">
@@ -465,7 +465,7 @@
                 <div class="d-flex flex-column gap-3">
                     @foreach([
                         ['bi-bank','Flexible Payments','Pay by card or bank transfer — whatever works for you.'],
-                        ['bi-shield-lock','Escrow Protection','Funds held safely until delivery is confirmed.'],
+                        ['bi-shield-lock','Buyer Protection','Verified sellers, disputes and a support team on your side.'],
                         ['bi-chat-dots','Direct Messaging','Vendors and buyers can chat and negotiate directly.'],
                         ['bi-award','Verified Vendors','KYC identity and business verification build real trust.'],
                         ['bi-currency-exchange','Flexible Pricing','Fixed, milestone and installment payment options.'],
@@ -492,7 +492,7 @@
                             'Create your free account',
                             'Set up your branded storefront',
                             'List products or services',
-                            'Get paid securely via escrow',
+                            'Get paid securely for every sale',
                         ] as $i => $step)
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white"
@@ -576,11 +576,11 @@
         </div>
         <div class="accordion reveal" id="homeFaq">
             @php $homeFaqs = [
-                ['What exactly is Volamani?', 'Volamani is an all-in-one marketplace where you can sell and buy digital products, freelance services, expert consultations and physical goods — with a branded storefront and escrow-protected payments built in.'],
-                ['How does escrow protect me?', "When a buyer pays, the money is held by Volamani instead of going straight to the seller. It's only released once delivery is confirmed — so buyers are covered if a seller doesn't deliver, and sellers know the funds are real before they start."],
+                ['What exactly is Volamani?', 'Volamani is an all-in-one marketplace where you can sell and buy digital products, freelance services, expert consultations and physical goods — with a branded storefront and secure, flexible payments built in.'],
+                ['How am I protected as a buyer?', "Buy from verified sellers, pay by card, bank transfer or on delivery, and message the seller directly before you order. If an order isn't as described, open a dispute and our support team reviews the evidence and decides a fair outcome."],
                 ['What does it cost to start?', 'Creating an account and opening a storefront is completely free. We only take a small commission when you make a sale, and optional paid plans lower that commission and add features.'],
-                ['How do I get paid, and how fast?', 'Completed sales land in your Volamani wallet. Once your account is verified you can withdraw to your bank account whenever you like.'],
-                ['What if something goes wrong with an order?', 'Try to sort it out with the other party first. If you can\'t, open a dispute from the order — this freezes the escrowed funds and our support team reviews the evidence and decides a fair outcome.'],
+                ['How do I get paid?', 'You receive payment for your sales directly — by card, bank transfer or cash on delivery, depending on how the buyer checks out.'],
+                ['What if something goes wrong with an order?', 'Try to sort it out with the other party first. If you can\'t, open a dispute from the order and our support team reviews the evidence and decides a fair outcome.'],
             ]; @endphp
             @foreach($homeFaqs as $i => $faq)
             <div class="accordion-item border-0 mb-2 shadow-sm rounded-3 overflow-hidden">

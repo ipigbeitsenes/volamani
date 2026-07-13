@@ -15,7 +15,7 @@
     $seoSite     = settings('site_name', config('app.name', 'Volamani'));
     $seoTagline  = settings('site_tagline', 'Your Digital Business Ecosystem');
     $seoDefaultDesc = 'Buy and sell digital products, freelance services and physical goods on '
-        . $seoSite . ' — a trusted multi-vendor marketplace with secure escrow, buyer protection and instant payouts.';
+        . $seoSite . ' — a trusted multi-vendor marketplace with verified sellers, buyer protection and secure payments.';
 
     $seoPageTitle = trim($__env->yieldContent('title'));
     $seoFullTitle = $seoPageTitle !== ''
@@ -25,7 +25,7 @@
     $seoDesc      = trim($__env->yieldContent('meta_description', $seoDefaultDesc));
     $seoKeywords  = trim($__env->yieldContent('meta_keywords',
         'Volamani, online marketplace, digital products, freelance services, '
-        . 'buy sell online, escrow payment, multi-vendor, sell digital downloads, hire freelancers'));
+        . 'buy sell online, secure payments, multi-vendor, sell digital downloads, hire freelancers'));
     $seoCanonical = trim($__env->yieldContent('canonical')) ?: url()->current();
     $seoRobots    = trim($__env->yieldContent('robots', 'index, follow')) . ', max-image-preview:large';
     $seoType      = trim($__env->yieldContent('og_type', 'website'));

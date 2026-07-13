@@ -19,10 +19,10 @@
         <div class="card-body p-4">
             <h6 class="fw-bold mb-3">The essentials</h6>
             <ul class="list-unstyled mb-0 d-grid gap-2 small">
-                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Payments are protected by escrow.</strong> Funds are held until the buyer receives what they paid for, then released to the seller.</span></li>
+                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Every purchase is protected.</strong> Buy from verified sellers, and if an order isn't as described you can open a dispute and our team steps in.</span></li>
                 <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Deal fairly &amp; honestly.</strong> Sellers must deliver as described; buyers must only raise disputes for genuine issues. Abuse on either side leads to strikes and suspension.</span></li>
-                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Keep transactions on-platform.</strong> Off-platform deals aren't covered by buyer protection or escrow.</span></li>
-                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Identity &amp; compliance.</strong> Verification (KYC) may be required to withdraw funds and to build trust.</span></li>
+                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Keep transactions on-platform.</strong> Off-platform deals aren't covered by buyer protection.</span></li>
+                <li class="d-flex gap-2"><i class="bi bi-check-circle-fill text-success mt-1"></i><span><strong>Identity &amp; compliance.</strong> Verification (KYC) may be required to sell and to build trust.</span></li>
             </ul>
         </div>
     </div>

@@ -22,7 +22,7 @@
         <div class="alert alert-secondary">
             <div class="fw-semibold"><i class="bi bi-x-circle me-1"></i>This order was cancelled by the seller.</div>
             @if($order->cancellation_reason)<div class="small mt-1">Reason: {{ $order->cancellation_reason }}</div>@endif
-            <div class="small text-muted mt-1">Any payment has been refunded to your <a href="{{ route('wallet.index') }}">Volamani wallet</a>.</div>
+            <div class="small text-muted mt-1">@feature('wallet')Any payment has been refunded to your <a href="{{ route('wallet.index') }}">Volamani wallet</a>.@else Any payment you made has been refunded.@endfeature</div>
         </div>
     @endif
 
@@ -106,16 +106,22 @@
             <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-2">
                 <div>
                     <div class="fw-semibold">Received everything?</div>
-                    <div class="small text-muted">Confirming releases your payment from escrow to the seller.</div>
+                    <div class="small text-muted">
+                        @if(! $order->isPod() && feature('escrow'))
+                            Confirming releases your payment from escrow to the seller.
+                        @else
+                            Confirming marks this order as complete.
+                        @endif
+                    </div>
                 </div>
                 <div class="d-flex gap-2">
                     @if($order->canBeDisputed())
-                        <a href="{{ route('escrows.index') }}" class="btn btn-outline-danger btn-sm">Raise an issue</a>
+                        <a href="{{ route('disputes.index') }}" class="btn btn-outline-danger btn-sm">Raise an issue</a>
                     @endif
                     <form method="POST" action="{{ route('orders.complete', $order) }}"
-                          onsubmit="return confirm('Confirm receipt and release payment to the seller?');">
+                          onsubmit="return confirm('Confirm you received this order?');">
                         @csrf
-                        <button class="btn btn-success btn-sm"><i class="bi bi-check-lg me-1"></i>Confirm &amp; release</button>
+                        <button class="btn btn-success btn-sm"><i class="bi bi-check-lg me-1"></i>Confirm receipt</button>
                     </form>
                 </div>
             </div>

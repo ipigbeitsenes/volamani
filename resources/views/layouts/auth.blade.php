@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="text-center mt-3 text-white-50 small">
-                    <i class="bi bi-shield-lock me-1"></i>Secured &amp; escrow protected &middot; &copy; {{ date('Y') }} Volamani
+                    <i class="bi bi-shield-lock me-1"></i>Secured &amp; buyer protected &middot; &copy; {{ date('Y') }} Volamani
                 </div>
             </div>
         </div>

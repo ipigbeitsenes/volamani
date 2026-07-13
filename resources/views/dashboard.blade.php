@@ -45,7 +45,7 @@
             <i class="bi bi-shield-exclamation fs-4"></i>
             <div>
                 <strong>Complete Identity Verification (KYC)</strong>
-                to unlock withdrawals, escrow protection, and increased trust.
+                to unlock seller verification, higher limits, and increased trust.
                 <a href="{{ route('kyc.index') }}" class="btn btn-sm btn-outline-primary ms-2">Verify Now</a>
             </div>
         </div>

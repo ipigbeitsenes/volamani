@@ -75,7 +75,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 small text-white-50">
             <span>&copy; {{ date('Y') }} Volamani. All rights reserved.</span>
             <span class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-shield-check me-1"></i>Escrow protected</span>
+                <span><i class="bi bi-shield-check me-1"></i>Buyer protected</span>
                 <span>Made with <i class="bi bi-heart-fill text-danger"></i> for entrepreneurs</span>
             </span>
         </div>

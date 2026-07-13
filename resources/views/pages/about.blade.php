@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'About Volamani')
-@section('meta_description', 'Volamani is a complete digital business ecosystem — sell digital products, services and physical goods with escrow-protected payments.')
+@section('meta_description', 'Volamani is a complete digital business ecosystem — sell digital products, services and physical goods with flexible, secure payments and verified sellers.')
 
 @section('content')
 
@@ -12,7 +12,7 @@
         <h1 class="display-5 fw-bold text-white mt-2 mb-3">Empowering entrepreneurs to grow online</h1>
         <p class="fs-5 mb-0" style="color:rgba(255,255,255,.74);">
             Volamani brings buyers and sellers together on one trusted platform — a branded storefront to sell
-            digital products, services and physical goods, with escrow protection on every deal.
+            digital products, services and physical goods, with flexible, secure payments and verified sellers on every deal.
         </p>
     </div>
 </section>
@@ -29,15 +29,15 @@
                     payments fall through, trust is hard to establish, and generic tools rarely fit how they work.
                 </p>
                 <p class="lead-muted">
-                    Volamani fixes that with flexible payments, KYC-verified vendors, chat-based commerce and escrow
-                    that holds funds until delivery is confirmed — so both sides can transact with confidence.
+                    Volamani fixes that with flexible payments, KYC-verified vendors, chat-based commerce and a
+                    dispute-backed support team — so both sides can transact with confidence.
                 </p>
                 <a href="{{ route('register') }}" class="btn btn-primary mt-2 px-4">Start growing free <i class="bi bi-arrow-right ms-1"></i></a>
             </div>
             <div class="col-lg-6">
                 <div class="row g-3">
                     @foreach([
-                        ['bi-shield-check','Escrow Protected','Funds released only on confirmed delivery.','success'],
+                        ['bi-shield-check','Buyer Protected','Verified sellers, disputes and support on every deal.','success'],
                         ['bi-patch-check','Verified Vendors','KYC identity and business verification.','primary'],
                         ['bi-bank','Flexible Payments','Card and direct bank transfer.','warning'],
                         ['bi-globe','Global-Ready','Built for the way you do business.','info'],

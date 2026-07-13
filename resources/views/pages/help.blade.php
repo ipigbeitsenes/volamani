@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Help Center')
-@section('meta_description', 'Find answers about buying, selling, payments, escrow and disputes on Volamani.')
+@section('meta_description', 'Find answers about buying, selling, payments and disputes on Volamani.')
 
 @section('content')
 
@@ -21,7 +21,7 @@
             @foreach([
                 ['bi-bag-check','Buying','How to buy products, services and consultations safely.', route('marketplace.products.index'), 'Browse the marketplace'],
                 ['bi-shop','Selling','Set up your storefront and list what you sell.', route('vendor.onboarding'), 'Become a vendor'],
-                ['bi-shield-lock','Payments & Escrow','How payments, escrow and withdrawals work.', route('pages.legal', 'refunds'), 'Refund policy'],
+                ['bi-shield-lock','Payments','How payments and refunds work.', route('pages.legal', 'refunds'), 'Refund policy'],
                 ['bi-life-preserver','Disputes','What to do when an order goes wrong.', route('pages.legal', 'disputes'), 'Dispute policy'],
                 ['bi-patch-check','Verification','KYC, BVN/NIN and getting verified.', route('register'), 'Get verified'],
                 ['bi-person-badge','Account','Manage your profile, security and notifications.', route('login'), 'Sign in'],
@@ -50,12 +50,12 @@
         </div>
         <div class="accordion" id="faqAccordion">
             @php $faqs = [
-                ['How does escrow protect me?', 'When you pay, your money is held in escrow — not sent straight to the seller. It is only released once you confirm delivery or the protection window passes, so you are covered if a seller does not deliver.'],
-                ['How do I get paid as a seller?', 'Completed sales credit your platform wallet. Once you complete KYC verification you can withdraw your wallet balance to your bank account.'],
-                ['What payment methods are supported?', 'You can pay with a card or bank transfer through Paystack, or by direct manual bank transfer. All payments stay within the platform so escrow protection applies.'],
-                ['What happens if there is a problem with my order?', 'Try to resolve it with the other party first. If you cannot, open a dispute from the order or escrow — this freezes the funds and our team mediates a fair outcome.'],
+                ['How am I protected as a buyer?', 'Buy from verified sellers, pay by card, bank transfer or on delivery, and message the seller directly before you order. If an order is not as described, open a dispute and our team decides a fair outcome.'],
+                ['How do I get paid as a seller?', 'You receive payment for your completed sales directly — by card, bank transfer or cash on delivery, depending on how the buyer pays.'],
+                ['What payment methods are supported?', 'You can pay by card or bank transfer through Paystack, by direct manual bank transfer, or with pay-on-delivery from verified sellers.'],
+                ['What happens if there is a problem with my order?', 'Try to resolve it with the other party first. If you cannot, open a dispute from the order and our team mediates a fair outcome.'],
                 ['Is there a fee to sell?', 'Creating an account and a storefront is free. We charge a commission on completed transactions, and optional subscription plans lower your commission and add features.'],
-                ['How do I become a verified vendor?', 'Complete the KYC process from your dashboard with your identity details and documents. Once approved you get a verified badge and can withdraw funds.'],
+                ['How do I become a verified vendor?', 'Complete the KYC process from your dashboard with your identity details and documents. Once approved you get a verified badge and can start selling.'],
             ]; @endphp
             @foreach($faqs as $i => $faq)
             <div class="accordion-item border-0 mb-2 shadow-sm rounded-3 overflow-hidden">

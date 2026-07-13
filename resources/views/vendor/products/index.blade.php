@@ -92,7 +92,7 @@
                                         @if($product->isActive())
                                             <li>
                                                 <form action="{{ route('vendor.products.promote', $product->id) }}" method="POST"
-                                                      onsubmit="return confirm('Promote this product for {{ config('payment.promotion.days') }} days for {{ money(config('payment.promotion.fee')) }}? The fee is charged from your wallet.')">
+                                                      onsubmit="return confirm('Promote this product for {{ config('payment.promotion.days') }} days for {{ money(config('payment.promotion.fee')) }}? The promotion fee will be charged to your account.')">
                                                     @csrf
                                                     <button type="submit" class="dropdown-item">
                                                         <i class="bi bi-star me-2 text-warning"></i>{{ $product->isPromoted() ? 'Extend Promotion' : 'Promote' }} ({{ money(config('payment.promotion.fee')) }})

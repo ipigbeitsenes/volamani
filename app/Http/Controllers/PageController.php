@@ -48,7 +48,7 @@ class PageController extends Controller
 
         return view('pages.buyer-protection', [
             'intro' => settings('protection_intro', ''),
-            'escrowSummary' => settings('protection_escrow_summary', ''),
+            'escrowSummary' => feature('escrow') ? settings('protection_escrow_summary', '') : '',
             'returnSummary' => settings('protection_return_summary', ''),
             'disputeProcess' => settings('protection_dispute_process', ''),
             'chargebackNote' => settings('protection_chargeback_note', ''),

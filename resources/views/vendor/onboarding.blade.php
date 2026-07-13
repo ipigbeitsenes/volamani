@@ -19,7 +19,7 @@
 
             {{-- Benefits --}}
             <div class="row g-3 mb-4">
-                @foreach([['bi-check-circle-fill text-success','Free to join — no setup fees'],['bi-check-circle-fill text-success','Reach thousands of buyers'],['bi-check-circle-fill text-success','Escrow-protected payments'],['bi-check-circle-fill text-success','Your own branded storefront']] as $b)
+                @foreach([['bi-check-circle-fill text-success','Free to join — no setup fees'],['bi-check-circle-fill text-success','Reach thousands of buyers'],['bi-check-circle-fill text-success','Secure, flexible payments'],['bi-check-circle-fill text-success','Your own branded storefront']] as $b)
                 <div class="col-6">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi {{ $b[0] }}"></i>

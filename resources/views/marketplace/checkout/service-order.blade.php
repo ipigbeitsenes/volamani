@@ -60,10 +60,12 @@
                     </div>
                 </div>
 
+                @feature('escrow')
                 <div class="alert alert-info small">
                     <i class="bi bi-shield-lock me-1"></i>
                     Your payment is held in <strong>escrow</strong> and only released to the vendor after you approve delivery.
                 </div>
+                @endfeature
 
                 <button type="submit" class="btn btn-primary btn-lg w-100">
                     Pay {{ money($serviceOrder->total_amount) }} <i class="bi bi-lock-fill ms-2"></i>
