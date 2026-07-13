@@ -118,6 +118,18 @@
                                 </label>
                             </div>
                         @endforeach
+
+                        @if($podAvailable)
+                            <div class="form-check border border-success rounded p-2 mb-2 bg-success-subtle">
+                                <input class="form-check-input" type="radio" name="gateway" id="gwpod"
+                                       value="pod" {{ old('gateway') === 'pod' ? 'checked' : '' }} required>
+                                <label class="form-check-label d-flex justify-content-between w-100" for="gwpod">
+                                    <span><i class="bi bi-cash-coin me-1 text-success"></i>Pay on Delivery</span>
+                                    <span class="badge bg-success"><i class="bi bi-patch-check-fill me-1"></i>Verified seller</span>
+                                </label>
+                                <div class="form-text ms-4">Pay the seller in cash when your item is delivered.</div>
+                            </div>
+                        @endif
                         @error('gateway')<div class="text-danger small">{{ $message }}</div>@enderror
                     </div>
                 </div>
@@ -154,7 +166,7 @@
                             <i class="bi bi-lock-fill me-1"></i>Place Order
                         </button>
                         <div class="form-text text-center mt-2">
-                            Funds are held in escrow and released to the seller only after you confirm delivery.
+                            Prepaid orders are held in escrow and released to the seller only after you confirm delivery. With Pay on Delivery you pay nothing now.
                         </div>
                     </div>
                 </div>

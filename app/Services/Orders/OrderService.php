@@ -6,12 +6,15 @@ use App\Actions\Products\RestockOrderAction;
 use App\Enums\EscrowStatus;
 use App\Enums\NotificationCategory;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\TransactionType;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Repositories\Orders\OrderRepository;
 use App\Services\Escrow\EscrowService;
 use App\Services\Notifications\NotificationService;
+use App\Services\Wallet\WalletService;
 use App\Support\BusinessDayCalculator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
@@ -24,6 +27,7 @@ class OrderService
         private EscrowService $escrow,
         private NotificationService $notifications,
         private RestockOrderAction $restock,
+        private WalletService $wallet,
     ) {}
 
     public function forBuyer(User $user, int $perPage = 15): LengthAwarePaginator
@@ -43,7 +47,25 @@ class OrderService
      */
     public function markComplete(Order $order, User $actor): bool
     {
-        if (! $order->isPaid() || $order->isCompleted()) {
+        if ($order->isCompleted()) {
+            return false;
+        }
+
+        // POD orders hold no escrow: the buyer paid the seller cash on delivery,
+        // so completion just settles the platform's commission from the seller.
+        if ($order->isPod()) {
+            DB::transaction(function () use ($order) {
+                $this->settlePodCommission($order);
+                $order->update([
+                    'status' => OrderStatus::Completed,
+                    'completed_at' => now(),
+                ]);
+            });
+
+            return true;
+        }
+
+        if (! $order->isPaid()) {
             return false;
         }
 
@@ -57,6 +79,61 @@ class OrderService
         });
 
         return true;
+    }
+
+    /**
+     * Settle the platform commission on a delivered Pay-on-Delivery order by
+     * debiting the seller's wallet. Idempotent: the order's payment_status flips
+     * to Success on first settlement and short-circuits any repeat. If the seller
+     * lacks the balance, the commission is recorded as owed and they're notified.
+     */
+    private function settlePodCommission(Order $order): void
+    {
+        if ($order->isPaid()) {
+            return; // already settled
+        }
+
+        $order->update([
+            'payment_status' => PaymentStatus::Success,
+            'paid_at' => $order->paid_at ?? now(),
+        ]);
+
+        $commission = (int) $order->platform_fee;
+        $vendor = $order->vendor;
+        $owner = $vendor instanceof Vendor ? $vendor->user : null;
+
+        if ($commission <= 0 || ! $owner instanceof User) {
+            return;
+        }
+
+        $wallet = $this->wallet->getOrCreate($owner);
+
+        if ($wallet->canWithdraw($commission)) {
+            $this->wallet->debit(
+                $wallet,
+                $commission,
+                TransactionType::Commission,
+                "Platform commission — cash-on-delivery order {$order->reference}",
+                $order,
+            );
+
+            return;
+        }
+
+        // Not enough balance — log the debt on the order and nudge the seller.
+        $note = '['.now()->format('d M Y H:i').'] Platform commission of '.money($commission).' due (insufficient wallet balance).';
+        $order->update([
+            'notes' => trim(($order->notes ? $order->notes."\n" : '').$note),
+        ]);
+
+        $this->notifications->send(
+            $owner,
+            NotificationCategory::Payments,
+            'Commission due',
+            'A platform commission of '.money($commission).' is due on your delivered pay-on-delivery order '.$order->reference.'. Please top up your wallet to clear it.',
+            route('vendor.wallet.index'),
+            'Top up wallet',
+        );
     }
 
     // ─── Vendor side ──────────────────────────────────────────────────────────────
@@ -103,7 +180,7 @@ class OrderService
      */
     public function markDelivered(Order $order): bool
     {
-        if (! $order->isPaid() || in_array($order->status, [OrderStatus::Completed, OrderStatus::Delivered, OrderStatus::Cancelled, OrderStatus::Refunded], true)) {
+        if ((! $order->isPaid() && ! $order->isPod()) || in_array($order->status, [OrderStatus::Completed, OrderStatus::Delivered, OrderStatus::Cancelled, OrderStatus::Refunded], true)) {
             return false;
         }
 
@@ -112,6 +189,13 @@ class OrderService
                 'status' => OrderStatus::Delivered,
                 'delivered_at' => now(),
             ]);
+
+            // POD: cash was collected on delivery — take the platform's cut now.
+            if ($order->isPod()) {
+                $this->settlePodCommission($order);
+
+                return;
+            }
 
             if ($order->requires_shipping) {
                 $escrow = $this->escrow->forPayable($order);
@@ -127,7 +211,9 @@ class OrderService
         $this->notifyBuyer(
             $order,
             'Order delivered',
-            'Your order '.$order->reference.' has been marked as delivered. Confirm receipt to release payment.',
+            $order->isPod()
+                ? 'Your order '.$order->reference.' has been marked as delivered. Thanks for shopping with us!'
+                : 'Your order '.$order->reference.' has been marked as delivered. Confirm receipt to release payment.',
         );
 
         return true;

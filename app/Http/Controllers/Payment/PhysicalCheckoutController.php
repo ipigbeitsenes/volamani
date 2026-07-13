@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 use App\Enums\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Vendor;
 use App\Services\Checkout\PhysicalCheckoutService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,7 +35,8 @@ class PhysicalCheckoutController extends Controller
 
         return view('marketplace.checkout.physical', [
             'product' => $product,
-            'gateways' => PaymentGateway::cases(),
+            'gateways' => PaymentGateway::enabled(),
+            'podAvailable' => $product->vendor instanceof Vendor && $product->vendor->isVerified(),
         ]);
     }
 
@@ -52,7 +54,7 @@ class PhysicalCheckoutController extends Controller
             'ship_to_address' => ['required', 'string', 'max:255'],
             'ship_to_city' => ['nullable', 'string', 'max:80'],
             'ship_to_state' => ['nullable', 'string', 'max:80'],
-            'gateway' => ['required', 'in:wallet,paystack,bank_transfer'],
+            'gateway' => ['required', 'in:wallet,paystack,flutterwave,bank_transfer,pod'],
         ]);
 
         $product->load(['vendor', 'variants', 'physicalDetail']);
@@ -78,8 +80,11 @@ class PhysicalCheckoutController extends Controller
         return match ($result['status']) {
             'paid' => redirect()->route('orders.show', $result['order'])
                 ->with('success', 'Order placed! The seller will ship it to you shortly.'),
+            'pod' => redirect()->route('orders.show', $result['order'])
+                ->with('success', 'Order placed! Pay the seller on delivery. You will only be charged when the item arrives.'),
             'redirect' => redirect()->away($result['redirect']),
             'own_item' => back()->with('error', 'You cannot buy your own product.'),
+            'pod_unavailable' => back()->withInput()->with('error', 'Pay on delivery is not available for this seller. Please choose another payment method.'),
             'no_delivery' => back()->withInput()->with('error', 'Sorry, this seller does not deliver to '.($result['location'] ?? 'your location').'. Try a different delivery address.'),
             'insufficient' => back()->withInput()->with('error', 'Insufficient wallet balance. Top up or choose another payment method.'),
             default => back()->withInput()->with('error', 'This product is currently unavailable or out of stock.'),

@@ -128,11 +128,17 @@ class Order extends Model
         return (bool) $this->requires_shipping;
     }
 
-    /** Vendor can mark a physical order shipped once it's paid and not yet shipped/delivered. */
+    /** A Pay-on-Delivery order: unpaid up front, no escrow; seller collects on delivery. */
+    public function isPod(): bool
+    {
+        return $this->payment_method === 'pod';
+    }
+
+    /** Vendor can mark a physical order shipped once it's paid (or POD) and not yet shipped. */
     public function canShip(): bool
     {
         return $this->isPhysical()
-            && $this->isPaid()
+            && ($this->isPaid() || $this->isPod())
             && in_array($this->status, [OrderStatus::Paid, OrderStatus::Processing], true);
     }
 
@@ -140,14 +146,14 @@ class Order extends Model
     public function canMarkDelivered(): bool
     {
         return $this->isPhysical()
-            && $this->isPaid()
+            && ($this->isPaid() || $this->isPod())
             && in_array($this->status, [OrderStatus::Paid, OrderStatus::Processing, OrderStatus::Shipped], true);
     }
 
-    /** Buyer can confirm receipt (release escrow) once paid and not already completed. */
+    /** Buyer can confirm receipt (release escrow, or settle POD) once paid/POD and not completed. */
     public function canConfirmReceipt(): bool
     {
-        return $this->isPaid()
+        return ($this->isPaid() || $this->isPod())
             && ! $this->isCompleted()
             && ! in_array($this->status, [OrderStatus::Cancelled, OrderStatus::Refunded, OrderStatus::Disputed], true);
     }

@@ -3,6 +3,8 @@
 namespace App\Services\Checkout;
 
 use App\Actions\Payment\FulfillPaymentAction;
+use App\Actions\Products\DecrementStockAction;
+use App\Enums\NotificationCategory;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Enums\PaymentStatus;
@@ -12,6 +14,8 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
+use App\Models\Vendor;
+use App\Services\Notifications\NotificationService;
 use App\Services\Payment\PaymentService;
 use App\Services\Wallet\WalletService;
 use Illuminate\Support\Facades\DB;
@@ -24,19 +28,25 @@ use Illuminate\Support\Facades\DB;
  */
 class PhysicalCheckoutService
 {
+    /** Sentinel "gateway" value for pay-the-seller-cash-on-delivery orders. */
+    public const POD = 'pod';
+
     public function __construct(
         private WalletService $walletService,
         private FulfillPaymentAction $fulfillAction,
         private PaymentService $paymentService,
+        private DecrementStockAction $decrementStock,
+        private NotificationService $notifications,
     ) {}
 
     /**
      * @return array{status:string, order?:Order, redirect?:string, shortfall?:int}
-     *                                                                              status ∈ own_item | unavailable | insufficient | paid | redirect
+     *                                                                              status ∈ own_item | unavailable | insufficient | pod_unavailable | paid | pod | redirect
      */
     public function place(User $buyer, Product $product, ?ProductVariant $variant, int $qty, array $address, string $gateway): array
     {
         $qty = max(1, $qty);
+        $isPod = $gateway === self::POD;
 
         if (! $product->isPhysical() || ! $product->isActive()) {
             return ['status' => 'unavailable'];
@@ -44,6 +54,11 @@ class PhysicalCheckoutService
 
         if ($product->vendor && $product->vendor->user_id === $buyer->id) {
             return ['status' => 'own_item'];
+        }
+
+        // Pay-on-Delivery is a trust concession — only verified sellers may offer it.
+        if ($isPod && ! ($product->vendor instanceof Vendor && $product->vendor->isVerified())) {
+            return ['status' => 'pod_unavailable'];
         }
 
         if ($product->vendor && ! $product->vendor->deliversTo($address['ship_to_state'] ?? null, $address['ship_to_city'] ?? null)) {
@@ -73,12 +88,14 @@ class PhysicalCheckoutService
             }
         }
 
-        $order = DB::transaction(function () use ($buyer, $product, $variant, $qty, $address, $unitPrice, $subtotal, $shipping, $total, $fee, $earnings) {
+        $order = DB::transaction(function () use ($buyer, $product, $variant, $qty, $address, $unitPrice, $subtotal, $shipping, $total, $fee, $earnings, $isPod) {
             $order = Order::create([
                 'buyer_id' => $buyer->id,
                 'vendor_id' => $product->vendor_id,
-                'status' => OrderStatus::Pending,
+                // POD orders skip payment entirely and go straight into fulfilment.
+                'status' => $isPod ? OrderStatus::Processing : OrderStatus::Pending,
                 'payment_status' => PaymentStatus::Pending,
+                'payment_method' => $isPod ? self::POD : null,
                 'requires_shipping' => true,
                 'total_amount' => $total,
                 'platform_fee' => $fee,
@@ -102,12 +119,43 @@ class PhysicalCheckoutService
                 'subtotal' => $subtotal,
             ]);
 
+            // POD is unpaid, so nothing else decrements stock — reserve it now.
+            if ($isPod) {
+                $this->decrementStock->execute($order);
+            }
+
             return $order;
         });
+
+        if ($isPod) {
+            $this->notifyVendorOfPod($order);
+
+            return ['status' => 'pod', 'order' => $order->fresh()];
+        }
 
         return $gateway === PaymentGateway::Wallet->value
             ? $this->settleWithWallet($buyer, $order)
             : $this->settleWithGateway($buyer, $order, $gateway);
+    }
+
+    /** Alert the seller that a cash-on-delivery order is waiting to be shipped. */
+    private function notifyVendorOfPod(Order $order): void
+    {
+        $vendor = $order->vendor;
+        $owner = $vendor instanceof Vendor ? $vendor->user : null;
+
+        if (! $owner instanceof User) {
+            return;
+        }
+
+        $this->notifications->send(
+            $owner,
+            NotificationCategory::Orders,
+            'New pay-on-delivery order',
+            'Order '.$order->reference.' was placed for pay-on-delivery. Ship it and collect '.money((int) $order->total_amount).' from the buyer on delivery.',
+            route('vendor.orders.show', $order),
+            'View order',
+        );
     }
 
     private function settleWithWallet(User $buyer, Order $order): array
@@ -153,7 +201,7 @@ class PhysicalCheckoutService
             return ['status' => 'redirect', 'redirect' => route('checkout.bank-transfer', $result['payment'])];
         }
 
-        $result = $this->paymentService->initiatePaystackPayment($buyer, $amount, $order, [
+        $result = $this->paymentService->initiateGatewayPayment($buyer, $amount, $order, $gateway, [
             'payable_type' => $order->getMorphClass(),
         ]);
 
