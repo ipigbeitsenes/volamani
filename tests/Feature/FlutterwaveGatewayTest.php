@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Gateways\FlutterwaveGateway;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class FlutterwaveGatewayTest extends TestCase
 {
+    use RefreshDatabase;   // initiate() reads currency_code() from the settings table
+
     protected function setUp(): void
     {
         parent::setUp();
