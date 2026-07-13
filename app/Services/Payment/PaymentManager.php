@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Contracts\PaymentGatewayInterface;
+use App\Gateways\FlutterwaveGateway;
 use App\Gateways\PaystackGateway;
 
 class PaymentManager
@@ -13,6 +14,7 @@ class PaymentManager
 
         return match ($driver) {
             'paystack' => app(PaystackGateway::class),
+            'flutterwave' => app(FlutterwaveGateway::class),
             default => throw new \InvalidArgumentException("Unsupported payment gateway: [{$driver}]"),
         };
     }
@@ -20,5 +22,10 @@ class PaymentManager
     public function paystack(): PaymentGatewayInterface
     {
         return $this->driver('paystack');
+    }
+
+    public function flutterwave(): PaymentGatewayInterface
+    {
+        return $this->driver('flutterwave');
     }
 }

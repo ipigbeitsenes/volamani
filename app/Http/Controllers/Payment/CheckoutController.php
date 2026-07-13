@@ -31,7 +31,7 @@ class CheckoutController extends Controller
                 ->with('info', 'You already own this product — find it under your orders.');
         }
 
-        $gateways = PaymentGateway::cases();
+        $gateways = PaymentGateway::enabled();
 
         return view('marketplace.checkout.product', compact('product', 'gateways'));
     }
@@ -46,7 +46,7 @@ class CheckoutController extends Controller
             return redirect()->route('service-orders.show', $serviceOrder);
         }
 
-        $gateways = PaymentGateway::cases();
+        $gateways = PaymentGateway::enabled();
 
         return view('marketplace.checkout.service-order', compact('serviceOrder', 'gateways'));
     }
@@ -61,7 +61,7 @@ class CheckoutController extends Controller
             return redirect()->route('consultations.sessions.show', $session);
         }
 
-        $gateways = PaymentGateway::cases();
+        $gateways = PaymentGateway::enabled();
 
         return view('marketplace.checkout.consultation', compact('session', 'gateways'));
     }
@@ -73,7 +73,7 @@ class CheckoutController extends Controller
         $request->validate([
             'payable_type' => ['required', 'string', 'in:product,service_order,consultation'],
             'payable_id' => ['required', 'integer'],
-            'gateway' => ['required', 'in:paystack,bank_transfer'],
+            'gateway' => ['required', 'in:paystack,flutterwave,bank_transfer'],
         ]);
 
         $user = auth()->user();
@@ -81,8 +81,9 @@ class CheckoutController extends Controller
 
         [$payable, $amountKobo] = $this->resolvePayable($request->payable_type, $request->payable_id, $user);
 
-        if ($gateway === 'paystack') {
-            $result = $this->paymentService->initiatePaystackPayment($user, $amountKobo, $payable, [
+        // Hosted card gateways (Paystack / Flutterwave) → redirect to the gateway.
+        if (in_array($gateway, ['paystack', 'flutterwave'], true)) {
+            $result = $this->paymentService->initiateGatewayPayment($user, $amountKobo, $payable, $gateway, [
                 'payable_type' => $request->payable_type,
             ]);
 
@@ -99,7 +100,8 @@ class CheckoutController extends Controller
 
     public function callback(Request $request)
     {
-        $reference = $request->query('reference') ?? $request->query('trxref');
+        // Paystack sends reference/trxref; Flutterwave sends tx_ref.
+        $reference = $request->query('reference') ?? $request->query('trxref') ?? $request->query('tx_ref');
         abort_if(! $reference, 400);
 
         $payment = $this->paymentService->verifyByReference($reference);

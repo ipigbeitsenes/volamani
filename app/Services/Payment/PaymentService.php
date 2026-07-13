@@ -26,6 +26,12 @@ class PaymentService
         return $this->initiate->execute($user, $amountKobo, $payable, 'paystack', $metadata, $email);
     }
 
+    /** Initiate a hosted-card payment on any configured gateway (paystack / flutterwave). */
+    public function initiateGatewayPayment(User $user, int $amountKobo, Model $payable, string $gateway, array $metadata = [], ?string $email = null): array
+    {
+        return $this->initiate->execute($user, $amountKobo, $payable, $gateway, $metadata, $email);
+    }
+
     public function initiateBankTransferPayment(User $user, int $amountKobo, Model $payable): array
     {
         return $this->initiate->execute($user, $amountKobo, $payable, 'bank_transfer');
