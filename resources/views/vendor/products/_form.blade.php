@@ -103,7 +103,7 @@
                 </div>
 
                 <div class="mt-3">
-                    <label class="form-label">Additional Gallery Images (max 10, 4MB each)</label>
+                    <label class="form-label">Additional Gallery Images (max 10, 10MB each)</label>
                     <input type="file" name="gallery[]" accept="image/*" multiple
                         class="form-control @error('gallery.*') is-invalid @enderror">
                     @error('gallery.*') <div class="invalid-feedback">{{ $message }}</div> @enderror

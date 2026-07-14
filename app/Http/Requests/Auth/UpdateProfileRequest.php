@@ -23,7 +23,7 @@ class UpdateProfileRequest extends FormRequest
             'bio' => ['nullable', 'string', 'max:500'],
             'location' => ['nullable', 'string', 'max:100'],
             'user_type' => ['nullable', 'string', 'in:'.implode(',', array_column(UserType::cases(), 'value'))],
-            'avatar' => ['nullable', 'image', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'max:5120'],
         ];
     }
 }

@@ -96,8 +96,8 @@
                                                     @error($field)<div class="invalid-feedback">{{ $message }}</div>@enderror
                                                     <div class="form-text">
                                                         {{ $isLogo
-                                                            ? 'Recommended: transparent PNG/SVG, around 200×48px. Max 2 MB.'
-                                                            : 'Recommended: square PNG or .ico, 32×32 or 64×64. Max 1 MB.' }}
+                                                            ? 'Recommended: transparent PNG/SVG, around 200×48px. Max 5 MB.'
+                                                            : 'Recommended: square PNG or .ico, 32×32 or 64×64. Max 2 MB.' }}
                                                     </div>
                                                     @if($current)
                                                         <div class="form-check mt-1">

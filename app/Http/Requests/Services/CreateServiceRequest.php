@@ -20,7 +20,7 @@ class CreateServiceRequest extends FormRequest
             'category_id' => ['nullable', 'exists:product_categories,id'],
             'short_description' => ['nullable', 'string', 'max:300'],
             'description' => ['required', 'string', 'min:100'],
-            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'thumbnail' => ['nullable', 'image', 'max:10240'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string', 'max:500'],
 

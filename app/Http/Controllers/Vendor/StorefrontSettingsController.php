@@ -62,8 +62,8 @@ class StorefrontSettingsController extends Controller
     public function updateBranding(Request $request): RedirectResponse
     {
         $request->validate([
-            'logo' => ['nullable', 'image', 'max:2048'],
-            'banner' => ['nullable', 'image', 'max:5120'],
+            'logo' => ['nullable', 'image', 'max:5120'],
+            'banner' => ['nullable', 'image', 'max:10240'],
         ]);
 
         if (! $request->hasFile('logo') && ! $request->hasFile('banner')) {

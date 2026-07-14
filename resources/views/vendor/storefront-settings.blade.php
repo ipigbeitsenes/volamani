@@ -251,7 +251,7 @@
                          style="height:80px;width:auto;max-width:100%;object-fit:contain" id="logoPreview" alt="Logo">
                     <input type="file" name="logo" id="logoInput" class="form-control form-control-sm"
                            accept="image/*" onchange="previewImage(this, 'logoPreview')">
-                    <div class="form-text">Recommended: 200×200px, max 2MB</div>
+                    <div class="form-text">Recommended: 200×200px, max 5MB</div>
                     @error('logo')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                 </div>
             </div>
@@ -272,7 +272,7 @@
                     @endif
                     <input type="file" name="banner" class="form-control form-control-sm"
                            accept="image/*" onchange="previewBanner(this)">
-                    <div class="form-text">Recommended: 1200×300px, max 5MB</div>
+                    <div class="form-text">Recommended: 1200×300px, max 10MB</div>
                     @error('banner')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                 </div>
             </div>

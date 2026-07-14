@@ -241,13 +241,13 @@
                             <label class="form-label small fw-medium mb-1">Store Logo</label>
                             <input type="file" name="logo" accept="image/*" class="form-control form-control-sm"
                                    onchange="(function(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=e=>document.getElementById('dashLogoPreview').src=e.target.result;r.readAsDataURL(i.files[0]);}})(this)">
-                            <div class="form-text">Square image, max 2MB.</div>
+                            <div class="form-text">Square image, max 5MB.</div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-medium mb-1">Store Banner</label>
                         <input type="file" name="banner" accept="image/*" class="form-control form-control-sm">
-                        <div class="form-text">Recommended 1200×300px, max 5MB.</div>
+                        <div class="form-text">Recommended 1200×300px, max 10MB.</div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-upload me-1"></i>Update branding</button>
                 </form>
