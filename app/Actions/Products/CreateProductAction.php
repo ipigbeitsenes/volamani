@@ -46,7 +46,9 @@ class CreateProductAction
                 'is_downloadable' => ! $isPhysical,
                 'download_limit' => $isPhysical ? null : ($data['download_limit'] ?? null),
                 'download_expiry_hours' => $isPhysical ? 48 : ($data['download_expiry_hours'] ?? 48),
-                'status' => ProductStatus::Pending,
+                // Verified vendors are trusted to publish directly; everyone else
+                // goes through admin review first.
+                'status' => $vendor->isVerified() ? ProductStatus::Active : ProductStatus::Pending,
                 'seo_title' => $data['seo_title'] ?? null,
                 'seo_description' => $data['seo_description'] ?? null,
             ]);

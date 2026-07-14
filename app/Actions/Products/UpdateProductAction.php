@@ -32,7 +32,10 @@ class UpdateProductAction
                 $thumbnail = $data['thumbnail']->store('products/thumbnails', 'public');
             }
 
-            $needsReview = $product->status === ProductStatus::Active
+            // Verified vendors keep their listing live through edits; unverified
+            // vendors' material changes (price/name/files) return it to review.
+            $needsReview = ! ($vendor instanceof Vendor && $vendor->isVerified())
+                && $product->isActive()
                 && (isset($data['price']) || isset($data['name']) || isset($data['files']));
 
             $product->update([

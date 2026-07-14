@@ -43,7 +43,11 @@ class ProductManagementController extends Controller
         $vendor = $request->user()->vendor;
         $product = $this->productService->createProduct($vendor, $request->validated());
 
-        $this->flashSuccess('Product submitted for review.');
+        $this->flashSuccess(
+            $product->isActive()
+                ? 'Product published and is now live.'
+                : 'Product submitted for review.'
+        );
 
         return redirect()->route('vendor.products.index');
     }

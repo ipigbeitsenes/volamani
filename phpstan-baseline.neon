@@ -517,24 +517,6 @@ parameters:
 			path: app/Actions/Products/RestockOrderAction.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Actions/Products/UpdateProductAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Products/UpdateProductAction.php
-
-		-
-			message: '#^Ternary operator condition is always false\.$#'
-			identifier: ternary.alwaysFalse
-			count: 1
-			path: app/Actions/Products/UpdateProductAction.php
-
-		-
 			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
 			identifier: argument.type
 			count: 1
