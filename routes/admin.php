@@ -149,6 +149,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/plans/{plan}/edit', [SubscriptionController::class, 'editPlan'])->name('plans.edit');
         Route::put('/plans/{plan}', [SubscriptionController::class, 'updatePlan'])->name('plans.update');
         Route::post('/plans/{plan}/toggle', [SubscriptionController::class, 'togglePlan'])->name('plans.toggle');
+        Route::delete('/plans/{plan}', [SubscriptionController::class, 'destroyPlan'])->name('plans.destroy');
     });
 
     // Platform documents — Volamani-issued invoices & contracts of sale

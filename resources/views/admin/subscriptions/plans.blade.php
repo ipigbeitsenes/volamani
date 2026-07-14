@@ -46,10 +46,18 @@
                                 <a href="{{ route('admin.subscriptions.plans.edit', $plan) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                                 <form action="{{ route('admin.subscriptions.plans.toggle', $plan) }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button class="btn btn-sm btn-outline-{{ $plan->is_active ? 'danger' : 'success' }}">
+                                    <button class="btn btn-sm btn-outline-{{ $plan->is_active ? 'warning' : 'success' }}">
                                         {{ $plan->is_active ? 'Deactivate' : 'Activate' }}
                                     </button>
                                 </form>
+                                @if((int) $plan->subscriptions_count === 0)
+                                    <form action="{{ route('admin.subscriptions.plans.destroy', $plan) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm('Delete the {{ $plan->name }} plan permanently? This cannot be undone.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

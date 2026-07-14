@@ -45,6 +45,24 @@ class SubscriptionService
         return $plan->fresh();
     }
 
+    /**
+     * Permanently delete a plan. Refuses when any vendor is (or ever was)
+     * subscribed to it, to avoid orphaning subscription records — deactivate
+     * such a plan instead. Returns false when the delete is blocked.
+     */
+    public function deletePlan(SubscriptionPlan $plan): bool
+    {
+        if ($plan->subscriptions()->exists()) {
+            return false;
+        }
+
+        // Hard delete: a deletable plan has never had a subscriber, so there is no
+        // history to preserve, and this matches the "cannot be undone" confirm.
+        $plan->forceDelete();
+
+        return true;
+    }
+
     // ─── Vendor lifecycle ────────────────────────────────────────────────────────
 
     public function subscribe(Vendor $vendor, SubscriptionPlan $plan, string $method = 'wallet'): array

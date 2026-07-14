@@ -67,4 +67,17 @@ class SubscriptionController extends Controller
 
         return back();
     }
+
+    public function destroyPlan(SubscriptionPlan $plan): RedirectResponse
+    {
+        $name = $plan->name;
+
+        if ($this->subscriptionService->deletePlan($plan)) {
+            $this->flashSuccess("Plan \"{$name}\" deleted.");
+        } else {
+            $this->flashError("Can't delete \"{$name}\" — vendors are subscribed to it. Deactivate it instead.");
+        }
+
+        return redirect()->route('admin.subscriptions.plans');
+    }
 }
