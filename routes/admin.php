@@ -70,16 +70,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{kyc}/reject', [KYCManagementController::class, 'reject'])->name('reject');
     });
 
-    // Withdrawal approvals (super-admin only — payouts)
-    Route::middleware('permission:withdrawals.approve')->prefix('withdrawals')->name('withdrawals.')->group(function () {
+    // Withdrawal approvals (super-admin only — payouts). Hidden with the wallet
+    // feature: without a funds licence the platform holds no balances to pay out.
+    Route::middleware(['permission:withdrawals.approve', 'feature:wallet'])->prefix('withdrawals')->name('withdrawals.')->group(function () {
         Route::get('/', [WithdrawalController::class, 'index'])->name('index');
         Route::get('/{withdrawal}', [WithdrawalController::class, 'show'])->name('show');
         Route::post('/{withdrawal}/approve', [WithdrawalController::class, 'approve'])->name('approve');
         Route::post('/{withdrawal}/reject', [WithdrawalController::class, 'reject'])->name('reject');
     });
 
-    // Escrow management
-    Route::prefix('escrows')->name('escrows.')->group(function () {
+    // Escrow management (hidden with the escrow feature)
+    Route::middleware('feature:escrow')->prefix('escrows')->name('escrows.')->group(function () {
         Route::get('/', [EscrowController::class, 'index'])->name('index');
         Route::get('/{escrow}', [EscrowController::class, 'show'])->name('show');
         Route::post('/{escrow}/release', [EscrowController::class, 'release'])->name('release');

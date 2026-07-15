@@ -18,15 +18,15 @@ Route::middleware(['auth', 'role:finance|super-admin'])->prefix('finance')->name
         Route::post('/{payment}/approve', [FinancePaymentController::class, 'approveOffline'])->name('approve-offline');
     });
 
-    // Withdrawals / payouts
-    Route::prefix('withdrawals')->name('withdrawals.')->group(function () {
+    // Withdrawals / payouts (hidden with the wallet feature)
+    Route::middleware('feature:wallet')->prefix('withdrawals')->name('withdrawals.')->group(function () {
         Route::get('/', [FinanceWithdrawalController::class, 'index'])->name('index');
         Route::post('/{withdrawal}/approve', [FinanceWithdrawalController::class, 'approve'])->name('approve');
         Route::post('/{withdrawal}/reject', [FinanceWithdrawalController::class, 'reject'])->name('reject');
     });
 
-    // Escrow
-    Route::prefix('escrows')->name('escrows.')->group(function () {
+    // Escrow (hidden with the escrow feature)
+    Route::middleware('feature:escrow')->prefix('escrows')->name('escrows.')->group(function () {
         Route::get('/', [FinanceEscrowController::class, 'index'])->name('index');
         Route::post('/{escrow}/release', [FinanceEscrowController::class, 'release'])->name('release');
         Route::post('/{escrow}/refund', [FinanceEscrowController::class, 'refund'])->name('refund');

@@ -5,17 +5,17 @@
 @section('content')
 <div class="container-fluid">
     <h4 class="fw-bold mb-1">Finance Overview</h4>
-    <p class="text-muted small mb-4">Money movement across the platform — revenue, escrow, payouts and fees.</p>
+    <p class="text-muted small mb-4">Money movement across the platform — revenue, payments and fees.</p>
 
     {{-- Headline figures --}}
     <div class="row g-3 mb-4">
         @php
-            $cards = [
+            $cards = array_values(array_filter([
                 ['Gross revenue', money($stats['gross_revenue']), 'bi-cash-stack', 'success'],
-                ['Held in escrow', money($stats['escrow_held']), 'bi-safe2', 'warning'],
-                ['Pending payouts', money($stats['withdrawals_pending_sum']), 'bi-arrow-up-circle', 'danger'],
+                feature('escrow') ? ['Held in escrow', money($stats['escrow_held']), 'bi-safe2', 'warning'] : null,
+                feature('wallet') ? ['Pending payouts', money($stats['withdrawals_pending_sum']), 'bi-arrow-up-circle', 'danger'] : null,
                 ['Bank transfers to check', number_format($stats['bank_transfers']), 'bi-bank', 'info'],
-            ];
+            ]));
         @endphp
         @foreach($cards as [$label, $value, $icon, $color])
             <div class="col-6 col-xl-3">
@@ -35,6 +35,7 @@
 
     {{-- Queue shortcuts --}}
     <div class="row g-3 mb-4">
+        @feature('wallet')
         <div class="col-md-6">
             <a href="{{ route('finance.withdrawals.index', ['status' => 'pending']) }}" class="card shadow-sm text-decoration-none">
                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -43,6 +44,7 @@
                 </div>
             </a>
         </div>
+        @endfeature
         <div class="col-md-6">
             <a href="{{ route('finance.payments.index') }}" class="card shadow-sm text-decoration-none">
                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -76,6 +78,7 @@
         </div>
 
         {{-- Recent withdrawals --}}
+        @feature('wallet')
         <div class="col-lg-5">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-white fw-semibold d-flex justify-content-between">
@@ -100,6 +103,7 @@
                 </div>
             </div>
         </div>
+        @endfeature
     </div>
 </div>
 @endsection

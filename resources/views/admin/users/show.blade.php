@@ -35,7 +35,7 @@
                         <dt class="col-sm-4 text-muted">Username</dt><dd class="col-sm-8">{{ $user->username ?? '—' }}</dd>
                         <dt class="col-sm-4 text-muted">Phone</dt><dd class="col-sm-8">{{ $user->phone ?? '—' }}</dd>
                         <dt class="col-sm-4 text-muted">KYC status</dt><dd class="col-sm-8">{{ $user->kyc_status?->label() ?? '—' }}</dd>
-                        <dt class="col-sm-4 text-muted">Wallet balance</dt><dd class="col-sm-8">{{ $user->wallet ? money($user->wallet->balance) : '—' }}</dd>
+                        @feature('wallet')<dt class="col-sm-4 text-muted">Wallet balance</dt><dd class="col-sm-8">{{ $user->wallet ? money($user->wallet->balance) : '—' }}</dd>@endfeature
                         <dt class="col-sm-4 text-muted">Referral code</dt><dd class="col-sm-8">{{ $user->referral_code }}</dd>
                         <dt class="col-sm-4 text-muted">Joined</dt><dd class="col-sm-8">{{ $user->created_at->format('d M Y, H:i') }}</dd>
                         <dt class="col-sm-4 text-muted">Last login</dt><dd class="col-sm-8">{{ $user->last_login_at?->diffForHumans() ?? 'Never' }}</dd>

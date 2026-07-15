@@ -96,12 +96,16 @@
             <a href="{{ route('finance.payments.index') }}" class="nav-link {{ active_prefix('finance/payments') }}">
                 <i class="bi bi-credit-card"></i> Payments
             </a>
+            @feature('wallet')
             <a href="{{ route('finance.withdrawals.index') }}" class="nav-link {{ active_prefix('finance/withdrawals') }}">
                 <i class="bi bi-arrow-up-circle"></i> Withdrawals
             </a>
+            @endfeature
+            @feature('escrow')
             <a href="{{ route('finance.escrows.index') }}" class="nav-link {{ active_prefix('finance/escrows') }}">
                 <i class="bi bi-safe2"></i> Escrow
             </a>
+            @endfeature
 
             <span class="nav-section">Settings</span>
             <a href="{{ route('finance.commissions.index') }}" class="nav-link {{ active_prefix('finance/commissions') }}">

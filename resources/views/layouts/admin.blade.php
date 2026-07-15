@@ -150,11 +150,13 @@
             <a href="{{ route('admin.payments.index') }}" class="nav-link {{ active_prefix('admin/payments') }}">
                 <i class="bi bi-credit-card"></i> Payments
             </a>
+            @feature('wallet')
             @can('withdrawals.approve')
             <a href="{{ route('admin.withdrawals.index') }}" class="nav-link {{ active_prefix('admin/withdrawals') }}">
                 <i class="bi bi-arrow-up-circle"></i> Withdrawals
             </a>
             @endcan
+            @endfeature
             @can('commissions.manage')
             <a href="{{ route('admin.commissions.index') }}" class="nav-link {{ active_prefix('admin/commissions') }}">
                 <i class="bi bi-percent"></i> Commissions

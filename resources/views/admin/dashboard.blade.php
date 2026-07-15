@@ -36,16 +36,16 @@
     <h6 class="text-uppercase text-muted small fw-bold mb-3">Needs attention</h6>
     <div class="row g-3 mb-4">
         @php
-            $queues = [
+            $queues = array_values(array_filter([
                 ['Vendor approvals', $stats['queues']['vendors'], route('admin.vendors.index', ['status' => 'pending']), 'bi-shop'],
                 ['KYC reviews', $stats['queues']['kyc'], route('admin.kyc.index'), 'bi-shield-check'],
-                ['Withdrawals', $stats['queues']['withdrawals'], route('admin.withdrawals.index'), 'bi-arrow-up-circle'],
+                feature('wallet') ? ['Withdrawals', $stats['queues']['withdrawals'], route('admin.withdrawals.index'), 'bi-arrow-up-circle'] : null,
                 ['Product reviews', $stats['queues']['products'], route('admin.products.index'), 'bi-box-seam'],
                 ['Open disputes', $stats['queues']['disputes'], route('admin.disputes.index'), 'bi-exclamation-triangle'],
                 ['Bank transfers', $stats['queues']['bank_transfers'], route('admin.payments.index'), 'bi-bank'],
                 ['Returns', $stats['queues']['returns'] ?? 0, route('admin.returns.index'), 'bi-arrow-return-left'],
                 ['Category requests', $stats['queues']['category_requests'] ?? 0, route('admin.category-requests.index'), 'bi-tags'],
-            ];
+            ]));
         @endphp
         @foreach($queues as [$label, $count, $url, $icon])
             <div class="col-6 col-md-4 col-xl-2">
