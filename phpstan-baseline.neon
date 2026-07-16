@@ -1,88 +1,10 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Affiliate/ApproveCommissionAction.php
-
-		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Affiliate/ApproveCommissionAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\CommissionStatus\:\:Cancelled will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Affiliate/ApproveCommissionAction.php
-
-		-
-			message: '#^Method App\\Actions\\Affiliate\\EnrollAffiliateAction\:\:execute\(\) should return App\\Models\\AffiliateAccount but returns Illuminate\\Database\\Eloquent\\Model\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Actions/Affiliate/EnrollAffiliateAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\ConsultantProfile\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:effectiveRate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\ReferralStatus\:\:Rewarded will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Actions/Affiliate/RecordConversionAction.php
-
-		-
-			message: '#^Parameter \#1 \$user of method App\\Actions\\Affiliate\\EnrollAffiliateAction\:\:execute\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Affiliate/RecordReferralSignupAction.php
-
-		-
-			message: '#^Property App\\Actions\\Affiliate\\RecordReferralSignupAction\:\:\$approveAction is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: app/Actions/Affiliate/RecordReferralSignupAction.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\AffiliateStatus\:\:Active will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Actions/Affiliate/RecordReferralSignupAction.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Actions/Affiliate/RecordReferralSignupAction.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
@@ -91,7 +13,7 @@ parameters:
 			path: app/Actions/Buyers/AddBuyerStrikeAction.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:buyerStrikes\(\)\.$#'
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/Actions/Buyers/ClearBuyerStrikeAction.php
@@ -103,86 +25,14 @@ parameters:
 			path: app/Actions/Chargebacks/ContestChargebackAction.php
 
 		-
-			message: '#^Offset ''files'' on array\{note\: non\-falsy\-string\|null\} on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/Actions/Chargebacks/ContestChargebackAction.php
-
-		-
-			message: '#^Offset ''note'' on array\{\}\|string on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/Actions/Chargebacks/ContestChargebackAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Actions/Chargebacks/OpenChargebackAction.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>total_amount" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Actions/Chargebacks/OpenChargebackAction.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:canRefund\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:canRelease\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Parameter \#1 \$buyer of method App\\Actions\\Buyers\\AddBuyerStrikeAction\:\:execute\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Parameter \#1 \$escrow of method App\\Services\\Escrow\\EscrowService\:\:refund\(\) expects App\\Models\\Escrow, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Parameter \#1 \$escrow of method App\\Services\\Escrow\\EscrowService\:\:release\(\) expects App\\Models\\Escrow, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Actions\\Vendors\\AddStrikeAction\:\:execute\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Chargebacks/ResolveChargebackAction.php
-
-		-
 			message: '#^Method App\\Actions\\Clients\\AddInteractionAction\:\:execute\(\) should return App\\Models\\ClientInteraction but returns Illuminate\\Database\\Eloquent\\Model\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Actions/Clients/AddInteractionAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ClientStatus\:\:Lead will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Actions/Clients/AddInteractionAction.php
 
@@ -193,94 +43,10 @@ parameters:
 			path: app/Actions/Clients/CreateClientAction.php
 
 		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Actions/Clients/UpdateClientAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Consultations/BookConsultationAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getEffectiveCommissionRate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Consultations/BookConsultationAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Disputes/OpenDisputeAction.php
-
-		-
-			message: '#^Parameter \#1 \$buyer of method App\\Actions\\Buyers\\AddBuyerStrikeAction\:\:execute\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Disputes/ResolveDisputeAction.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Actions\\Vendors\\AddStrikeAction\:\:execute\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Disputes/ResolveDisputeAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$unit_price\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
-			identifier: argument.unresolvableType
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Actions\\Documents\\CreateDocumentAction\:\:execute\(\) expects App\\Models\\Vendor\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Documents/ConvertQuotationAction.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Actions/Documents/RecordPaymentAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:notify\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Documents/SendDocumentAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Escrow/HoldEscrowAction.php
 
 		-
 			message: '#^Method App\\Actions\\Escrow\\HoldEscrowAction\:\:autoReleaseAt\(\) should return Illuminate\\Support\\Carbon\|null but returns Carbon\\Carbon\.$#'
@@ -289,94 +55,10 @@ parameters:
 			path: app/Actions/Escrow/HoldEscrowAction.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\ConsultantProfile\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
 			count: 1
-			path: app/Actions/Escrow/RefundEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$user of method App\\Services\\Wallet\\WalletService\:\:getOrCreate\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Escrow/RefundEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:decrementEscrow\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Escrow/RefundEscrowAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Escrow/ReleaseEscrowAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Escrow/ReleaseEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:credit\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Escrow/ReleaseEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:decrementEscrow\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Escrow/ReleaseEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:incrementReserve\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Escrow/ReleaseEscrowAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/KYC/ApproveKYCAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/KYC/RejectKYCAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$document_back\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/KYC/SubmitKYCAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$document_front\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/KYC/SubmitKYCAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$proof_of_address\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/KYC/SubmitKYCAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$selfie\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/KYC/SubmitKYCAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/KYC/SubmitKYCAction.php
+			path: app/Actions/Escrow/HoldEscrowAction.php
 
 		-
 			message: '#^Method App\\Actions\\Matching\\CreateMatchRequestAction\:\:execute\(\) should return App\\Models\\MatchRequest but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
@@ -391,196 +73,10 @@ parameters:
 			path: app/Actions/Matching/CreateMatchRequestAction.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$matchingProfile\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Matching/RespondToMatchAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Matching/RespondToMatchAction.php
-
-		-
-			message: '#^Property App\\Models\\BusinessMatch\:\:\$status \(string\) does not accept App\\Enums\\MatchStatus\:\:Connected\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Actions/Matching/RespondToMatchAction.php
-
-		-
-			message: '#^Property App\\Models\\BusinessMatch\:\:\$status \(string\) does not accept App\\Enums\\MatchStatus\:\:Declined\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Actions/Matching/RespondToMatchAction.php
-
-		-
-			message: '#^Property App\\Models\\BusinessMatch\:\:\$status \(string\) does not accept App\\Enums\\MatchStatus\:\:Interested\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Actions/Matching/RespondToMatchAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Payment/ApproveBankTransferAction.php
-
-		-
-			message: '#^Method App\\Actions\\Payment\\ApproveBankTransferAction\:\:approve\(\) should return App\\Models\\Payment but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Actions/Payment/ApproveBankTransferAction.php
-
-		-
-			message: '#^Parameter \#1 \$payment of method App\\Actions\\Payment\\FulfillPaymentAction\:\:execute\(\) expects App\\Models\\Payment, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Payment/ApproveBankTransferAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Payment/FulfillPaymentAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:notify\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Payment/FulfillPaymentAction.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
 			count: 2
-			path: app/Actions/Payment/FulfillPaymentAction.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: app/Actions/Payment/InitiateRefundAction.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: app/Actions/Payment/VerifyPaymentAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Actions/Products/DecrementStockAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Products/DecrementStockAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$variant\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Products/DecrementStockAction.php
-
-		-
-			message: '#^Call to function abort_unless\(\) with arguments false, 422 and ''Only active…'' will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Actions/Products/PromoteProductAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Products/PromoteProductAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Actions/Products/RestockOrderAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Products/RestockOrderAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$variant\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Products/RestockOrderAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Returns/ApproveReturnAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Returns/CancelReturnAction.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Actions/Returns/CancelReturnAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\EscrowStatus\:\:Holding will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Returns/CancelReturnAction.php
-
-		-
-			message: '#^Parameter \#1 \$order of method App\\Actions\\Products\\RestockOrderAction\:\:execute\(\) expects App\\Models\\Order, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Returns/ConfirmReturnAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Returns/ConfirmReturnAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Returns/MarkReturnShippedAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Returns/RejectReturnAction.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Actions/Returns/RejectReturnAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\EscrowStatus\:\:Holding will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Returns/RejectReturnAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Returns/RequestReturnAction.php
+			path: app/Actions/Reviews/ModerateReviewAction.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
@@ -601,122 +97,8 @@ parameters:
 			path: app/Actions/Reviews/SubmitReviewAction.php
 
 		-
-			message: '#^Parameter \#2 \$actor of method App\\Services\\Escrow\\EscrowService\:\:releaseForPayable\(\) expects App\\Models\\User\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Services/AcceptDeliveryAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Actions/Services/DeliverServiceOrderAction.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Services/DeliverServiceOrderAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getEffectiveCommissionRate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Services/PlaceServiceOrderAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$delivery_days\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Services/SubmitRequirementsAction.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Services/SubmitRequirementsAction.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Actions/Services/UpdateServiceAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Services/UpdateServiceAction.php
-
-		-
-			message: '#^Ternary operator condition is always false\.$#'
-			identifier: ternary.alwaysFalse
-			count: 1
-			path: app/Actions/Services/UpdateServiceAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$featured_listing\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Subscription/ActivateSubscriptionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_featured\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Subscription/ActivateSubscriptionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Subscription/ActivateSubscriptionAction.php
-
-		-
-			message: '#^Cannot call method advance\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Subscription/ActivateSubscriptionAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Subscription/RenewSubscriptionAction.php
-
-		-
-			message: '#^Cannot call method advance\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Subscription/RenewSubscriptionAction.php
-
-		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Subscription/RenewSubscriptionAction.php
-
-		-
-			message: '#^Parameter \#1 \$user of method App\\Services\\Wallet\\WalletService\:\:getOrCreate\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Subscription/RenewSubscriptionAction.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$reference\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/Actions/Subscription/SubscribeAction.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Actions/Subscription/SubscribeAction.php
-
-		-
-			message: '#^Cannot call method isRecurring\(\) on string\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: app/Actions/Subscription/SubscribeAction.php
 
@@ -733,88 +115,16 @@ parameters:
 			path: app/Actions/Subscription/SubscribeAction.php
 
 		-
-			message: '#^Parameter \#1 \$user of method App\\Services\\Payment\\PaymentService\:\:initiatePaystackPayment\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Subscription/SubscribeAction.php
-
-		-
-			message: '#^Parameter \#1 \$user of method App\\Services\\Wallet\\WalletService\:\:getOrCreate\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Actions/Subscription/SubscribeAction.php
-
-		-
-			message: '#^Cannot call method modelClass\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Actions/Taxonomy/ApproveCategoryRequestAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:notify\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Actions/Vendors/AddStrikeAction.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/Actions/Vendors/AddStrikeAction.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Actions/Vendors/AddStrikeAction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\Status\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Actions/Vendors/AddStrikeAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:strikes\(\)\.$#'
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/Actions/Vendors/ClearStrikeAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Actions/Wallet/FundWalletAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Actions\\Wallet\\CreditWalletAction\:\:execute\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Wallet/ProcessWithdrawalAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:credit\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Wallet/ReleaseReserveAction.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Services\\Wallet\\WalletService\:\:decrementReserve\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Actions/Wallet/ReleaseReserveAction.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:trustTier\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Actions/Wallet/RequestWithdrawalAction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/Admin/AffiliateController.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
@@ -823,52 +133,10 @@ parameters:
 			path: app/Http/Controllers/Admin/BuyerStrikeController.php
 
 		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Controllers/Admin/CategoryRequestController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Admin/LiveChatController.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: app/Http/Controllers/Admin/LiveChatController.php
-
-		-
 			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Admin/PlatformDocumentController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Cart/CartController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/Cart/CartController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Cart/CartController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Cart/CartController.php
 
 		-
 			message: '#^Offset ''item'' on array\{status\: ''no_delivery'', gateway\?\: string, result\?\: array\} on left side of \?\? does not exist\.$#'
@@ -883,58 +151,10 @@ parameters:
 			path: app/Http/Controllers/Cart/CartController.php
 
 		-
-			message: '#^Parameter \#2 \$variant of method App\\Models\\Product\:\:canFulfilQuantity\(\) expects App\\Models\\ProductVariant\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Cart/CartController.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Http/Controllers/Cart/CartController.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 3
-			path: app/Http/Controllers/Chat/ChatWidgetController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Consultations/BookingController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$consultantProfile\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Consultations/ConsultationController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Disputes/DisputeController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Disputes/DisputeController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Freelance/ServiceController.php
 
 		-
 			message: '#^Parameter \#2 \$package of method App\\Services\\Services\\ServiceListingService\:\:placeOrder\(\) expects App\\Models\\ServicePackage, Illuminate\\Database\\Eloquent\\Model given\.$#'
@@ -949,74 +169,14 @@ parameters:
 			path: app/Http/Controllers/HealthController.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentStatus\:\:Sent will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Http/Controllers/Invoices/InvoiceController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Call to function abort_if\(\) with arguments false, 422 and ''This invoice was…'' will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Call to function abort_unless\(\) with false and 422 will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\DocumentStatus\:\:Sent, App\\Enums\\DocumentStatus\:\:Viewed\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentStatus\:\:Cancelled will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentStatus\:\:Sent will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Http/Controllers/Invoices/PublicDocumentController.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\BusinessMatch\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Matching/MatchRequestController.php
-
-		-
 			message: '#^Match expression does not handle remaining value\: string$#'
 			identifier: match.unhandled
 			count: 1
 			path: app/Http/Controllers/Payment/CheckoutController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Payment/PhysicalCheckoutController.php
-
-		-
 			message: '#^Offset ''location'' on array\{status\: ''no_delivery'', order\?\: App\\Models\\Order, redirect\?\: string, shortfall\?\: int\} on left side of \?\? does not exist\.$#'
 			identifier: nullCoalesce.offset
-			count: 1
-			path: app/Http/Controllers/Payment/PhysicalCheckoutController.php
-
-		-
-			message: '#^Parameter \#3 \$variant of method App\\Services\\Checkout\\PhysicalCheckoutService\:\:place\(\) expects App\\Models\\ProductVariant\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Payment/PhysicalCheckoutController.php
 
@@ -1105,177 +265,9 @@ parameters:
 			path: app/Http/Controllers/PricingCalculatorController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isPhysical\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/Products/DownloadController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Requests/ProductRequestController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Models\\ProductRequest\:\:getQuotationBy\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Requests/ProductRequestController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Models\\ProductRequest\:\:hasQuotedBy\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Requests/ProductRequestController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Http/Controllers/ServiceOrderController.php
-
-		-
-			message: '#^Call to function abort_unless\(\) with arguments false, 422 and ''Requirements…'' will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Controllers/ServiceOrderController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ServiceOrderStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Http/Controllers/ServiceOrderController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/Vendor/AnalyticsController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:averageRating\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/AnalyticsController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:products\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/AnalyticsController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:services\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/AnalyticsController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:totalReviews\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/AnalyticsController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Taxonomy\\CategoryRequestService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/CategoryRequestController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Taxonomy\\CategoryRequestService\:\:submit\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/CategoryRequestController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Clients\\ClientService\:\:create\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Clients\\ClientService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Clients\\ClientService\:\:sync\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Clients\\ClientService\:\:vendorStats\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ClientController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$consultantProfile\.$#'
-			identifier: property.notFound
-			count: 9
-			path: app/Http/Controllers/Vendor/ConsultationManagementController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:consultantProfile\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/ConsultationManagementController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Consultations\\ConsultationService\:\:createProfile\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ConsultationManagementController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/DocumentController.php
-
-		-
-			message: '#^Parameter \#1 \$type of method App\\Http\\Controllers\\Vendor\\DocumentController\:\:routeBaseForType\(\) expects App\\Enums\\DocumentType, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/DocumentController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Documents\\DocumentService\:\:create\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/DocumentController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Documents\\DocumentService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/DocumentController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Documents\\DocumentService\:\:vendorStats\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/DocumentController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 6
-			path: app/Http/Controllers/Vendor/ProductManagementController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor_id\.$#'
 			identifier: property.notFound
-			count: 5
+			count: 3
 			path: app/Http/Controllers/Vendor/ProductManagementController.php
 
 		-
@@ -1297,36 +289,6 @@ parameters:
 			path: app/Http/Controllers/Vendor/ProductManagementController.php
 
 		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Products\\ProductService\:\:createProduct\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ProductManagementController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 5
-			path: app/Http/Controllers/Vendor/QuotationController.php
-
-		-
-			message: '#^Parameter \#2 \$vendor of method App\\Services\\Requests\\ProductRequestService\:\:submitQuotation\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/QuotationController.php
-
-		-
-			message: '#^Parameter \#2 \$vendor of method App\\Services\\Requests\\ProductRequestService\:\:withdrawQuotation\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/QuotationController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Http/Controllers/Vendor/ServiceManagementController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor_id\.$#'
 			identifier: property.notFound
 			count: 2
@@ -1345,322 +307,16 @@ parameters:
 			path: app/Http/Controllers/Vendor/ServiceManagementController.php
 
 		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Services\\ServiceListingService\:\:createService\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/ServiceManagementController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Http/Controllers/Vendor/ServiceOrderManagementController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Vendors\\VendorService\:\:updateStorefront\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Vendor/StorefrontSettingsController.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between mixed and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: app/Http/Controllers/Vendor/StorefrontSettingsController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:activeSubscription\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/Vendor/SubscriptionController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Subscription\\SubscriptionService\:\:subscribe\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/SubscriptionController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorChargebackController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Chargebacks\\ChargebackService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorChargebackController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$balance\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 5
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:averageRating\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:products\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:reviews\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:services\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Documents\\DocumentService\:\:vendorStats\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>balance" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Http/Controllers/Vendor/VendorDashboardController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorEscrowController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorMatchController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Matching\\MatchingService\:\:leadsForVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorMatchController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Matching\\MatchingService\:\:profileForVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Vendor/VendorMatchController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Matching\\MatchingService\:\:saveProfile\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorMatchController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Matching\\MatchingService\:\:vendorStats\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorMatchController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorOrderController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Orders\\OrderService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorOrderController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorReturnController.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Services\\Returns\\ReturnService\:\:forVendor\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Vendor/VendorReturnController.php
-
-		-
-			message: '#^Result of \|\| is always true\.$#'
-			identifier: booleanOr.alwaysTrue
-			count: 1
-			path: app/Http/Middleware/EnsureKYCVerified.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\KYCStatus\:\:Verified will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Http/Middleware/EnsureKYCVerified.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Http/Middleware/EnsureKYCVerified.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/EnsureVendorApproved.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:consultantProfile\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/Consultations/CreateConsultantProfileRequest.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/Consultations/CreateConsultantProfileRequest.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$consultantProfile\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Requests/Consultations/CreatePackageRequest.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/Products/CreateProductRequest.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Requests/Products/UpdateProductRequest.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/Requests/SubmitQuotationRequest.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/Services/CreateServiceRequest.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Requests/Services/UpdateServiceRequest.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$referral_code\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/AffiliateAccount.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\AffiliateStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/AffiliateAccount.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\CommissionStatus\:\:Pending, App\\Enums\\CommissionStatus\:\:Approved\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/AffiliateCommission.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\CommissionStatus\:\:Paid will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/AffiliateCommission.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\CommissionStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/AffiliateCommission.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\MatchStatus\:\:Connected will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/BusinessMatch.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\MatchStatus\:\:Declined will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/BusinessMatch.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\CategoryRequestStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/CategoryRequest.php
-
-		-
-			message: '#^Cannot call method isOpen\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: app/Models/Chargeback.php
-
-		-
-			message: '#^Offset ''files'' on string\|null on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/Models/Chargeback.php
-
-		-
-			message: '#^Offset ''note'' on string\|null on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/Models/Chargeback.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ChargebackStatus\:\:Open will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Chargeback.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/ChatConversation.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/ChatConversation.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ChatConversationStatus\:\:Closed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ChatConversation.php
 
 		-
 			message: '#^Using nullsafe property access "\?\-\>email" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
@@ -1675,36 +331,6 @@ parameters:
 			path: app/Models/ChatConversation.php
 
 		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\ChatSenderType\:\:Agent, App\\Enums\\ChatSenderType\:\:Bot, App\\Enums\\ChatSenderType\:\:System\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ChatMessage.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ChatSenderType\:\:Visitor will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ChatMessage.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/ClientInteraction.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\InteractionType\:\:Task will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ClientInteraction.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$logo_url\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/ConsultantProfile.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
@@ -1717,160 +343,10 @@ parameters:
 			path: app/Models/ConsultantProfile.php
 
 		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\ConsultationSessionStatus\:\:Confirmed, App\\Enums\\ConsultationSessionStatus\:\:InProgress\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\ConsultationSessionStatus\:\:Pending, App\\Enums\\ConsultationSessionStatus\:\:Confirmed\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 3
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ConsultationSessionStatus\:\:Confirmed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ConsultationSessionStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentStatus\:\:Success will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ConsultationSession.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
+			message: '#^Parameter \#2 \$syntax of method Carbon\\Carbon\:\:diffForHumans\(\) expects array\|int\|null, true given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Models/Dispute.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\DisputeStatus\:\:Open, App\\Enums\\DisputeStatus\:\:UnderReview, App\\Enums\\DisputeStatus\:\:AwaitingResponse, App\\Enums\\DisputeStatus\:\:Escalated\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Dispute.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\DisputeStatus\:\:Open, App\\Enums\\DisputeStatus\:\:UnderReview, App\\Enums\\DisputeStatus\:\:AwaitingResponse\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Dispute.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\DisputeStatus\:\:Resolved, App\\Enums\\DisputeStatus\:\:Closed\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Dispute.php
-
-		-
-			message: '#^Cannot call method diffForHumans\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: app/Models/Dispute.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: app/Models/Dispute.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$business_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$logo\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$whatsapp\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Cannot call method isEditable\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\DocumentStatus\:\:Cancelled will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentStatus\:\:Paid will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentStatus\:\:Signed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentType\:\:Contract will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentType\:\:Invoice will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Document.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\DocumentType\:\:Quotation will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Document.php
 
 		-
 			message: '#^Using nullsafe property access "\?\-\>business_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
@@ -1879,62 +355,8 @@ parameters:
 			path: app/Models/Document.php
 
 		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\EscrowStatus\:\:Holding, App\\Enums\\EscrowStatus\:\:PartiallyReleased, App\\Enums\\EscrowStatus\:\:Disputed\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 2
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\EscrowStatus\:\:Holding, App\\Enums\\EscrowStatus\:\:PartiallyReleased\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\EscrowStatus\:\:Released, App\\Enums\\EscrowStatus\:\:Refunded\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 3
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Cannot call method copy\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\EscrowStatus\:\:Disputed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Escrow.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\EscrowStatus\:\:Holding will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Escrow.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
-			count: 1
-			path: app/Models/FreelanceService.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Models/FreelanceService.php
 
@@ -1943,24 +365,6 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: app/Models/FreelanceService.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\KYCStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: app/Models/KYCVerification.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\KYCStatus\:\:Verified will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/KYCVerification.php
-
-		-
-			message: '#^Cannot call method isOpen\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/MatchRequest.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
@@ -1969,96 +373,6 @@ parameters:
 			path: app/Models/Order.php
 
 		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Cancelled, App\\Enums\\OrderStatus\:\:Refunded, App\\Enums\\OrderStatus\:\:Disputed\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Completed, App\\Enums\\OrderStatus\:\:Cancelled, App\\Enums\\OrderStatus\:\:Refunded, App\\Enums\\OrderStatus\:\:Disputed\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Completed, App\\Enums\\OrderStatus\:\:Refunded, App\\Enums\\OrderStatus\:\:Cancelled\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Paid, App\\Enums\\OrderStatus\:\:Processing, App\\Enums\\OrderStatus\:\:Shipped\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Paid, App\\Enums\\OrderStatus\:\:Processing\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\OrderStatus\:\:Paid, App\\Enums\\OrderStatus\:\:Processing, App\\Enums\\OrderStatus\:\:InProgress, App\\Enums\\OrderStatus\:\:Shipped, App\\Enums\\OrderStatus\:\:Delivered\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Cannot call method copy\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:first\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(App\\Models\\ReturnRequest\)\: bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Models/Order.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\OrderStatus\:\:Completed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentStatus\:\:Success will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Order.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Models/Payment.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentGateway\:\:Paystack will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Payment.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Payment.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentStatus\:\:Success will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Payment.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
@@ -2071,74 +385,8 @@ parameters:
 			path: app/Models/PhysicalCategory.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Models/PricingTemplate.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PricingType\:\:Hourly will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/PricingTemplate.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$allow_backorder\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Models/Product.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Models/Product.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_quantity\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Models/Product.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$track_inventory\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Models/Product.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:effectivePrice\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Models/Product.php
-
-		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Product.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
-			count: 1
-			path: app/Models/Product.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\ProductKind\:\:Physical will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Models/Product.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductKind\:\:Physical will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Product.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ProductStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Models/Product.php
 
@@ -2159,12 +407,6 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: app/Models/ProductCategory.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/ProductRequest.php
 
 		-
 			message: '#^Method App\\Models\\ProductRequest\:\:getQuotationBy\(\) should return App\\Models\\ProductRequestQuotation\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
@@ -2173,24 +415,6 @@ parameters:
 			path: app/Models/ProductRequest.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\RequestStatus\:\:Open will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ProductRequest.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\QuotationStatus\:\:Accepted will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ProductRequestQuotation.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\QuotationStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: app/Models/ProductRequestQuotation.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
@@ -2201,54 +425,6 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: app/Models/ProductTag.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$price\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/ProductVariant.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ReferralStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Referral.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ReferralStatus\:\:Rewarded will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Referral.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\ReturnStatus\:\:Approved, App\\Enums\\ReturnStatus\:\:ShippedBack\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ReturnRequest.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\ReturnStatus\:\:Requested, App\\Enums\\ReturnStatus\:\:Approved\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ReturnRequest.php
-
-		-
-			message: '#^Cannot call method isActive\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/ReturnRequest.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ReturnStatus\:\:Approved will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ReturnRequest.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ReturnStatus\:\:Requested will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: app/Models/ReturnRequest.php
 
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
@@ -2263,96 +439,6 @@ parameters:
 			path: app/Models/ServiceCategory.php
 
 		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\ServiceOrderStatus\:\:Completed, App\\Enums\\ServiceOrderStatus\:\:Cancelled\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\PaymentStatus\:\:Success will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ServiceOrderStatus\:\:Completed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\ServiceOrderStatus\:\:Delivered will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: app/Models/ServiceOrder.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\SubscriptionStatus\:\:Active, App\\Enums\\SubscriptionStatus\:\:Trialing, App\\Enums\\SubscriptionStatus\:\:PastDue\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Cannot call method grantsAccess\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Cannot call method isRecurring\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 5
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Cancelled will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Trialing will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionInvoiceStatus\:\:Paid will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/SubscriptionInvoice.php
-
-		-
-			message: '#^Cannot call method shortLabel\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/SubscriptionPlan.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
@@ -2363,52 +449,10 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: app/Models/SubscriptionPlan.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$database\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\KYCStatus\:\:Verified will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/User.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:active\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: app/Models/Vendor.php
-
-		-
-			message: '#^Cannot call method sellsDigital\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Vendor.php
-
-		-
-			message: '#^Cannot call method sellsPhysical\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/Vendor.php
-
-		-
-			message: '#^Cannot call method sellsServices\(\) on string\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: app/Models/Vendor.php
 
@@ -2425,106 +469,16 @@ parameters:
 			path: app/Models/Vendor.php
 
 		-
-			message: '#^Method App\\Models\\Vendor\:\:currentPlan\(\) should return App\\Models\\SubscriptionPlan\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Models/Vendor.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\Status\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Vendor.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 2
 			path: app/Models/Vendor.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			message: '#^Using nullsafe method call on non\-nullable type App\\Enums\\StoreFocus\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 3
 			path: app/Models/Vendor.php
-
-		-
-			message: '#^Cannot call method isCredit\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Models/WalletLedger.php
-
-		-
-			message: '#^Call to function in_array\(\) with string and array\{App\\Enums\\WithdrawalStatus\:\:Pending, App\\Enums\\WithdrawalStatus\:\:Processing\} will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Models/WalletWithdrawal.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\WithdrawalStatus\:\:Pending will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/WalletWithdrawal.php
-
-		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Notifications/BuyerStrikeIssuedNotification.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: app/Notifications/DocumentSentNotification.php
-
-		-
-			message: '#^Cannot call method icon\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Notifications/DocumentSentNotification.php
-
-		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Notifications/DocumentSentNotification.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Notifications/OrderDownloadReadyNotification.php
-
-		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: app/Notifications/StrikeIssuedNotification.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$reference\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Notifications/SupportTicketOpenedNotification.php
-
-		-
-			message: '#^Cannot call method label\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Notifications/SupportTicketOpenedNotification.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Repositories/Affiliate/AffiliateRepository.php
-
-		-
-			message: '#^Method App\\Repositories\\Affiliate\\AffiliateRepository\:\:activeAccountByCode\(\) should return App\\Models\\AffiliateAccount\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Repositories/Affiliate/AffiliateRepository.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:role\(\)\.$#'
@@ -2549,12 +503,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: app/Repositories/Auth/UserRepository.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Repositories/Disputes/DisputeRepository.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$category\.$#'
@@ -2611,12 +559,6 @@ parameters:
 			path: app/Repositories/Requests/ProductRequestRepository.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:reviews\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Repositories/Reviews/ReviewRepository.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:active\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -2641,33 +583,9 @@ parameters:
 			path: app/Repositories/Vendors/VendorRepository.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Services/Admin/AdminService.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:assignRole\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Services/Admin/AdminService.php
-
-		-
 			message: '#^Parameter \#1 \$proof of method App\\Services\\Payment\\PaymentService\:\:approveBankTransfer\(\) expects App\\Models\\BankTransferProof, Illuminate\\Database\\Eloquent\\Model given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Services/Admin/AdminService.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 3
-			path: app/Services/Admin/AdminService.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: app/Services/Admin/AdminService.php
 
 		-
@@ -2683,58 +601,16 @@ parameters:
 			path: app/Services/Cart/CartCheckoutService.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_active\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:effectivePrice\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Cannot access property \$value on string\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
-			message: '#^Parameter \#2 \$variant of method App\\Models\\Product\:\:canFulfilQuantity\(\) expects App\\Models\\ProductVariant\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Cart/CartService.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 2
 			path: app/Services/Cart/CartService.php
+
+		-
+			message: '#^Method App\\Services\\Chat\\ChatService\:\:maybeBotReply\(\) should return App\\Models\\ChatMessage\|null but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Chat/ChatService.php
 
 		-
 			message: '#^Method App\\Services\\Chat\\ChatService\:\:postAgentMessage\(\) should return App\\Models\\ChatMessage but returns Illuminate\\Database\\Eloquent\\Model\.$#'
@@ -2749,78 +625,6 @@ parameters:
 			path: app/Services/Chat/ChatService.php
 
 		-
-			message: '#^Property App\\Models\\ChatConversation\:\:\$status \(string\) does not accept App\\Enums\\ChatConversationStatus\:\:Open\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Services/Chat/ChatService.php
-
-		-
-			message: '#^Property App\\Models\\ChatConversation\:\:\$status \(string\) does not accept App\\Enums\\ChatConversationStatus\:\:Pending\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Services/Chat/ChatService.php
-
-		-
-			message: '#^Result of \|\| is always true\.$#'
-			identifier: booleanOr.alwaysTrue
-			count: 1
-			path: app/Services/Chat/ChatService.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\ChatConversationStatus\:\:Open will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Services/Chat/ChatService.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Services/Chat/ChatService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$allow_backorder\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_quantity\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$track_inventory\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:deliversTo\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:shippingFeeFor\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Services/Checkout/PhysicalCheckoutService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Documents/DocumentService.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$reference\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2831,66 +635,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Services/Escrow/EscrowService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$vendor\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Matching/MatchingEngine.php
-
-		-
-			message: '#^Parameter \#3 \$profile of method App\\Services\\Matching\\MatchingEngine\:\:score\(\) expects App\\Models\\MatchingProfile, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Matching/MatchingEngine.php
-
-		-
-			message: '#^Property App\\Models\\BusinessMatch\:\:\$score_breakdown \(string\|null\) does not accept array\<string, int\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Services/Matching/MatchingEngine.php
-
-		-
-			message: '#^Property App\\Models\\BusinessMatch\:\:\$status \(string\) does not accept App\\Enums\\MatchStatus\:\:Suggested\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Services/Matching/MatchingEngine.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\MatchStatus\:\:Suggested will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Services/Matching/MatchingService.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Enums\\OrderStatus\:\:Completed, App\\Enums\\OrderStatus\:\:Delivered, App\\Enums\\OrderStatus\:\:Cancelled, App\\Enums\\OrderStatus\:\:Refunded\} and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Services/Orders/OrderService.php
-
-		-
-			message: '#^Parameter \#1 \$recipients of method App\\Services\\Notifications\\NotificationService\:\:send\(\) expects App\\Models\\User\|Illuminate\\Support\\Collection, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Orders/OrderService.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: app/Services/Orders/OrderService.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\EscrowStatus\:\:Holding will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Services/Orders/OrderService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Requests/ProductRequestService.php
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Review\:\:\$avg_rating\.$#'
@@ -2905,34 +649,10 @@ parameters:
 			path: app/Services/Reviews/RatingAggregationService.php
 
 		-
-			message: '#^Method App\\Services\\Reviews\\RatingAggregationService\:\:vendorFor\(\) should return App\\Models\\Vendor\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Services/Reviews/RatingAggregationService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$kyc_status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Reviews/TrustScoreService.php
-
-		-
 			message: '#^Using nullsafe method call on non\-nullable type Illuminate\\Http\\Request\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 2
 			path: app/Services/Security/SecurityService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$business_name\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Services/Social/FollowService.php
-
-		-
-			message: '#^Parameter \#1 \$vendor of method App\\Repositories\\Social\\FollowRepository\:\:followerUsers\(\) expects App\\Models\\Vendor, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Social/FollowService.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$auto_renew\.$#'
@@ -2948,18 +668,6 @@ parameters:
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ends_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Subscription/SubscriptionService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$plan\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Subscription/SubscriptionService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Services/Subscription/SubscriptionService.php
@@ -2983,34 +691,10 @@ parameters:
 			path: app/Services/Subscription/SubscriptionService.php
 
 		-
-			message: '#^Property App\\Services\\Subscription\\SubscriptionService\:\:\$activateAction is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: app/Services/Subscription/SubscriptionService.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\SubscriptionStatus\:\:Pending will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Services/Subscription/SubscriptionService.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Services/Subscription/SubscriptionService.php
-
-		-
-			message: '#^Method App\\Services\\Wallet\\WalletService\:\:getOrCreate\(\) should return App\\Models\\Wallet but returns Illuminate\\Database\\Eloquent\\Model\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Services/Wallet/WalletService.php
-
-		-
-			message: '#^Parameter \#1 \$wallet of method App\\Actions\\Wallet\\CreditWalletAction\:\:execute\(\) expects App\\Models\\Wallet, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			message: '#^Parameter \#2 \$invoice of method App\\Actions\\Subscription\\ActivateSubscriptionAction\:\:execute\(\) expects App\\Models\\SubscriptionInvoice, Illuminate\\Database\\Eloquent\\Model given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Services/Wallet/WalletService.php
+			path: app/Services/Subscription/SubscriptionService.php
 
 		-
 			message: '#^Method App\\Support\\BusinessDayCalculator\:\:addBusinessDays\(\) should return Carbon\\Carbon but returns Carbon\\CarbonInterface\.$#'

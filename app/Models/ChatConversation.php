@@ -4,12 +4,58 @@ namespace App\Models;
 
 use App\Enums\ChatConversationStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $token
+ * @property int|null $user_id
+ * @property string|null $guest_name
+ * @property string|null $guest_email
+ * @property string|null $subject
+ * @property ChatConversationStatus $status
+ * @property int|null $assigned_to
+ * @property Carbon|null $last_visitor_at
+ * @property Carbon|null $last_agent_at
+ * @property bool $bot_replied
+ * @property int $agent_unread
+ * @property int $visitor_unread
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $agent
+ * @property-read ChatMessage|null $latestMessage
+ * @property-read Collection<int, ChatMessage> $messages
+ * @property-read int|null $messages_count
+ * @property-read User|null $user
+ *
+ * @method static Builder<static>|ChatConversation newModelQuery()
+ * @method static Builder<static>|ChatConversation newQuery()
+ * @method static Builder<static>|ChatConversation open()
+ * @method static Builder<static>|ChatConversation query()
+ * @method static Builder<static>|ChatConversation whereAgentUnread($value)
+ * @method static Builder<static>|ChatConversation whereAssignedTo($value)
+ * @method static Builder<static>|ChatConversation whereBotReplied($value)
+ * @method static Builder<static>|ChatConversation whereCreatedAt($value)
+ * @method static Builder<static>|ChatConversation whereGuestEmail($value)
+ * @method static Builder<static>|ChatConversation whereGuestName($value)
+ * @method static Builder<static>|ChatConversation whereId($value)
+ * @method static Builder<static>|ChatConversation whereLastAgentAt($value)
+ * @method static Builder<static>|ChatConversation whereLastVisitorAt($value)
+ * @method static Builder<static>|ChatConversation whereStatus($value)
+ * @method static Builder<static>|ChatConversation whereSubject($value)
+ * @method static Builder<static>|ChatConversation whereToken($value)
+ * @method static Builder<static>|ChatConversation whereUpdatedAt($value)
+ * @method static Builder<static>|ChatConversation whereUserId($value)
+ * @method static Builder<static>|ChatConversation whereVisitorUnread($value)
+ *
+ * @mixin \Eloquent
+ */
 class ChatConversation extends Model
 {
     protected $fillable = [

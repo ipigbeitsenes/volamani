@@ -7,7 +7,54 @@ use App\Enums\CommissionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $affiliate_account_id
+ * @property int|null $referral_id
+ * @property string|null $earnable_type
+ * @property int|null $earnable_id
+ * @property int|null $buyer_id
+ * @property CommissionType $type
+ * @property int $amount
+ * @property numeric|null $rate_applied
+ * @property CommissionStatus $status
+ * @property int|null $wallet_ledger_id
+ * @property string|null $note
+ * @property Carbon|null $approved_at
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read AffiliateAccount|null $account
+ * @property-read User|null $buyer
+ * @property-read Model|\Eloquent|null $earnable
+ * @property-read Referral|null $referral
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereAffiliateAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereApprovedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereEarnableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereEarnableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission wherePaidAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereRateApplied($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereReferralId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateCommission whereWalletLedgerId($value)
+ *
+ * @mixin \Eloquent
+ */
 class AffiliateCommission extends Model
 {
     protected $fillable = [

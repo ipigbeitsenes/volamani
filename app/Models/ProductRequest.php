@@ -3,11 +3,70 @@
 namespace App\Models;
 
 use App\Enums\RequestStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $buyer_id
+ * @property int|null $vendor_id
+ * @property int|null $category_id
+ * @property string $title
+ * @property string $description
+ * @property int|null $budget_min
+ * @property int|null $budget_max
+ * @property array<array-key, mixed>|null $attachments
+ * @property Carbon|null $deadline_at
+ * @property RequestStatus $status
+ * @property-read int|null $quotations_count
+ * @property int|null $accepted_quotation_id
+ * @property Carbon|null $closed_at
+ * @property bool $is_public
+ * @property string|null $location
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read ProductRequestQuotation|null $acceptedQuotation
+ * @property-read User|null $buyer
+ * @property-read ProductCategory|null $category
+ * @property-read Collection<int, ProductRequestQuotation> $quotations
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest forBuyer(int $userId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest forVendor(int $vendorId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest open()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereAcceptedQuotationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereAttachments($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereBudgetMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereBudgetMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereClosedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereDeadlineAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereQuotationsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductRequest withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class ProductRequest extends Model
 {
     use SoftDeletes;

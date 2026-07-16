@@ -5,7 +5,47 @@ namespace App\Models;
 use App\Enums\SubscriptionInvoiceStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $subscription_id
+ * @property int $plan_id
+ * @property int $amount
+ * @property SubscriptionInvoiceStatus $status
+ * @property string|null $method
+ * @property int|null $payment_id
+ * @property int|null $wallet_ledger_id
+ * @property Carbon|null $period_start
+ * @property Carbon|null $period_end
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Payment|null $payment
+ * @property-read SubscriptionPlan|null $plan
+ * @property-read Subscription|null $subscription
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice wherePaidAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice wherePaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice wherePeriodEnd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice wherePeriodStart($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice wherePlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereSubscriptionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionInvoice whereWalletLedgerId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SubscriptionInvoice extends Model
 {
     protected $fillable = [

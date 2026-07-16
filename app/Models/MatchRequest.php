@@ -4,11 +4,64 @@ namespace App\Models;
 
 use App\Enums\MatchRequestStatus;
 use App\Enums\MatchTargetType;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $user_id
+ * @property MatchTargetType $looking_for
+ * @property string $title
+ * @property string $description
+ * @property string|null $category
+ * @property int|null $budget_min
+ * @property int|null $budget_max
+ * @property string|null $preferred_location
+ * @property bool $remote_ok
+ * @property array<array-key, mixed>|null $skills
+ * @property string|null $timeline
+ * @property MatchRequestStatus $status
+ * @property-read int|null $matches_count
+ * @property Carbon|null $expires_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, BusinessMatch> $matches
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereBudgetMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereBudgetMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereLookingFor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereMatchesCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest wherePreferredLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereRemoteOk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereSkills($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereTimeline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MatchRequest withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class MatchRequest extends Model
 {
     use SoftDeletes;

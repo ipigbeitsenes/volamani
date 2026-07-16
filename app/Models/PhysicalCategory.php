@@ -3,11 +3,51 @@
 namespace App\Models;
 
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int|null $parent_id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $image
+ * @property string|null $icon
+ * @property bool $is_active
+ * @property int $sort_order
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, PhysicalCategory> $children
+ * @property-read int|null $children_count
+ * @property-read string $image_url
+ * @property-read PhysicalCategory|null $parent
+ * @property-read Collection<int, Product> $products
+ * @property-read int|null $products_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory roots()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhysicalCategory whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 class PhysicalCategory extends Model
 {
     use HasSlug;

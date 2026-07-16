@@ -3,12 +3,72 @@
 namespace App\Models;
 
 use App\Enums\EscrowStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property string $escrowable_type
+ * @property int $escrowable_id
+ * @property int $buyer_id
+ * @property int $vendor_id
+ * @property int|null $wallet_id
+ * @property int|null $payment_id
+ * @property int $total_amount
+ * @property int $platform_fee
+ * @property int $vendor_earnings
+ * @property int $released_amount
+ * @property int $refunded_amount
+ * @property EscrowStatus $status
+ * @property string|null $notes
+ * @property Carbon|null $auto_release_at
+ * @property Carbon|null $held_at
+ * @property Carbon|null $released_at
+ * @property Carbon|null $refunded_at
+ * @property Carbon|null $disputed_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $buyer
+ * @property-read Model|\Eloquent $escrowable
+ * @property-read Payment|null $payment
+ * @property-read Collection<int, EscrowTransaction> $transactions
+ * @property-read int|null $transactions_count
+ * @property-read Vendor|null $vendor
+ * @property-read Wallet|null $wallet
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereAutoReleaseAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereDisputedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereEscrowableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereEscrowableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereHeldAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow wherePaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow wherePlatformFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereRefundedAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereRefundedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereReleasedAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereReleasedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereVendorEarnings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Escrow whereWalletId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Escrow extends Model
 {
     protected $fillable = [

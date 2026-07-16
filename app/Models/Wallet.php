@@ -2,10 +2,53 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $balance
+ * @property int $escrow_balance
+ * @property int $reserve_balance
+ * @property int $pending_withdrawal
+ * @property string $currency
+ * @property bool $is_frozen
+ * @property Carbon|null $last_reconciled_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, WalletFunding> $fundings
+ * @property-read int|null $fundings_count
+ * @property-read string $formatted_available
+ * @property-read string $formatted_balance
+ * @property-read string $formatted_escrow
+ * @property-read string $formatted_reserve
+ * @property-read Collection<int, WalletLedger> $ledgers
+ * @property-read int|null $ledgers_count
+ * @property-read User|null $user
+ * @property-read Collection<int, WalletWithdrawal> $withdrawals
+ * @property-read int|null $withdrawals_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereEscrowBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereIsFrozen($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereLastReconciledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet wherePendingWithdrawal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereReserveBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Wallet whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Wallet extends Model
 {
     protected $fillable = [

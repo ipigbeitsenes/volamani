@@ -5,12 +5,100 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Traits\Auditable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $buyer_id
+ * @property int $vendor_id
+ * @property OrderStatus $status
+ * @property PaymentStatus $payment_status
+ * @property bool $requires_shipping
+ * @property int $total_amount
+ * @property int $platform_fee
+ * @property int $vendor_earnings
+ * @property int $shipping_fee
+ * @property string|null $ship_to_name
+ * @property string|null $ship_to_phone
+ * @property string|null $ship_to_address
+ * @property string|null $ship_to_city
+ * @property string|null $ship_to_state
+ * @property string|null $tracking_number
+ * @property string|null $courier
+ * @property string|null $payment_reference
+ * @property string|null $payment_method
+ * @property string $currency
+ * @property string|null $notes
+ * @property string|null $cancellation_reason
+ * @property int|null $cancelled_by
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $shipped_at
+ * @property Carbon|null $delivered_at
+ * @property Carbon|null $completed_at
+ * @property Carbon|null $cancelled_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read User|null $buyer
+ * @property-read User|null $cancelledBy
+ * @property-read Collection<int, OrderItem> $items
+ * @property-read int|null $items_count
+ * @property-read Collection<int, ProductDownload> $productDownloads
+ * @property-read int|null $product_downloads_count
+ * @property-read Collection<int, ReturnRequest> $returnRequests
+ * @property-read int|null $return_requests_count
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCancellationReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCancelledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCancelledBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCourier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDeliveredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaidAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaymentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePlatformFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereRequiresShipping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShipToAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShipToCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShipToName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShipToPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShipToState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShippedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereShippingFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTrackingNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereVendorEarnings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Order extends Model
 {
     use Auditable, SoftDeletes;

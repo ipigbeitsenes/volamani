@@ -8,6 +8,7 @@ use App\Enums\ProductType;
 use App\Services\Reviews\ReviewEligibilityService;
 use App\Traits\Auditable;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,7 +16,115 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
+/**
+ * @property int $id
+ * @property int $vendor_id
+ * @property ProductKind $kind
+ * @property int|null $category_id
+ * @property int|null $physical_category_id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $short_description
+ * @property string|null $description
+ * @property ProductType $type
+ * @property int $price
+ * @property int|null $compare_price
+ * @property string|null $thumbnail
+ * @property string|null $preview_url
+ * @property bool $is_downloadable
+ * @property int|null $download_limit
+ * @property int $download_expiry_hours
+ * @property ProductStatus $status
+ * @property string $availability
+ * @property bool $is_featured
+ * @property Carbon|null $featured_until
+ * @property int $sales_count
+ * @property int $views_count
+ * @property-read int|null $reviews_count
+ * @property float $average_rating
+ * @property string|null $seo_title
+ * @property string|null $seo_description
+ * @property Carbon|null $approved_at
+ * @property int|null $approved_by
+ * @property string|null $rejection_reason
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read User|null $approvedBy
+ * @property-read ProductCategory|null $category
+ * @property-read Collection<int, ProductDownload> $downloads
+ * @property-read int|null $downloads_count
+ * @property-read Collection<int, ProductFile> $files
+ * @property-read int|null $files_count
+ * @property-read Collection<int, ProductGallery> $gallery
+ * @property-read int|null $gallery_count
+ * @property-read string $thumbnail_url
+ * @property-read Collection<int, OrderItem> $orderItems
+ * @property-read int|null $order_items_count
+ * @property-read PhysicalCategory|null $physicalCategory
+ * @property-read ProductPhysicalDetail|null $physicalDetail
+ * @property-read Collection<int, Review> $reviews
+ * @property-read Collection<int, PhysicalCategory> $secondaryPhysicalCategories
+ * @property-read int|null $secondary_physical_categories_count
+ * @property-read Collection<int, ProductTag> $tags
+ * @property-read int|null $tags_count
+ * @property-read Collection<int, ProductVariant> $variants
+ * @property-read int|null $variants_count
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product digital()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product featured()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product ofType(string $type)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product physical()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product search(string $term)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereApprovedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereApprovedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereAvailability($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereAverageRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereComparePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDownloadExpiryHours($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDownloadLimit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereFeaturedUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereIsDownloadable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereIsFeatured($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereKind($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePhysicalCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePreviewUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereRejectionReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereReviewsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSalesCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSeoDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSeoTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereShortDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereThumbnail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereViewsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     use Auditable, HasSlug, SoftDeletes;

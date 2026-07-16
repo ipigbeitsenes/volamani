@@ -3,11 +3,56 @@
 namespace App\Models;
 
 use App\Enums\AffiliateStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property AffiliateStatus $status
+ * @property numeric|null $commission_rate
+ * @property-read int|null $clicks_count
+ * @property int $signups_count
+ * @property int $conversions_count
+ * @property int $total_earned
+ * @property int $total_paid
+ * @property Carbon|null $joined_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, AffiliateClick> $clicks
+ * @property-read Collection<int, AffiliateCommission> $commissions
+ * @property-read int|null $commissions_count
+ * @property-read Collection<int, Referral> $referrals
+ * @property-read int|null $referrals_count
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereClicksCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereCommissionRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereConversionsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereJoinedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereSignupsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereTotalEarned($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereTotalPaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateAccount withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class AffiliateAccount extends Model
 {
     use SoftDeletes;

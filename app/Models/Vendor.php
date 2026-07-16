@@ -8,13 +8,138 @@ use App\Enums\StoreType;
 use App\Enums\TrustTier;
 use App\Traits\Auditable;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $business_name
+ * @property string $slug
+ * @property string|null $tagline
+ * @property string|null $description
+ * @property string|null $logo
+ * @property string|null $banner
+ * @property string|null $whatsapp
+ * @property string|null $website
+ * @property array<array-key, mixed>|null $social_links
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $category
+ * @property StoreType $store_type
+ * @property StoreFocus $store_focus
+ * @property string|null $currency
+ * @property Status $status
+ * @property bool $is_featured
+ * @property int $views_count
+ * @property Carbon|null $approved_at
+ * @property int|null $approved_by
+ * @property string|null $rejection_reason
+ * @property Carbon|null $verified_at
+ * @property float $average_rating
+ * @property int $reviews_count
+ * @property-read int|null $followers_count
+ * @property int $trust_score
+ * @property Collection<int, VendorStrike> $strikes
+ * @property Carbon|null $strikes_updated_at
+ * @property bool $suspended_for_strikes
+ * @property int|null $commission_rate
+ * @property string $plan
+ * @property int $shipping_fee
+ * @property int|null $free_shipping_threshold
+ * @property string|null $ships_to
+ * @property array<array-key, mixed>|null $no_delivery_states
+ * @property array<array-key, mixed>|null $no_delivery_cities
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read User|null $approvedBy
+ * @property-read Collection<int, BusinessMatch> $businessMatches
+ * @property-read int|null $business_matches_count
+ * @property-read Collection<int, CategoryRequest> $categoryRequests
+ * @property-read int|null $category_requests_count
+ * @property-read Collection<int, Client> $clients
+ * @property-read int|null $clients_count
+ * @property-read ConsultantProfile|null $consultantProfile
+ * @property-read Collection<int, Document> $documents
+ * @property-read int|null $documents_count
+ * @property-read Collection<int, User> $followers
+ * @property-read Collection<int, Follow> $follows
+ * @property-read int|null $follows_count
+ * @property-read string $banner_url
+ * @property-read string $logo_url
+ * @property-read string $storefront_url
+ * @property-read MatchingProfile|null $matchingProfile
+ * @property-read Collection<int, Product> $products
+ * @property-read int|null $products_count
+ * @property-read Collection<int, FreelanceService> $services
+ * @property-read int|null $services_count
+ * @property-read int|null $strikes_count
+ * @property-read Collection<int, Subscription> $subscriptions
+ * @property-read int|null $subscriptions_count
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereApprovedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereApprovedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereAverageRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereBanner($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereBusinessName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereCommissionRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereFollowersCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereFreeShippingThreshold($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereIsFeatured($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereNoDeliveryCities($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereNoDeliveryStates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor wherePlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereRejectionReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereReviewsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereShippingFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereShipsTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereSocialLinks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereStoreFocus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereStoreType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereStrikesUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereSuspendedForStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereTagline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereTrustScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereViewsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereWebsite($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereWhatsapp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Vendor extends Model
 {
     use Auditable, HasSlug, SoftDeletes;

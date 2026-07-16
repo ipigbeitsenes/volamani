@@ -6,7 +6,64 @@ use App\Enums\PricingCategory;
 use App\Enums\PricingType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int|null $user_id
+ * @property string|null $session_token
+ * @property int|null $template_id
+ * @property PricingCategory $category
+ * @property string $service_name
+ * @property PricingType $pricing_type
+ * @property string $urgency
+ * @property numeric $urgency_multiplier
+ * @property int $base_price
+ * @property int $hourly_rate
+ * @property numeric $estimated_hours
+ * @property array<array-key, mixed>|null $add_ons
+ * @property int $add_ons_total
+ * @property array<array-key, mixed>|null $milestones
+ * @property int $subtotal
+ * @property int $total
+ * @property string|null $notes
+ * @property string|null $client_name
+ * @property string|null $client_email
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read PricingTemplate|null $template
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereAddOns($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereAddOnsTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereBasePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereClientEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereClientName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereEstimatedHours($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereHourlyRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereMilestones($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate wherePricingType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereServiceName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereSessionToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereSubtotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereTemplateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereUrgency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereUrgencyMultiplier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PricingEstimate whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class PricingEstimate extends Model
 {
     protected $fillable = [

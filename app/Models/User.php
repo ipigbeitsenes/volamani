@@ -7,6 +7,7 @@ use App\Enums\NotificationCategory;
 use App\Enums\UserType;
 use App\Traits\Auditable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,10 +15,131 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property string|null $username
+ * @property string|null $phone
+ * @property Carbon|null $phone_verified_at
+ * @property string|null $avatar
+ * @property string|null $bio
+ * @property string|null $location
+ * @property string|null $whatsapp
+ * @property UserType $user_type
+ * @property bool $is_active
+ * @property KYCStatus $kyc_status
+ * @property Carbon|null $terms_accepted_at
+ * @property string|null $terms_version
+ * @property int $buyer_strikes
+ * @property Carbon|null $buyer_strikes_updated_at
+ * @property bool $buyer_flagged
+ * @property Carbon|null $buyer_flagged_at
+ * @property bool $purchases_suspended
+ * @property Carbon|null $purchases_suspended_at
+ * @property string|null $referral_code
+ * @property int|null $referred_by
+ * @property Carbon|null $last_login_at
+ * @property string|null $last_login_ip
+ * @property int $failed_login_attempts
+ * @property Carbon|null $locked_until
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read AffiliateAccount|null $affiliateAccount
+ * @property-read Collection<int, BuyerStrike> $buyerStrikes
+ * @property-read int|null $buyer_strikes_count
+ * @property-read Collection<int, Vendor> $followedVendors
+ * @property-read int|null $followed_vendors_count
+ * @property-read Collection<int, Follow> $follows
+ * @property-read int|null $follows_count
+ * @property-read string $avatar_url
+ * @property-read string $storefront_url
+ * @property-read KYCVerification|null $kycVerification
+ * @property-read Collection<int, MatchRequest> $matchRequests
+ * @property-read int|null $match_requests_count
+ * @property-read Collection<int, NotificationPreference> $notificationPreferences
+ * @property-read int|null $notification_preferences_count
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read Collection<int, Order> $orders
+ * @property-read int|null $orders_count
+ * @property-read Collection<int, Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read Collection<int, User> $referrals
+ * @property-read int|null $referrals_count
+ * @property-read User|null $referrer
+ * @property-read Collection<int, Review> $reviews
+ * @property-read int|null $reviews_count
+ * @property-read Collection<int, Role> $roles
+ * @property-read int|null $roles_count
+ * @property-read Collection<int, SecurityLog> $securityLogs
+ * @property-read int|null $security_logs_count
+ * @property-read Vendor|null $vendor
+ * @property-read Wallet|null $wallet
+ *
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User permission($permissions, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBuyerFlagged($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBuyerFlaggedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBuyerStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBuyerStrikesUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFailedLoginAttempts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereKycStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastLoginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastLoginIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLockedUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhoneVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePurchasesSuspended($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePurchasesSuspendedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereReferralCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereReferredBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTermsAcceptedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTermsVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereWhatsapp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Auditable, HasFactory, HasRoles, Notifiable, SoftDeletes;

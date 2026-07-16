@@ -5,7 +5,42 @@ namespace App\Models;
 use App\Enums\MatchStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $match_request_id
+ * @property int $vendor_id
+ * @property int $score
+ * @property array<array-key, mixed>|null $score_breakdown
+ * @property MatchStatus $status
+ * @property bool $requester_interested
+ * @property bool $vendor_interested
+ * @property Carbon|null $viewed_at
+ * @property Carbon|null $connected_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read MatchRequest|null $matchRequest
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereConnectedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereMatchRequestId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereRequesterInterested($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereScoreBreakdown($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereVendorInterested($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BusinessMatch whereViewedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 class BusinessMatch extends Model
 {
     protected $table = 'business_matches';

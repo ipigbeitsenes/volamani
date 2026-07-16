@@ -2,11 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $buyer_id
+ * @property int $vendor_id
+ * @property int|null $product_id
+ * @property Carbon|null $last_message_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $buyer
+ * @property-read SellerMessage|null $latestMessage
+ * @property-read Collection<int, SellerMessage> $messages
+ * @property-read int|null $messages_count
+ * @property-read Product|null $product
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation forUser(\App\Models\User $user)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereLastMessageAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SellerConversation whereVendorId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SellerConversation extends Model
 {
     protected $fillable = ['buyer_id', 'vendor_id', 'product_id', 'last_message_at'];

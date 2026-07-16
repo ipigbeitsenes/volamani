@@ -4,7 +4,38 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $product_id
+ * @property string $label
+ * @property string $path
+ * @property string $original_name
+ * @property string|null $mime_type
+ * @property int $file_size
+ * @property int $sort_order
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read string $file_size_formatted
+ * @property-read Product|null $product
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereFileSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereOriginalName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductFile whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 class ProductFile extends Model
 {
     protected $fillable = [

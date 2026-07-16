@@ -5,7 +5,38 @@ namespace App\Models;
 use App\Enums\EscrowTransactionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $escrow_id
+ * @property string $reference
+ * @property EscrowTransactionType $type
+ * @property int $amount
+ * @property int $balance_after
+ * @property string $description
+ * @property int|null $actor_id
+ * @property array<array-key, mixed>|null $metadata
+ * @property Carbon $created_at
+ * @property-read User|null $actor
+ * @property-read Escrow $escrow
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereActorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereBalanceAfter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereEscrowId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereMetadata($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EscrowTransaction whereType($value)
+ *
+ * @mixin \Eloquent
+ */
 class EscrowTransaction extends Model
 {
     public $timestamps = false;

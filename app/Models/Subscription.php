@@ -4,11 +4,63 @@ namespace App\Models;
 
 use App\Enums\BillingInterval;
 use App\Enums\SubscriptionStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $vendor_id
+ * @property int $user_id
+ * @property int $plan_id
+ * @property int $price
+ * @property BillingInterval $billing_interval
+ * @property SubscriptionStatus $status
+ * @property bool $auto_renew
+ * @property Carbon|null $trial_ends_at
+ * @property Carbon|null $starts_at
+ * @property Carbon|null $ends_at
+ * @property Carbon|null $last_payment_at
+ * @property Carbon|null $cancelled_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, SubscriptionInvoice> $invoices
+ * @property-read int|null $invoices_count
+ * @property-read SubscriptionPlan|null $plan
+ * @property-read User|null $user
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereAutoRenew($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereBillingInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereCancelledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereLastPaymentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription wherePlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereStartsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereTrialEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Subscription withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Subscription extends Model
 {
     use SoftDeletes;

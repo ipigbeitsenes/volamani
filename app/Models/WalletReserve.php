@@ -3,9 +3,51 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $wallet_id
+ * @property int $vendor_id
+ * @property int|null $escrow_id
+ * @property int $amount
+ * @property string $status
+ * @property Carbon $release_at
+ * @property Carbon|null $released_at
+ * @property Carbon|null $clawed_back_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read Escrow|null $escrow
+ * @property-read Vendor|null $vendor
+ * @property-read Wallet $wallet
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve dueForRelease()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve held()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereClawedBackAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereEscrowId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereReleaseAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereReleasedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletReserve whereWalletId($value)
+ *
+ * @mixin \Eloquent
+ */
 class WalletReserve extends Model
 {
     use Auditable;

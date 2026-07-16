@@ -7,9 +7,76 @@ use App\Enums\KYCDocumentType;
 use App\Enums\KYCStatus;
 use App\Enums\KYCType;
 use App\Traits\Auditable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $user_id
+ * @property KYCType $type
+ * @property KYCStatus $status
+ * @property string $full_name
+ * @property KYCDocumentType $id_type
+ * @property string $id_number
+ * @property Carbon|null $date_of_birth
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string $country
+ * @property string|null $business_name
+ * @property string|null $rc_number
+ * @property string|null $document_front
+ * @property string|null $document_back
+ * @property string|null $selfie
+ * @property string|null $proof_of_address
+ * @property string|null $rejection_reason
+ * @property int|null $reviewed_by
+ * @property Carbon|null $submitted_at
+ * @property Carbon|null $reviewed_at
+ * @property Carbon|null $verified_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read User|null $reviewedBy
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereBusinessName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereDateOfBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereDocumentBack($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereDocumentFront($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereIdNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereIdType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereProofOfAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereRcNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereRejectionReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereReviewedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereSelfie($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereSubmittedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|KYCVerification whereVerifiedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 class KYCVerification extends Model
 {
     use Auditable;

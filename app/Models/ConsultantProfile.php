@@ -5,11 +5,68 @@ namespace App\Models;
 use App\Enums\ConsultationSessionStatus;
 use App\Services\Reviews\ReviewEligibilityService;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $vendor_id
+ * @property string $slug
+ * @property string $display_name
+ * @property string $bio
+ * @property string|null $niche
+ * @property array<array-key, mixed>|null $expertise
+ * @property int $experience_years
+ * @property string|null $linkedin
+ * @property string|null $calendly_url
+ * @property bool $is_available
+ * @property numeric $average_rating
+ * @property-read int|null $reviews_count
+ * @property int $total_sessions
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, ConsultationPackage> $allPackages
+ * @property-read int|null $all_packages_count
+ * @property-read Collection<int, ConsultantAvailability> $availability
+ * @property-read int|null $availability_count
+ * @property-read string $avatar_url
+ * @property-read Collection<int, ConsultationPackage> $packages
+ * @property-read int|null $packages_count
+ * @property-read Collection<int, Review> $reviews
+ * @property-read Collection<int, ConsultationSession> $sessions
+ * @property-read int|null $sessions_count
+ * @property-read Collection<int, ConsultationSession> $upcomingSessions
+ * @property-read int|null $upcoming_sessions_count
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile available()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile search(string $term)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereAverageRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereBio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereCalendlyUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereExperienceYears($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereExpertise($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereIsAvailable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereLinkedin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereNiche($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereReviewsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereTotalSessions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultantProfile whereVendorId($value)
+ *
+ * @mixin \Eloquent
+ */
 class ConsultantProfile extends Model
 {
     use HasSlug;

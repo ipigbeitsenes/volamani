@@ -6,7 +6,40 @@ use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $wallet_id
+ * @property string $reference
+ * @property TransactionType $type
+ * @property int $amount
+ * @property int $balance_after
+ * @property string $description
+ * @property array<array-key, mixed>|null $metadata
+ * @property string|null $ledgerable_type
+ * @property int|null $ledgerable_id
+ * @property Carbon $created_at
+ * @property-read Model|\Eloquent|null $ledgerable
+ * @property-read Wallet $wallet
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereBalanceAfter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereLedgerableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereLedgerableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereMetadata($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletLedger whereWalletId($value)
+ *
+ * @mixin \Eloquent
+ */
 class WalletLedger extends Model
 {
     public $timestamps = false;

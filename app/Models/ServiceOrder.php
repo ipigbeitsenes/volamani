@@ -4,11 +4,82 @@ namespace App\Models;
 
 use App\Enums\PaymentStatus;
 use App\Enums\ServiceOrderStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $service_id
+ * @property int $package_id
+ * @property int $buyer_id
+ * @property int $vendor_id
+ * @property ServiceOrderStatus $status
+ * @property PaymentStatus $payment_status
+ * @property int $total_amount
+ * @property int $platform_fee
+ * @property int $vendor_earnings
+ * @property string|null $payment_reference
+ * @property string|null $payment_method
+ * @property string|null $requirements
+ * @property int $revisions_allowed
+ * @property int $revisions_used
+ * @property Carbon|null $due_at
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $started_at
+ * @property Carbon|null $delivered_at
+ * @property Carbon|null $completed_at
+ * @property Carbon|null $cancelled_at
+ * @property string|null $cancellation_reason
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $buyer
+ * @property-read Collection<int, ServiceOrderMessage> $messages
+ * @property-read int|null $messages_count
+ * @property-read ServicePackage $package
+ * @property-read FreelanceService|null $service
+ * @property-read Vendor|null $vendor
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereCancellationReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereCancelledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereDeliveredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereDueAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePackageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePaidAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePaymentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder wherePlatformFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereRequirements($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereRevisionsAllowed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereRevisionsUsed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereServiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereVendorEarnings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceOrder withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class ServiceOrder extends Model
 {
     use SoftDeletes;

@@ -7,7 +7,72 @@ use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int $package_id
+ * @property int $profile_id
+ * @property int $buyer_id
+ * @property ConsultationSessionStatus $status
+ * @property PaymentStatus $payment_status
+ * @property int $price
+ * @property int $platform_fee
+ * @property int $consultant_earnings
+ * @property string|null $payment_reference
+ * @property Carbon|null $scheduled_at
+ * @property int $duration_minutes
+ * @property string|null $meeting_link
+ * @property string|null $meeting_platform
+ * @property string|null $notes
+ * @property string|null $consultant_notes
+ * @property Carbon|null $confirmed_at
+ * @property Carbon|null $started_at
+ * @property Carbon|null $completed_at
+ * @property Carbon|null $cancelled_at
+ * @property string|null $cancellation_reason
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $buyer
+ * @property-read ConsultationPackage $package
+ * @property-read ConsultantProfile $profile
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereBuyerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereCancellationReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereCancelledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereConfirmedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereConsultantEarnings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereConsultantNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereDurationMinutes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereMeetingLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereMeetingPlatform($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession wherePackageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession wherePaymentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession wherePlatformFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereProfileId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereScheduledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConsultationSession withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class ConsultationSession extends Model
 {
     use SoftDeletes;
